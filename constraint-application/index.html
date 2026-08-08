@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>제약 적용 | Endfield Balance Lab</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <link rel="stylesheet" href="redesign.css"/>
+  <link rel="stylesheet" href="editor-v3.css"/>
+  <link rel="stylesheet" href="editor-v4.css"/>
+  <link rel="stylesheet" href="editor-v5.css"/>
+  <link rel="stylesheet" href="editor-v6.css"/>
+  <link rel="stylesheet" href="editor-v7.css"/>
+  <link rel="stylesheet" href="editor-v8.css"/>
+  <link rel="stylesheet" href="editor-v9.css"/>
+  <link rel="stylesheet" href="editor-v10.css"/>
+  <link rel="stylesheet" href="editor-v11.css"/>
+  <link rel="stylesheet" href="editor-v12.css"/>
+  <link rel="stylesheet" href="constraint-application.css?v=12"/>
+  <link rel="stylesheet" href="integration-nav.css?v=10"/>
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+<header class="integrated-site-topbar">
+  <div class="integrated-site-brand">
+    <a class="integrated-brand-mark" href="../index.html" aria-label="Endfield Balance Lab 파티 분석 페이지"><img class="site-brand-character" src="../assets/lab-brand-character.jpg" alt=""></a>
+    <div class="integrated-brand-copy">
+      <a class="integrated-brand-title" href="../index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+      <div class="integrated-brand-lower">
+        <small>엔드필드 위기 협약 데이터베이스</small>
+        <nav class="integrated-site-nav" aria-label="페이지 전환">
+          <a href="../glossary.html">용어 사전</a>
+          <a href="../characters.html">캐릭터</a>
+          <a href="../index.html">파티 분석</a>
+          <a href="../results.html">분석 결과</a>
+          <a href="../dungeon-monsters.html">스테이지 구성</a>
+          <a href="../constraints.html">제약 추천</a>
+          <a href="../constraint-board.html">제약 설계</a>
+          <a href="../constraint-balancing/index.html">제약 밸런싱</a>
+          <a href="../control-time/index.html">컨트롤 시간</a>
+          <a href="index.html" class="active" aria-current="page">제약 적용</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="constraint-page-stage" class="app-stage constraint-only-stage">
+  <section id="simulator-view" class="app-view active">
+    <div class="sim-wrapper">
+      <header class="constraint-workspace-head">
+        <div>
+          <div class="constraint-workspace-kicker">CONSTRAINT APPLICATION</div>
+          <h1>제약 적용</h1>
+          <p>지표 보드의 연결 구조·잠금·충돌·선택 기능을 유지하면서, 선택한 제약의 파티별 계산 결과를 바로 확인합니다.</p>
+        </div>
+        <div class="constraint-workspace-metrics" aria-label="제약 적용 현황">
+          <div><small>전체 지표</small><strong id="dashboard-total-count">46</strong></div>
+          <div><small>선택 지표</small><strong id="dashboard-selected-count">0</strong></div>
+          <div><small>지표 점수</small><strong><span id="dashboard-score">0</span>★</strong></div>
+        </div>
+      </header>
+
+      <main class="sim-main sim-main-stacked">
+        <div class="constraint-board-toolbar" aria-label="지표 검색 및 필터">
+          <label class="constraint-search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="constraint-board-search" type="search" placeholder="지표 이름·설명 검색" autocomplete="off">
+          </label>
+          <div class="constraint-filter-group" id="constraint-type-filters" aria-label="지표 유형 필터">
+            <button class="constraint-filter-chip active" type="button" data-filter="all">전체</button>
+            <button class="constraint-filter-chip" type="button" data-filter="team">팀</button>
+            <button class="constraint-filter-chip" type="button" data-filter="control">조작</button>
+            <button class="constraint-filter-chip" type="button" data-filter="env">환경</button>
+          </div>
+          <div class="constraint-filter-group" id="constraint-tier-filters" aria-label="지표 단계 필터">
+            <button class="constraint-filter-chip active" type="button" data-tier="all">전 단계</button>
+            <button class="constraint-filter-chip" type="button" data-tier="1">1★</button>
+            <button class="constraint-filter-chip" type="button" data-tier="2">2★</button>
+            <button class="constraint-filter-chip" type="button" data-tier="3">3★</button>
+            <button class="constraint-selection-reset" type="button" onclick="resetSelected()">선택 초기화</button>
+          </div>
+        </div>
+
+        <section class="sim-board-shell constraint-dashboard-board">
+          <div class="constraint-board-heading">
+            <div>
+              <span>INDICATOR MAP</span>
+              <h2>단계별 지표 구조</h2>
+            </div>
+            <p>검색·필터 조건에 맞지 않는 카드는 흐리게 표시됩니다. 지표를 누르면 기존 선택·잠금·충돌 규칙이 그대로 적용됩니다.</p>
+          </div>
+          <div class="sim-body">
+            <section class="board-wrap" aria-label="지표 선택 보드">
+              <div id="grid-area" class="grid-area"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- V21 선택 상태 처리에 필요한 원본 영역입니다. 화면에는 표시하지 않습니다. -->
+        <section class="side-panel selected-panel-wide" aria-label="선택된 지표 목록">
+          <div class="panel-header">
+            <div><span>선택된 지표</span><small>선택 순서대로 확인하고 개별 제거할 수 있습니다.</small></div>
+            <div class="panel-header-actions">
+              <div class="selected-score-box"><small>총합 점수</small><strong id="selected-score">0★</strong></div>
+              <div class="selected-count-box"><small>선택 수</small><strong id="selected-count">0</strong></div>
+              <button class="panel-reset-btn" onclick="resetSelected()">전체 초기화</button>
+            </div>
+          </div>
+          <div id="panel-list" class="panel-list panel-list-wide"></div>
+        </section>
+
+        <section class="constraint-result-shell" aria-label="파티별 제약 조합 결과">
+          <div class="constraint-result-heading">
+            <div>
+              <span>PARTY COMBINATION RESULTS</span>
+              <h2>파티별 제약 조합 결과</h2>
+              <p>선택한 DPS·클리어 관련 지표를 제약 밸런싱 계산과 연결해 표시합니다.</p>
+            </div>
+            <div class="constraint-time-mode-toggle" role="group" aria-label="남은 시간 계산 기준">
+              <button type="button" class="constraint-time-mode-button active" data-time-mode="practical" aria-pressed="true">컨트롤 시간 포함</button>
+              <button type="button" class="constraint-time-mode-button" data-time-mode="dps" aria-pressed="false">DPS 시간만 포함</button>
+            </div>
+          </div>
+          <iframe
+            id="constraint-result-frame"
+            class="constraint-result-frame"
+            src="constraint-balancing/index.html?embed=1"
+            title="파티별 제약 조합 결과"
+            scrolling="auto"
+          ></iframe>
+        </section>
+      </main>
+    </div>
+  </section>
+</main>
+
+
+<button type="button" id="constraint-combo-drawer-toggle" class="constraint-combo-drawer-toggle" aria-expanded="false" aria-controls="constraint-combo-drawer" aria-label="제약 조합 저장 패널 열기">
+  <span aria-hidden="true">‹</span>
+</button>
+
+<aside id="constraint-combo-drawer" class="constraint-combo-drawer" aria-hidden="true" aria-labelledby="constraint-combo-drawer-title" inert>
+  <div class="constraint-combo-drawer-inner">
+    <header class="constraint-combo-drawer-heading">
+      <small>CONSTRAINT COMBINATION ARCHIVE</small>
+      <div class="constraint-combo-heading-row">
+        <h2 id="constraint-combo-drawer-title">제약 조합</h2>
+        <label class="constraint-combo-search-field" aria-label="제약 조합 제목 검색">
+          <input id="constraint-combo-search" type="search" autocomplete="off" placeholder="제약 조합 검색">
+        </label>
+      </div>
+      <p>선택한 제약들을 조합으로 저장하거나, 저장된 조합을 다시 불러옵니다.</p>
+    </header>
+
+    <div class="constraint-combo-tabs" role="tablist" aria-label="제약 조합 메뉴">
+      <button type="button" id="constraint-combo-save-tab" class="constraint-combo-tab active" role="tab" aria-selected="true" aria-controls="constraint-combo-save-panel">제약 조합 저장</button>
+      <button type="button" id="constraint-combo-saved-tab" class="constraint-combo-tab" role="tab" aria-selected="false" aria-controls="constraint-combo-saved-panel">저장된 제약 조합 <span id="constraint-combo-saved-count">0</span></button>
+    </div>
+
+    <section id="constraint-combo-save-panel" class="constraint-combo-panel active" role="tabpanel" aria-labelledby="constraint-combo-save-tab">
+      <div class="constraint-combo-current-summary">
+        <div><small>현재 총점</small><strong><span id="constraint-combo-current-score">0</span>★</strong></div>
+        <div><small>선택 제약</small><strong><span id="constraint-combo-current-count">0</span>개</strong></div>
+      </div>
+      <label class="constraint-combo-name-field">
+        <span>제약 조합 이름</span>
+        <input id="constraint-combo-name" type="text" maxlength="48" autocomplete="off" placeholder="예: 13점 보스전 조합">
+      </label>
+      <div class="constraint-combo-section-title"><strong>현재 선택된 제약</strong><span id="constraint-combo-current-caption">선택 없음</span></div>
+      <div id="constraint-combo-current-list" class="constraint-combo-constraint-list"></div>
+      <div class="constraint-combo-save-actions">
+        <button type="button" id="constraint-combo-save-button" class="constraint-combo-primary-button">현재 조합 저장 + JSON 추출</button>
+        <p id="constraint-combo-save-note">저장하면 이 브라우저에 기록되고, 저장된 조합 전체가 JSON 파일로 함께 추출됩니다.</p>
+      </div>
+    </section>
+
+    <section id="constraint-combo-saved-panel" class="constraint-combo-panel" role="tabpanel" aria-labelledby="constraint-combo-saved-tab" hidden>
+      <div class="constraint-combo-section-title"><strong>저장된 제약 조합</strong><span id="constraint-combo-saved-caption">0개</span></div>
+      <div id="constraint-combo-saved-list" class="constraint-combo-saved-list"></div>
+    </section>
+  </div>
+</aside>
+
+<div id="constraint-combo-toast" class="constraint-combo-toast" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+<script src="saved-constraint-combinations.js"></script>
+<script src="constraint-application.js?v=12"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+GitHub update v60
+
+Upload these four files to the repository root and overwrite the existing files:
+- saved-analyses.js
+- party.html
+- results.html
+- constraints.html
+
+Included analyses:
+- 로시 · 탕탕 · 질베르타 · 펠리카
+- 이본 · 탕탕 · 질베르타 · 자이히

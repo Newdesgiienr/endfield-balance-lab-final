@@ -1,0 +1,4 @@
+V8 defaults update
+- Practical clear-time page opens with Levatain · Adela · Wulfgard · Akekuri selected.
+- Constraint board defaults to All Constraints tray view.
+- Bundled uploaded v1.5 constraint-board version and archived version-json-backup/v1.5.json.

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="제약 마크를 위기 협약 제약 설계 현황판에 배치하고 충돌·시너지 관계와 버전별 설계 기록을 관리하는 Endfield Balance Lab 제약 설계 페이지">
+  <title>제약 설계 | Endfield Balance Lab</title>
+  <link rel="stylesheet" href="styles.css?v=109">
+  <link rel="stylesheet" href="constraint-board.css?v=111">
+</head>
+<body>
+  <header class="app-topbar">
+    <div class="brand">
+      <a class="brand-mark" href="index.html" aria-label="Endfield Balance Lab 파티 분석 페이지"><img class="site-brand-character" src="assets/lab-brand-character.jpg" alt=""></a>
+      <div class="brand-copy">
+        <a class="brand-title" href="index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+        <div class="brand-lower">
+          <small>엔드필드 위기 협약 데이터베이스</small>
+          <nav class="site-nav" aria-label="페이지 전환">
+            <a href="glossary.html">용어 사전</a>
+            <a href="characters.html">캐릭터</a>
+            <a href="index.html">파티 분석</a>
+            <a href="results.html">분석 결과</a>
+            <a href="dungeon-monsters.html">스테이지 구성</a>
+              <a href="constraints.html">제약 추천</a>
+              <a href="constraint-board.html" class="active" aria-current="page">제약 설계</a>
+              <a href="constraint-balancing/index.html">제약 밸런싱</a>
+              <a href="control-time/index.html">컨트롤 시간</a>
+              <a href="constraint-application/index.html">제약 적용</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="constraint-designer page-shell">
+    <header class="designer-heading">
+      <div>
+        <span>CONSTRAINT DESIGN BOARD</span>
+        <h1>제약 설계 현황판</h1>
+        <p>제약 마크를 직접 만들고 1·2·3점 구역에 붙여가며 설계합니다.</p>
+      </div>
+      <div class="designer-heading-actions">
+        <div id="autosave-status" class="autosave-status" role="status"><i></i><span>자동 저장 준비</span></div>
+        <button id="save-version-button" class="primary-board-action" type="button">현재 버전 기록</button>
+      </div>
+    </header>
+
+    <section class="board-card" aria-labelledby="board-title">
+      <div class="board-card-heading">
+        <div class="board-title-block"><small>MAGNETIC CONSTRAINT BOARD</small><div class="board-title-line"><h2 id="board-title">위기 협약 제약 설계</h2><div id="score-selection-total" class="score-selection-total" title="현황판의 제약 마크를 더블클릭하면 선택 제약 총점에 포함됩니다."><span>선택 제약 총점</span><strong id="score-selection-value">0점</strong></div></div></div>
+        <div class="board-heading-tools">
+          <button id="reset-selection-button" class="board-place-button" type="button" title="현황판에서 선택한 제약을 모두 선택 해제합니다.">선택 초기화</button>
+          <button id="open-placement-modal" class="board-place-button" type="button" aria-controls="placement-drawer" aria-expanded="false">미배치 제약 열기</button>
+          <div class="relation-visibility" aria-label="관계선 표시 설정">
+            <label class="relation-switch conflict-switch"><input id="toggle-conflict-lines" type="checkbox" checked><span></span><b><i class="legend-line conflict"></i>충돌선</b></label>
+            <label class="relation-switch synergy-switch"><input id="toggle-synergy-lines" type="checkbox" checked><span></span><b><i class="legend-line synergy"></i>시너지선</b></label>
+            <label class="relation-switch second-phase-switch"><input id="toggle-second-phase" type="checkbox" checked><span></span><b><i class="second-phase-legend">2차</i><em id="second-phase-toggle-label">제약 포함</em></b></label>
+          </div>
+        </div>
+      </div>
+      <div class="board-filter-bar" aria-label="현황판 제약 표시 필터">
+        <div class="board-filter-group" role="group" aria-label="카테고리 필터">
+          <button type="button" class="active" data-board-category-filter="all" aria-pressed="true">전체</button>
+          <button type="button" data-board-category-filter="팀" aria-pressed="false">팀</button>
+          <button type="button" data-board-category-filter="조작" aria-pressed="false">조작</button>
+          <button type="button" data-board-category-filter="환경" aria-pressed="false">환경</button>
+        </div>
+        <div class="board-filter-group board-score-filter-group" role="group" aria-label="점수 필터">
+          <button type="button" class="active" data-board-score-filter="all" aria-pressed="true">모든 점수</button>
+          <button type="button" data-board-score-filter="1" aria-pressed="false">1점</button>
+          <button type="button" data-board-score-filter="2" aria-pressed="false">2점</button>
+          <button type="button" data-board-score-filter="3" aria-pressed="false">3점</button>
+        </div>
+        <span id="board-filter-count" class="board-filter-count" aria-live="polite">표시 0개</span>
+      </div>
+      <div id="constraint-board-scroll" class="constraint-board-scroll">
+        <div id="constraint-board" class="constraint-board" aria-label="제약 마크 배치 현황판">
+          <svg id="relation-layer" class="relation-layer" aria-label="제약 관계선"></svg>
+          <div id="selection-marquee" class="selection-marquee" aria-hidden="true" hidden></div>
+          <section class="score-row score-row-1" data-tier="1" aria-label="1점 제약 구역"><strong class="score-label">1<small>★</small></strong><div class="tier-dropzone" data-tier="1"></div></section>
+          <section class="score-row score-row-2" data-tier="2" aria-label="2점 제약 구역"><strong class="score-label">2<small>★</small></strong><div class="tier-dropzone" data-tier="2"></div></section>
+          <section class="score-row score-row-3" data-tier="3" aria-label="3점 제약 구역"><strong class="score-label">3<small>★</small></strong><div class="tier-dropzone" data-tier="3"></div></section>
+        </div>
+      </div>
+      <div id="board-drop-hint" class="board-instruction">
+        <span>드래그: 배치·이동</span><span>빈 공간 드래그: 범위 선택</span><span>오른쪽 배치: 현황판 자동 확장</span><span>클릭: 총점 포함/제외</span><span>SHIFT+클릭: 여러 마크 선택</span><span>선택 마크 드래그: 점수 줄 유지·가로 이동</span><span>ENTER: 일반 묶음</span><span>↑ 방향키: 문지기 묶음</span><span>↓ 방향키: 2차 제약 지정/해제</span><span>아래로 끌기: 현황판에서 제거</span><span>길게 누르기: 충돌 연결</span><span>빠르게 세 번 누르기: 시너지 연결</span><strong id="marker-selection-status" class="marker-selection-status" aria-live="polite" hidden>선택 없음</strong>
+      </div>
+    </section>
+
+    <div class="marker-management-grid">
+      <section class="work-panel marker-create-panel" aria-labelledby="marker-work-title">
+        <header class="work-panel-heading"><div><small>CREATE</small><h2 id="marker-work-title">제약 마크 제작</h2></div></header>
+        <form id="marker-create-form" class="marker-form compact-marker-form">
+          <label><span>카테고리</span><select id="marker-category" required><option value="팀">팀</option><option value="조작">조작</option><option value="환경">환경</option></select></label>
+          <label><span>마크에 표시할 글자</span><input id="marker-label" maxlength="18" required placeholder="예: 교대 [2회]"></label>
+          <label><span>제약명</span><input id="marker-title" maxlength="48" required placeholder="예: 캐릭터 교대 제한"></label>
+          <label><span>상세 설명</span><textarea id="marker-description" rows="5" required placeholder="예: 캐릭터 교대 횟수를 [2회]로 제한합니다. [ ] 안의 값은 굵게 표시됩니다."></textarea></label>
+          <button type="submit" class="create-marker-button">제약 마크 만들기</button>
+        </form>
+      </section>
+
+      <section class="work-panel marker-tray-panel" aria-labelledby="marker-tray-title">
+        <header class="work-panel-heading"><div><small>CONSTRAINT STORAGE</small><h2 id="marker-tray-title">미배치 제약 보관함</h2><p id="marker-tray-description">좌측에서 만든 미배치 제약이 카테고리별로 정리됩니다. 전체 제약 보기로 배치 여부와 관계없이 모두 확인할 수 있습니다.</p></div><div class="tray-heading-actions"><button id="toggle-tray-view" class="tray-view-toggle" type="button" aria-pressed="false">전체 제약 보기</button><span id="tray-count" class="panel-count">0개</span></div></header>
+        <div id="marker-tray" class="marker-tray-categories" aria-label="카테고리별 미배치 제약 마크"></div>
+      </section>
+    </div>
+
+    <section class="work-panel recommendation-work-panel full-width-panel collapsible-work-panel is-collapsed" aria-labelledby="recommendation-title">
+      <header class="work-panel-heading collapsible-panel-heading">
+        <div><small>PARTY ANALYSIS RECOMMENDATION</small><h2 id="recommendation-title">분석 기반 제약 추천</h2></div>
+        <div class="panel-heading-actions"><span id="analysis-count" class="panel-count">0개 분석</span><button class="panel-collapse-toggle" type="button" data-collapse-panel="recommendation-panel-content" data-collapse-label="제약 추천" aria-expanded="false" aria-controls="recommendation-panel-content"><span>제약 추천 펼치기</span><i aria-hidden="true"></i></button></div>
+      </header>
+      <div id="recommendation-panel-content" class="collapsible-panel-content" hidden>
+        <div class="recommendation-toolbar">
+          <label class="board-search"><span>⌕</span><input id="recommendation-search" type="search" placeholder="제약명·내용·근거 검색"></label>
+          <div id="recommendation-filters" class="recommendation-filters" role="group" aria-label="추천 제약 카테고리 필터">
+            <button type="button" class="active" data-category="all">전체</button><button type="button" data-category="팀">팀</button><button type="button" data-category="조작">조작</button><button type="button" data-category="환경">환경</button>
+          </div>
+        </div>
+        <div id="recommendation-list" class="recommendation-list"></div>
+      </div>
+    </section>
+
+    <section class="work-panel version-panel collapsible-work-panel is-collapsed" aria-labelledby="version-title">
+      <header class="work-panel-heading collapsible-panel-heading">
+        <div><small>DESIGN HISTORY</small><h2 id="version-title">버전 기록</h2></div>
+        <div class="panel-heading-actions"><span id="version-count" class="panel-count">0개 버전</span><button class="panel-collapse-toggle" type="button" data-collapse-panel="version-panel-content" data-collapse-label="버전 기록" aria-expanded="false" aria-controls="version-panel-content"><span>버전 기록 펼치기</span><i aria-hidden="true"></i></button></div>
+      </header>
+      <div id="version-panel-content" class="collapsible-panel-content" hidden><div id="version-list" class="version-list"></div></div>
+    </section>
+  </main>
+
+  <div id="marker-tooltip" class="marker-tooltip" role="tooltip" hidden></div>
+  <div id="relation-menu" class="relation-menu" hidden><strong id="relation-menu-title"></strong><button id="remove-relation-button" type="button">관계 해제</button></div>
+  <div id="toast" class="board-toast" role="status" hidden></div>
+
+  <div id="modal-backdrop" class="board-modal-backdrop" hidden></div>
+
+  <aside id="placement-drawer" class="placement-drawer" role="dialog" aria-modal="false" aria-labelledby="placement-title" hidden>
+    <header><div class="placement-heading-copy"><small>UNPLACED CONSTRAINTS</small><div class="placement-title-row"><h2 id="placement-title">미배치 제약 보관함</h2><button id="placement-drag-handle" class="placement-drag-handle" type="button" aria-label="미배치 제약 보관함 이동" title="잡고 드래그하여 창 이동"><span aria-hidden="true">⋮⋮</span></button></div><p>마크를 현황판의 1·2·3점 구역으로 직접 끌어 놓거나 점수 버튼으로 빠르게 배치하세요.</p></div><button type="button" data-close-placement-drawer aria-label="미배치 제약 보관함 닫기">×</button></header>
+    <div class="placement-drawer-body">
+      <div id="placement-marker-list" class="placement-marker-list"></div>
+    </div>
+  </aside>
+
+  <section id="marker-edit-modal" class="board-modal" role="dialog" aria-modal="true" aria-labelledby="marker-edit-title" hidden>
+    <header><div><small>EDIT CONSTRAINT</small><h2 id="marker-edit-title">제약 마크 수정</h2></div><button type="button" data-close-modal aria-label="닫기">×</button></header>
+    <form id="marker-edit-form" class="marker-form modal-form">
+      <input id="edit-marker-id" type="hidden">
+      <label><span>카테고리</span><select id="edit-marker-category" required><option value="팀">팀</option><option value="조작">조작</option><option value="환경">환경</option></select></label>
+      <label><span>마크에 표시할 글자</span><input id="edit-marker-label" maxlength="18" required></label>
+      <label><span>제약명</span><input id="edit-marker-title" maxlength="48" required></label>
+      <label class="marker-form-wide"><span>상세 설명</span><textarea id="edit-marker-description" rows="5" required></textarea></label>
+      <div class="modal-actions marker-edit-actions"><button id="delete-marker-button" type="button" class="danger-button">제약 완전 삭제</button><span></span><button type="button" data-close-modal class="secondary-button">취소</button><button type="submit" class="primary-board-action">수정 저장</button></div>
+    </form>
+  </section>
+
+  <section id="version-save-modal" class="board-modal compact-modal" role="dialog" aria-modal="true" aria-labelledby="version-save-title" hidden>
+    <header><div><small>SAVE SNAPSHOT</small><h2 id="version-save-title">현재 버전 기록</h2></div><button type="button" data-close-modal aria-label="닫기">×</button></header>
+    <form id="version-save-form" class="version-save-form">
+      <label><span>버전 이름</span><input id="version-name" maxlength="36" required placeholder="예: v1.0 최초 설계"></label>
+      <label><span>변경 메모</span><textarea id="version-memo" rows="4" placeholder="이번 버전에서 고민하거나 바꾼 내용을 기록하세요."></textarea></label>
+      <div class="modal-actions"><button type="button" data-close-modal class="secondary-button">취소</button><button type="submit" class="primary-board-action">버전 저장</button></div>
+    </form>
+  </section>
+
+  <section id="preview-modal" class="board-modal wide-modal" role="dialog" aria-modal="true" aria-labelledby="preview-title" hidden>
+    <header><div><small>VERSION PREVIEW</small><h2 id="preview-title">버전 미리보기</h2></div><button type="button" data-close-modal aria-label="닫기">×</button></header>
+    <div id="preview-content" class="preview-content"></div>
+  </section>
+
+  <section id="compare-modal" class="board-modal wide-modal" role="dialog" aria-modal="true" aria-labelledby="compare-title" hidden>
+    <header><div><small>VERSION COMPARISON</small><h2 id="compare-title">버전 비교</h2></div><button type="button" data-close-modal aria-label="닫기">×</button></header>
+    <div id="compare-content" class="compare-content"></div>
+  </section>
+
+  <script src="saved-analyses.js?v=64"></script>
+  <script src="analysis-store.js?v=63"></script>
+  <script src="constraint-data.js?v=74"></script>
+  <script src="constraint-board-default-versions.js?v=130"></script>
+  <script src="constraint-board.js?v=128"></script>
+</body>
+</html>

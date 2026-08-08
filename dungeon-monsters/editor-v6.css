@@ -1,0 +1,189 @@
+/* V6: 구성 북마크 탭, 정렬 개선, DB 확장, 소형 사거리 표현 정리 */
+
+/* 왼쪽 데이터베이스의 작업 폭을 넓혀 이름·스탯을 한눈에 읽는다. */
+.enemy-editor-grid{
+  grid-template-columns:minmax(420px,480px) minmax(0,1fr)!important;
+  gap:16px;
+}
+.monster-palette-panel{min-width:0;}
+.palette-title h2{word-break:keep-all;}
+.palette-title>small{max-width:145px;line-height:1.35;text-align:right;}
+.palette-monster-card{
+  grid-template-columns:62px minmax(0,1fr) 54px;
+  gap:13px;
+  padding:12px 13px;
+}
+.palette-monster-name strong{font-size:16px;}
+.palette-stat-line{gap:6px 8px;}
+.palette-stat-line span{font-size:11px;}
+
+/* 구성 1·2·3을 브라우저 북마크처럼 이어지는 탭으로 표현한다. */
+.placement-setup .composition-bookmarks{
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  padding:7px 8px 0;
+  border-bottom:1px solid #cfd6de;
+  border-radius:10px 10px 0 0;
+  background:#e8ecf1;
+  overflow:visible;
+}
+.placement-setup .composition-bookmarks .composition-tab{
+  flex:1 1 0;
+  position:relative;
+  min-width:0;
+  min-height:60px;
+  margin:0 0 -1px;
+  padding:10px 18px 11px;
+  border:1px solid #cfd6de;
+  border-bottom-color:#cfd6de;
+  border-radius:13px 13px 0 0;
+  background:#f0f3f6;
+  color:#626d79;
+  box-shadow:none;
+  overflow:visible;
+  transform:none;
+  transition:background .14s,border-color .14s,transform .14s,box-shadow .14s;
+}
+.placement-setup .composition-bookmarks .composition-tab::after{
+  content:"";
+  position:absolute;
+  left:14px;
+  right:14px;
+  top:0;
+  bottom:auto;
+  height:3px;
+  border-radius:0 0 3px 3px;
+  background:transparent;
+  box-shadow:none;
+}
+.placement-setup .composition-bookmarks .composition-tab:hover{
+  background:#f8fafb;
+  transform:translateY(-2px);
+}
+.placement-setup .composition-bookmarks .composition-tab.active{
+  z-index:2;
+  background:#fff;
+  border-color:#aeb8c3;
+  border-bottom-color:#fff;
+  color:#1b222b;
+  transform:translateY(-3px);
+  box-shadow:0 -5px 13px rgba(30,39,49,.08);
+}
+.placement-setup .composition-bookmarks .composition-tab.active::after{
+  background:var(--accent);
+}
+.placement-setup .composition-bookmarks .composition-tab span{
+  font-size:17px;
+  color:inherit;
+}
+.placement-setup .composition-bookmarks .composition-tab small{
+  font-size:11px;
+  color:#77828e;
+}
+.placement-setup .composition-bookmarks .composition-tab.active small{color:#5c6773;}
+
+/* 웨이브와 요약 카드를 일정한 칸·높이로 정렬한다. */
+.placement-setup .wave-tabs{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:stretch;
+}
+.placement-setup .wave-tab{
+  width:100%;
+  min-width:0;
+  height:54px;
+  min-height:54px;
+  padding:8px 13px;
+}
+.placement-setup .wave-tab span,
+.placement-setup .wave-tab small{white-space:nowrap;}
+.placement-summary{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch;
+}
+.placement-summary .summary-card,
+.placement-summary .summary-card.context{
+  width:100%;
+  min-width:0;
+  min-height:82px;
+  height:82px;
+  padding:11px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.placement-summary .summary-card strong{
+  font-size:19px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.placement-summary .summary-card p{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* 구성 변화 패널은 제거되어 현재 웨이브 목록만 전체 폭으로 사용한다. */
+.pregrid-analysis{
+  display:block!important;
+  padding:12px 16px;
+}
+.pregrid-analysis .wave-roster-panel{width:100%;}
+
+/* 선택한 사거리 원이 한 칸 내부에 들어오면 셀/토큰의 사각 프레임을 숨긴다. */
+.battle-grid.compact-range .battle-cell.range-origin{
+  background:#f7f9fb!important;
+  box-shadow:none!important;
+}
+.grid-monster-token.range-inside-cell,
+.grid-monster-token.range-inside-cell.selected{
+  width:auto;
+  height:auto;
+  min-width:0;
+  min-height:0;
+  padding:0;
+  border:0!important;
+  border-radius:0;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#18212a;
+}
+.grid-monster-token.range-inside-cell:hover{
+  transform:scale(1.05);
+  box-shadow:none!important;
+}
+.grid-monster-token.range-inside-cell span{
+  display:block;
+  width:auto;
+  height:auto;
+  border-radius:0;
+  background:transparent;
+  font-size:12px;
+  text-shadow:0 1px 2px rgba(255,255,255,.95);
+  box-shadow:none;
+}
+.grid-monster-token.range-inside-cell small{display:none;}
+
+@media(max-width:1450px){
+  .enemy-editor-grid{grid-template-columns:minmax(380px,430px) minmax(0,1fr)!important;}
+  .placement-summary{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+}
+@media(max-width:1180px){
+  .enemy-editor-grid{grid-template-columns:1fr!important;}
+  .monster-palette-panel{position:static;}
+  .monster-palette{min-height:0;max-height:440px;}
+  .placement-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media(max-width:760px){
+  .placement-setup .composition-bookmarks{display:grid;grid-template-columns:1fr;padding:6px;border-bottom:0;}
+  .placement-setup .composition-bookmarks .composition-tab,
+  .placement-setup .composition-bookmarks .composition-tab.active{
+    margin:0;
+    border:1px solid #cfd6de;
+    border-radius:10px;
+    transform:none;
+  }
+  .placement-setup .wave-tabs{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .placement-summary{grid-template-columns:1fr!important;}
+}

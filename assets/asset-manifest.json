@@ -1,0 +1,223 @@
+{
+  "sourceArchive": "EF_CHAR.zip",
+  "sourceGeneratedAt": "2026-07-20T03:48:19.874Z",
+  "characters": [
+    {
+      "name": "리노",
+      "slug": "rino",
+      "portrait": "assets/characters/rino/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/supporter.png"
+    },
+    {
+      "name": "결",
+      "slug": "gyeol",
+      "portrait": "assets/characters/gyeol/portrait.png",
+      "elementIcon": "assets/icons/elements/nature.png",
+      "roleIcon": "assets/icons/roles/caster.png"
+    },
+    {
+      "name": "카뮤",
+      "slug": "camu",
+      "portrait": "assets/characters/camu/portrait.png",
+      "elementIcon": "assets/icons/elements/heat.png",
+      "roleIcon": "assets/icons/roles/vanguard.png"
+    },
+    {
+      "name": "미브",
+      "slug": "mive",
+      "portrait": "assets/characters/mive/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "장방이",
+      "slug": "jangbangyi",
+      "portrait": "assets/characters/jangbangyi/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "로시",
+      "slug": "rossi",
+      "portrait": "assets/characters/rossi/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "탕탕",
+      "slug": "tangtang",
+      "portrait": "assets/characters/tangtang/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/caster.png"
+    },
+    {
+      "name": "이본",
+      "slug": "yvonne",
+      "portrait": "assets/characters/yvonne/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "질베르타",
+      "slug": "gilberta",
+      "portrait": "assets/characters/gilberta/portrait.png",
+      "elementIcon": "assets/icons/elements/nature.png",
+      "roleIcon": "assets/icons/roles/supporter.png"
+    },
+    {
+      "name": "레바테인",
+      "slug": "laevatain",
+      "portrait": "assets/characters/laevatain/portrait.png",
+      "elementIcon": "assets/icons/elements/heat.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "관리자(남)",
+      "slug": "administrator-male",
+      "portrait": "assets/characters/administrator-male/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "관리자(여)",
+      "slug": "administrator-female",
+      "portrait": "assets/characters/administrator-female/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "포그라니치니크",
+      "slug": "pogranichnik",
+      "portrait": "assets/characters/pogranichnik/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/vanguard.png"
+    },
+    {
+      "name": "엠버",
+      "slug": "amber",
+      "portrait": "assets/characters/amber/portrait.png",
+      "elementIcon": "assets/icons/elements/heat.png",
+      "roleIcon": "assets/icons/roles/defender.png"
+    },
+    {
+      "name": "라스트 라이트",
+      "slug": "last-light",
+      "portrait": "assets/characters/last-light/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "여풍",
+      "slug": "yufeng",
+      "portrait": "assets/characters/yufeng/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "아델리아",
+      "slug": "adelia",
+      "portrait": "assets/characters/adelia/portrait.png",
+      "elementIcon": "assets/icons/elements/nature.png",
+      "roleIcon": "assets/icons/roles/supporter.png"
+    },
+    {
+      "name": "펠리카",
+      "slug": "perlica",
+      "portrait": "assets/characters/perlica/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/caster.png"
+    },
+    {
+      "name": "진천우",
+      "slug": "jintianyu",
+      "portrait": "assets/characters/jintianyu/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "울프가드",
+      "slug": "wolfguard",
+      "portrait": "assets/characters/wolfguard/portrait.png",
+      "elementIcon": "assets/icons/elements/heat.png",
+      "roleIcon": "assets/icons/roles/caster.png"
+    },
+    {
+      "name": "아크라이트",
+      "slug": "arclight",
+      "portrait": "assets/characters/arclight/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/vanguard.png"
+    },
+    {
+      "name": "자이히",
+      "slug": "xaihi",
+      "portrait": "assets/characters/xaihi/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/supporter.png"
+    },
+    {
+      "name": "알레쉬",
+      "slug": "alesh",
+      "portrait": "assets/characters/alesh/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/vanguard.png"
+    },
+    {
+      "name": "판",
+      "slug": "pan",
+      "portrait": "assets/characters/pan/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "아비웨나",
+      "slug": "avivenna",
+      "portrait": "assets/characters/avivenna/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/striker.png"
+    },
+    {
+      "name": "스노우샤인",
+      "slug": "snowshine",
+      "portrait": "assets/characters/snowshine/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/defender.png"
+    },
+    {
+      "name": "아케쿠리",
+      "slug": "akekuri",
+      "portrait": "assets/characters/akekuri/portrait.png",
+      "elementIcon": "assets/icons/elements/heat.png",
+      "roleIcon": "assets/icons/roles/vanguard.png"
+    },
+    {
+      "name": "에스텔라",
+      "slug": "estella",
+      "portrait": "assets/characters/estella/portrait.png",
+      "elementIcon": "assets/icons/elements/frost.png",
+      "roleIcon": "assets/icons/roles/guard.png"
+    },
+    {
+      "name": "카치르",
+      "slug": "kachir",
+      "portrait": "assets/characters/kachir/portrait.png",
+      "elementIcon": "assets/icons/elements/physical.png",
+      "roleIcon": "assets/icons/roles/defender.png"
+    },
+    {
+      "name": "플루라이트",
+      "slug": "fluorite",
+      "portrait": "assets/characters/fluorite/portrait.png",
+      "elementIcon": "assets/icons/elements/nature.png",
+      "roleIcon": "assets/icons/roles/caster.png"
+    },
+    {
+      "name": "안탈",
+      "slug": "antal",
+      "portrait": "assets/characters/antal/portrait.png",
+      "elementIcon": "assets/icons/elements/electric.png",
+      "roleIcon": "assets/icons/roles/supporter.png"
+    }
+  ]
+}

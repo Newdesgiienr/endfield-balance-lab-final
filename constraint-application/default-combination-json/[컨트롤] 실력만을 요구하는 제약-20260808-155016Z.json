@@ -1,0 +1,99 @@
+{
+  "schema": "endfield-constraint-combinations",
+  "version": 1,
+  "exportedAt": "2026-08-08T15:50:16.075Z",
+  "combinations": [
+    {
+      "id": "combo-1786082979598-ljscpx",
+      "name": "[컨트롤] 실력만을 요구하는 제약",
+      "totalScore": 19,
+      "selectedCount": 8,
+      "selectedIds": [
+        "2-15",
+        "2-14",
+        "2-2",
+        "2-6",
+        "3-7",
+        "2-8",
+        "3-11",
+        "3-13"
+      ],
+      "constraints": [
+        {
+          "id": "2-15",
+          "name": "조작: 독성 II",
+          "category": "조작",
+          "tier": 2,
+          "score": 2,
+          "effect": "처치 당한 적이 독성 물질을 남기고 오퍼레이터가 독성 물질의 범위에 있을 때, 매초마다 최대 생명력의 5% 피해를 입음",
+          "icon": "assets/icons/독성2.png"
+        },
+        {
+          "id": "2-14",
+          "name": "환경: 분리",
+          "category": "환경",
+          "tier": 2,
+          "score": 2,
+          "effect": "전투가 시작된 후 메인 컨트롤 오퍼레이터 전환 불가",
+          "icon": "assets/icons/분리.png"
+        },
+        {
+          "id": "2-2",
+          "name": "조작: 공격 II",
+          "category": "조작",
+          "tier": 2,
+          "score": 2,
+          "effect": "적이 주는 피해 +80%",
+          "icon": "assets/icons/공격2.png"
+        },
+        {
+          "id": "2-6",
+          "name": "팀: 참수 II",
+          "category": "팀",
+          "tier": 2,
+          "score": 2,
+          "effect": "메인 컨트롤 오퍼레이터가 받는 피해 +100%",
+          "icon": "assets/icons/참수2.png"
+        },
+        {
+          "id": "3-7",
+          "name": "환경: 속박",
+          "category": "환경",
+          "tier": 3,
+          "score": 3,
+          "effect": "회피 불가",
+          "icon": "assets/icons/속박.png"
+        },
+        {
+          "id": "2-8",
+          "name": "환경: 쇠퇴 II",
+          "category": "환경",
+          "tier": 2,
+          "score": 2,
+          "effect": "웨이브 사이에 치유 물질이 생성되지 않음",
+          "icon": "assets/icons/쇠퇴2.png"
+        },
+        {
+          "id": "3-11",
+          "name": "팀: 쇠약",
+          "category": "팀",
+          "tier": 3,
+          "score": 3,
+          "effect": "오퍼레이터가 받은 데미지의 일부 수치만큼 최대 생명력 감소(근거리오퍼:30%,원거리오퍼:50%)",
+          "icon": "assets/icons/쇠퇴.png"
+        },
+        {
+          "id": "3-13",
+          "name": "환경: 충격",
+          "category": "환경",
+          "tier": 3,
+          "score": 3,
+          "effect": "오퍼레이터 일반공격, 배틀스킬,연계스킬, 궁극기 이외의 피해 +100%, 배틀스킬 피해 -60%",
+          "icon": "assets/icons/충격.png"
+        }
+      ],
+      "createdAt": "2026-08-07T06:09:39.598Z",
+      "updatedAt": "2026-08-07T08:38:02.235Z"
+    }
+  ]
+}

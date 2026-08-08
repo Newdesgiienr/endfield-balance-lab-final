@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Endfield Balance Lab · 컨트롤 시간</title>
+  <meta name="description" content="파티와 스테이지 구성별 실전 추가 컨트롤 시간을 정렬형 정보 바와 웨이브 계산표로 확인하는 독립형 프로토타입" />
+  <link rel="stylesheet" href="../styles.css?v=109" />
+  <link rel="stylesheet" href="styles.css?v=10" />
+</head>
+<body class="control-time-page-body">
+<header class="app-topbar">
+  <div class="brand">
+    <a class="brand-mark" href="../index.html" aria-label="Endfield Balance Lab 파티 분석 페이지"><img class="site-brand-character" src="../assets/lab-brand-character.jpg" alt=""></a>
+    <div class="brand-copy">
+      <a class="brand-title" href="../index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+      <div class="brand-lower">
+        <small>엔드필드 위기 협약 데이터베이스</small>
+        <nav class="site-nav" aria-label="페이지 전환">
+          <a href="../glossary.html">용어 사전</a>
+          <a href="../characters.html">캐릭터</a>
+          <a href="../index.html">파티 분석</a>
+          <a href="../results.html">분석 결과</a>
+          <a href="../dungeon-monsters.html">스테이지 구성</a>
+          <a href="../constraints.html">제약 추천</a>
+          <a href="../constraint-board.html">제약 설계</a>
+          <a href="../constraint-balancing/index.html">제약 밸런싱</a>
+          <a href="index.html" class="active" aria-current="page">컨트롤 시간</a>
+          <a href="../constraint-application/index.html">제약 적용</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-shell control-time-shell">
+  <header class="page-heading control-time-heading">
+    <div>
+      <span>CONTROL TIME BOARD</span>
+      <h1>컨트롤 시간</h1>
+      <p>파티와 스테이지 구성을 선택해 웨이브별 패턴 대응·집결·재접근 시간을 확인하고, 기존 DPS 기준 클리어 시간에 더할 실전 추가 시간을 정리합니다.</p>
+    </div>
+  </header>
+  <details class="settings-strip card" id="settingsStrip">
+    <summary>
+      <div class="settings-strip-title">
+        <span class="eyebrow">ASSUMPTIONS</span>
+        <strong>계산 가정 조정</strong>
+        <small>평소에는 접어두고, 패턴 횟수 가정만 필요할 때 수정</small>
+      </div>
+      <div class="assumption-chip-row" id="assumptionChips"></div>
+      <span class="settings-toggle"><span class="closed">설정 열기</span><span class="opened">설정 닫기</span></span>
+    </summary>
+    <div class="settings-body">
+      <div class="setting-grid">
+        <article class="setting-item">
+          <div><strong>삼미 추가 패턴</strong><span>모든 주요 패턴 1회씩 이후 추가 발생</span></div>
+          <div class="stepper"><button type="button" data-adjust="heavyStingExtra" data-delta="-1">−</button><output id="heavyStingExtraValue">4회</output><button type="button" data-adjust="heavyStingExtra" data-delta="1">+</button></div>
+        </article>
+        <article class="setting-item">
+          <div><strong>조류 일반 연속공격</strong><span>다른 큰 패턴은 기본 1회씩 유지</span></div>
+          <div class="stepper"><button type="button" data-adjust="tidewalkerComboTotal" data-delta="-1">−</button><output id="tidewalkerComboTotalValue">3회</output><button type="button" data-adjust="tidewalkerComboTotal" data-delta="1">+</button></div>
+        </article>
+        <article class="setting-item">
+          <div><strong>강화형 α 추가 패턴</strong><span>HP 약 +50%를 고려한 추가 발생</span></div>
+          <div class="stepper"><button type="button" data-adjust="alphaExtraPatterns" data-delta="-1">−</button><output id="alphaExtraPatternsValue">2회</output><button type="button" data-adjust="alphaExtraPatterns" data-delta="1">+</button></div>
+        </article>
+      </div>
+      <div class="fixed-rules">
+        <b>고정 집결</b>
+        <span>W1 모방 아겔로스 · 수동 6초 / 질베르타 2.5초 / 미브 2초</span>
+        <span>W2 수정 아겔로스 · 5초</span>
+        <span>W3 쌍뿔 아겔로스 · 4.5초</span>
+        <span>W4 삼미 아겔로스+쌍뿔 아겔로스 · 5초</span>
+      </div>
+      <div class="assumption-list" id="monsterAssumptions"></div>
+    </div>
+  </details>
+
+  <!-- 스테이지를 파티보다 먼저 배치 -->
+  <section class="stage-board card">
+    <div class="board-title-row">
+      <div>
+        <span class="eyebrow">01 · STAGE</span>
+        <h1>스테이지 구성</h1>
+      </div>
+      <p>구성 1~3 중 하나를 선택하면 아래 웨이브 요약과 계산 결과가 즉시 갱신됩니다.</p>
+    </div>
+
+    <div class="stage-content">
+      <div class="composition-picker" id="compositionPicker"></div>
+
+      <div class="result-strip" aria-label="선택 결과 요약">
+        <div class="result-total">
+          <span>추가 컨트롤 시간</span>
+          <strong id="totalClock">—</strong>
+          <small id="totalContext">—</small>
+        </div>
+        <div class="wave-summary-grid" id="waveSummaryGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="party-board card">
+    <div class="board-title-row">
+      <div>
+        <span class="eyebrow">02 · PARTY</span>
+        <h1>파티 선택</h1>
+      </div>
+      <p>한 줄에 한 파티씩 정렬했습니다. 행 전체를 누르면 선택됩니다.</p>
+    </div>
+
+    <div class="party-table" aria-label="파티 목록">
+      <div class="party-table-head" aria-hidden="true">
+        <span>멤버</span><span>파티</span><span>DPS</span><span>사이클</span><span>집결 방식</span><span></span>
+      </div>
+      <div class="party-picker" id="partyPicker"></div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">03 · WAVE BREAKDOWN</span>
+        <h2>웨이브별 계산</h2>
+      </div>
+    </div>
+
+    <div class="wave-table-labels" aria-hidden="true">
+      <span>웨이브</span>
+      <span>몬스터</span>
+      <span>구간</span>
+      <span class="metric-head">패턴</span>
+      <span class="metric-head">집결</span>
+      <span class="metric-head">중첩</span>
+      <span class="metric-head total">합계</span>
+      <span></span>
+    </div>
+    <div class="wave-stack" id="waveStack"></div>
+  </section>
+
+  <section class="section-block secondary-section">
+    <details class="compare-card card">
+      <summary>
+        <div><span class="eyebrow">04 · PARTY COMPARISON</span><strong>전체 파티 비교</strong><small>현재 선택한 구성에서 7개 파티의 추가 컨트롤 시간을 한 줄씩 비교</small></div>
+        <span class="fold-label"><span class="closed">펼치기</span><span class="opened">접기</span></span>
+      </summary>
+      <div class="compare-body" id="partyComparison"></div>
+    </details>
+  </section>
+
+  <footer class="formula-card card">
+    <span class="eyebrow">FINAL FORMULA</span>
+    <b>실전 예상 클리어 시간 = 기존 DPS 기준 클리어 시간 + 웨이브 대기시간 + 추가 컨트롤 시간</b>
+    <p><strong>웨이브 대기시간</strong>은 기존 V2.0의 전체 15초 값을 뜻하며, 이 페이지는 마지막 항목인 <strong>추가 컨트롤 시간</strong>만 계산합니다.</p>
+  </footer>
+</main>
+
+<script src="data.js?v=10"></script>
+<script src="app.js?v=10"></script>
+</body>
+</html>

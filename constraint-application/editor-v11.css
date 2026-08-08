@@ -1,0 +1,58 @@
+/* V11: 배치 조작 헤더 카드 통일 + 빈 구성 기본값 대응 */
+.grid-command-card{
+  margin:12px 16px 0;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 4px 14px rgba(27,34,43,.045);
+  overflow:hidden;
+}
+.grid-command-card .placement-title{
+  min-height:74px;
+  padding:13px 16px;
+  border-bottom:1px solid var(--border);
+  background:#fff;
+}
+.grid-command-card .placement-title h2{
+  margin:0;
+  font-size:20px;
+  line-height:1.25;
+}
+.grid-command-card .grid-help{
+  min-height:48px;
+  padding:9px 16px;
+  border-bottom:0;
+  background:#f7f8fa;
+}
+/* 위 카드들과 배치 격자 좌우 기준선을 동일하게 맞춘다. */
+.placement-panel>.battle-grid-shell{
+  margin:10px 16px 0;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+.placement-panel>.placement-inspector{
+  margin:0 16px 16px;
+  border:1px solid var(--border);
+  border-top:0;
+  border-radius:0 0 14px 14px;
+}
+/* 비어 있는 웨이브 안내도 카드 내부에서 안정적으로 보이게 한다. */
+.compact-roster-panel .delta-none{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+@media(max-width:760px){
+  .grid-command-card,
+  .placement-panel>.battle-grid-shell,
+  .placement-panel>.placement-inspector{
+    margin-left:10px;
+    margin-right:10px;
+  }
+  .grid-command-card .placement-title{
+    align-items:flex-start;
+  }
+}

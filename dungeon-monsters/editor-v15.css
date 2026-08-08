@@ -1,0 +1,127 @@
+/* V120
+   1) 스테이지 구성 페이지의 제목 계층을 분석 결과 페이지와 동일하게 유지한다.
+   2) 설명 문구는 데스크톱과 모바일에서 줄바꿈하지 않는다.
+   3) 구성 탭 레이아웃과 총체력 글자 크기는 그대로 유지한다.
+*/
+
+/* 분석 결과 페이지(.page-heading)의 실제 폰트 규칙과 동일한 크기 */
+.enemy-head .workspace-kicker{
+  margin:0;
+  color:var(--accent);
+  font-size:14px;
+  font-weight:950;
+  letter-spacing:.14em;
+  line-height:1.2;
+}
+
+.enemy-head .enemy-title-row{
+  display:block;
+}
+
+.enemy-head .enemy-title-row h1{
+  margin:4px 0 6px;
+  color:var(--text);
+  font-size:40px;
+  font-weight:900;
+  line-height:1.15;
+  letter-spacing:-.045em;
+}
+
+.enemy-head > div > p{
+  max-width:none;
+  margin:0;
+  color:#66717d;
+  font-size:15px;
+  line-height:1.5;
+  white-space:nowrap!important;
+}
+
+/* 구성 탭의 총체력 문구와 숫자를 웨이브 카드 총 HP 숫자(20px)와 같은 크기로 표시한다.
+   탭 자체의 높이, 패딩, 폭과 외곽선은 기존 규칙을 그대로 사용한다. */
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main{
+  display:flex!important;
+  align-items:center;
+  justify-content:flex-start;
+  gap:18px;
+  width:100%;
+  min-width:0;
+  height:100%;
+  margin:0;
+  white-space:nowrap;
+  text-align:left;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy{
+  display:flex;
+  flex:0 0 auto;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  min-width:64px;
+  line-height:1;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy > small{
+  display:block;
+  margin:0 0 5px!important;
+  color:#6d7884;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-.02em;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy > b{
+  display:block;
+  margin:0;
+  color:inherit;
+  font-size:21px;
+  font-weight:950;
+  line-height:1;
+  letter-spacing:-.035em;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em{
+  display:block;
+  flex:0 1 auto;
+  min-width:0;
+  margin:0;
+  overflow:hidden;
+  align-self:center;
+  color:#65717e;
+  font-size:20px;
+  font-style:normal;
+  font-weight:950;
+  line-height:1.1;
+  text-overflow:ellipsis;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em strong{
+  color:#293746;
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:-.025em;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab.active .composition-tab-copy > small{
+  color:#5c6773;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab.active .composition-tab-main > em{
+  color:#4f5d6b;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab.active .composition-tab-main > em strong{
+  color:#17232e;
+}
+
+@media (max-width:760px){
+  .enemy-head .enemy-title-row h1{font-size:34px;}
+  .enemy-head > div > p{font-size:14px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main{gap:14px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy{min-width:60px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy > small{font-size:12px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-copy > b{font-size:19px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em{font-size:16px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em strong{font-size:16px;}
+}

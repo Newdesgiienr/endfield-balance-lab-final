@@ -1,0 +1,14 @@
+ENDFIELD BALANCE LAB · GitHub Pages 배포 점검
+
+- index.html이 ZIP/저장소 최상단에 있음
+- .nojekyll 포함
+- 캐릭터 초상화 31종 로컬 포함
+- 속성 아이콘 5종 로컬 포함
+- 역할군 아이콘 6종 로컬 포함
+- 사이트에 표시되는 캐릭터 28명 모두 로컬 초상화 매핑 완료
+- 외부 SKPORT 이미지 URL 없음
+- data:image 인라인 이미지 없음
+- JavaScript 문법 검사 완료
+- HTML 내부 로컬 파일 참조 검사 완료
+
+GitHub 업로드 시 이 폴더 안의 파일과 폴더 전체를 저장소 최상단에 올리세요.

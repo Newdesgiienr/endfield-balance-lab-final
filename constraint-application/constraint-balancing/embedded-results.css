@@ -1,0 +1,591 @@
+html.embed-results,
+body.embed-results {
+  min-height: 0 !important;
+  margin: 0 !important;
+  background: #eef2f6 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+body.embed-results > *:not(#embedded-party-results-root) {
+  display: none !important;
+}
+
+#embedded-party-results-root {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 14px;
+  background: #eef2f6;
+}
+
+#embedded-party-results-root .constraint-party-stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 0;
+}
+
+#embedded-party-results-root .constraint-party-fold {
+  margin: 0;
+}
+
+#embedded-party-results-root .party-result-bar {
+  margin-top: 0;
+}
+
+/* 원본의 펼치기 버튼·안내·상세 분석 영역을 그대로 표시합니다. */
+#embedded-party-results-root .constraint-party-detail-body {
+  display: block;
+}
+
+#embedded-party-results-root .constraint-party-fold:not([open]) > .constraint-party-detail-body {
+  display: none;
+}
+
+#embedded-party-results-root .result-click-hint,
+#embedded-party-results-root .result-action-cell {
+  display: flex;
+}
+
+#embedded-party-results-root .combo-party-result {
+  box-shadow: 0 7px 18px rgba(38, 54, 76, .08);
+}
+
+/* 좁은 화면에서는 결과 바 전체가 잘리지 않고 세로로 재배치됩니다. */
+@media (max-width: 1500px) {
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: minmax(260px, 1.2fr) repeat(3, minmax(120px, .72fr));
+  }
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    grid-column: 1 / -1;
+    min-height: 58px;
+    border-left: 0;
+    border-top: 1px solid #dce1f6;
+  }
+}
+
+@media (max-width: 980px) {
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  #embedded-party-results-root .combo-party-result .result-party-id,
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  #embedded-party-results-root {
+    padding: 10px;
+  }
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: 1fr;
+  }
+  #embedded-party-results-root .combo-party-result .result-party-id,
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    grid-column: auto;
+  }
+  #embedded-party-results-root .result-metric {
+    border-left: 0 !important;
+    border-top: 1px solid var(--line);
+  }
+}
+
+
+/* V4: iframe 안에서 파티 결과 자체를 세로 스크롤할 수 있게 고정합니다. */
+html.embed-results {
+  height: 100% !important;
+}
+body.embed-results {
+  height: 100% !important;
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable;
+}
+
+/* V5 · 파티 결과 정보 바 크기와 기준선을 모든 파티에서 동일하게 고정 */
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+  width: 100% !important;
+  height: 104px !important;
+  min-height: 104px !important;
+  max-height: 104px !important;
+  grid-template-columns: minmax(400px, 1.7fr) repeat(6, minmax(145px, 1fr)) 164px !important;
+  align-items: stretch !important;
+  box-sizing: border-box !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id,
+#embedded-party-results-root .combo-party-result .result-metric,
+#embedded-party-results-root .combo-party-result .result-action-cell {
+  height: 102px !important;
+  min-height: 102px !important;
+  max-height: 102px !important;
+  box-sizing: border-box !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id {
+  display: grid !important;
+  grid-template-columns: 128px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 12px 18px !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits {
+  width: 128px !important;
+  min-width: 128px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  overflow: visible !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits img {
+  flex: 0 0 35px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id > div:last-child {
+  min-width: 0 !important;
+  height: 78px !important;
+  display: grid !important;
+  grid-template-rows: 52px 18px !important;
+  align-content: center !important;
+  gap: 2px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id b {
+  min-width: 0 !important;
+  height: 52px !important;
+  display: -webkit-box !important;
+  align-content: center !important;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+  word-break: keep-all !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-click-hint {
+  height: 18px !important;
+  align-items: center !important;
+  margin: 0 !important;
+  line-height: 18px !important;
+  white-space: nowrap !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-metric {
+  display: grid !important;
+  grid-template-rows: 18px 31px !important;
+  align-content: center !important;
+  justify-content: stretch !important;
+  gap: 5px !important;
+  padding: 14px 17px !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-metric span,
+#embedded-party-results-root .combo-party-result .result-metric b {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-metric span {
+  height: 18px !important;
+  font-size: 13px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-metric b {
+  height: 31px !important;
+  font-size: 20px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-action-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 10px !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-fold-action {
+  width: 146px !important;
+  min-width: 146px !important;
+  max-width: 146px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* 중간 폭에서는 고정 열을 유지하고 결과 영역 안에 가로 스크롤을 제공합니다. */
+@media (max-width: 1500px) and (min-width: 981px) {
+  #embedded-party-results-root .constraint-party-stack {
+    min-width: 1460px !important;
+  }
+  #embedded-party-results-root {
+    overflow-x: auto !important;
+  }
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: 400px repeat(6, 145px) 164px !important;
+  }
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    grid-column: auto !important;
+    border-left: 1px solid #dce1f6 !important;
+    border-top: 0 !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+  #embedded-party-results-root .combo-party-result .result-party-id,
+  #embedded-party-results-root .combo-party-result .result-metric,
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    height: auto !important;
+    min-height: 82px !important;
+    max-height: none !important;
+  }
+}
+
+/* V6 · 파티명 아래 안내 문구와 노란 하이라이트의 폭·기준선을 정확히 일치 */
+#embedded-party-results-root .combo-party-result .result-click-hint {
+  display: inline-flex !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  justify-self: start !important;
+  align-self: start !important;
+  align-items: center !important;
+  padding: 0 3px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-click-hint::before {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 1px !important;
+  height: 58% !important;
+  transform: none !important;
+}
+
+/* V7 · 결과 카드 좌우 여백과 파티 정보 기준선을 통일합니다. */
+#embedded-party-results-root {
+  width: min(100%, 1760px) !important;
+  margin: 0 auto !important;
+  padding: 24px clamp(24px, 2.4vw, 44px) 30px !important;
+}
+
+#embedded-party-results-root .constraint-party-stack {
+  width: 100% !important;
+  gap: 13px !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+  height: 116px !important;
+  min-height: 116px !important;
+  max-height: 116px !important;
+  grid-template-columns: minmax(430px, 1.8fr) repeat(6, minmax(142px, .95fr)) 164px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id,
+#embedded-party-results-root .combo-party-result .result-metric,
+#embedded-party-results-root .combo-party-result .result-action-cell {
+  height: 114px !important;
+  min-height: 114px !important;
+  max-height: 114px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id {
+  grid-template-columns: 126px minmax(0, 1fr) !important;
+  gap: 16px !important;
+  padding: 13px 22px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits {
+  width: 126px !important;
+  min-width: 126px !important;
+  justify-content: flex-start !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id > div:last-child {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 88px !important;
+  display: grid !important;
+  grid-template-rows: 62px 20px !important;
+  align-content: center !important;
+  align-items: stretch !important;
+  gap: 4px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id b {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 62px !important;
+  min-height: 62px !important;
+  display: -webkit-box !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  font-size: 16px !important;
+  line-height: 1.62 !important;
+  word-break: keep-all !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-click-hint {
+  position: relative !important;
+  z-index: 0 !important;
+  width: 124px !important;
+  min-width: 124px !important;
+  max-width: 124px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  justify-self: start !important;
+  align-self: end !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 20px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-click-hint::before {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 1px !important;
+  width: 124px !important;
+  height: 11px !important;
+  border-radius: 2px !important;
+  transform: none !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-metric {
+  grid-template-rows: 19px 33px !important;
+  gap: 7px !important;
+  padding: 16px 18px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-action-cell {
+  padding: 0 12px !important;
+}
+
+/* 중간 폭에서도 같은 카드 기준선을 유지하고, 필요한 경우 결과 영역만 가로 스크롤합니다. */
+@media (max-width: 1500px) and (min-width: 981px) {
+  #embedded-party-results-root {
+    width: 100% !important;
+    padding-inline: 26px !important;
+  }
+  #embedded-party-results-root .constraint-party-stack {
+    min-width: 1510px !important;
+  }
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: 430px repeat(6, 142px) 164px !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #embedded-party-results-root {
+    width: 100% !important;
+    padding: 18px 16px 24px !important;
+  }
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar,
+  #embedded-party-results-root .combo-party-result .result-party-id,
+  #embedded-party-results-root .combo-party-result .result-metric,
+  #embedded-party-results-root .combo-party-result .result-action-cell {
+    height: auto !important;
+    min-height: 86px !important;
+    max-height: none !important;
+  }
+  #embedded-party-results-root .combo-party-result .result-party-id > div:last-child {
+    height: auto !important;
+    min-height: 82px !important;
+  }
+}
+
+
+/* V9 · 결과 iframe 내부 여백 유지 + 초상화 확대 + 파티명 한 줄 정렬 */
+#embedded-party-results-root {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 14px 0 26px !important;
+}
+
+#embedded-party-results-root .constraint-party-stack {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+  grid-template-columns: minmax(620px, 2.5fr) repeat(6, minmax(136px, .9fr)) 156px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id {
+  display: flex !important;
+  gap: 16px !important;
+  height: 102px !important;
+  min-height: 102px !important;
+  max-height: 102px !important;
+  padding: 0 20px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits {
+  width: 132px !important;
+  min-width: 132px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits img {
+  width: 40px !important;
+  height: 40px !important;
+  flex: 0 0 40px !important;
+  margin-left: -8px !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-portraits img:first-child {
+  margin-left: 0 !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id > div:last-child {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-result .result-party-id b {
+  width: 100% !important;
+  margin: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 15px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+  word-break: keep-all !important;
+  text-align: left !important;
+}
+
+/* 안내 문구와 노란 하이라이트는 완전히 제거합니다. */
+#embedded-party-results-root .result-click-hint {
+  display: none !important;
+}
+
+@media (max-width: 1500px) and (min-width: 981px) {
+  #embedded-party-results-root {
+    width: 100% !important;
+    padding-inline: 0 !important;
+  }
+  #embedded-party-results-root .constraint-party-stack {
+    min-width: 1590px !important;
+  }
+  #embedded-party-results-root .combo-party-stack .constraint-party-fold > .party-result-bar {
+    grid-template-columns: 620px repeat(6, 136px) 156px !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #embedded-party-results-root {
+    width: 100% !important;
+    padding: 10px 0 20px !important;
+  }
+}
+
+
+/* V13 · 파티 정보 바 전체 높이를 기준으로 초상화와 파티명을 정확히 세로 중앙 정렬 */
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result {
+  position: relative !important;
+  height: 104px !important;
+  min-height: 104px !important;
+  max-height: 104px !important;
+  align-items: stretch !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result > .result-party-id {
+  position: relative !important;
+  display: block !important;
+  height: 102px !important;
+  min-height: 102px !important;
+  max-height: 102px !important;
+  padding: 0 20px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result > .result-party-id > .result-portraits {
+  position: absolute !important;
+  left: 20px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 132px !important;
+  min-width: 132px !important;
+  height: 44px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result > .result-party-id > div:last-child {
+  position: absolute !important;
+  left: 168px !important;
+  right: 20px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result > .result-party-id > div:last-child > b {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: left !important;
+}
+
+
+/* Integrated V9 · 기존 글자 크기/정렬 유지, 컨트롤 시간 열만 추가 */
+#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result{grid-template-columns:minmax(620px,2.5fr) repeat(7,minmax(136px,.9fr)) 156px !important;}
+@media(max-width:1500px) and (min-width:981px){#embedded-party-results-root .constraint-party-stack{min-width:1728px !important;}#embedded-party-results-root .combo-party-stack .constraint-party-fold > summary.party-result-bar.combo-party-result{grid-template-columns:620px repeat(7,136px) 156px !important;}}

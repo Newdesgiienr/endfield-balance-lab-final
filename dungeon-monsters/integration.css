@@ -1,0 +1,254 @@
+/* V108: Endfield Balance Lab shared light header for the stage enemy editor. */
+:root{
+  --lab-header-height:72px;
+  --lab-page:#eef1f5;
+  --lab-surface-soft:#f7f8fa;
+  --lab-navy:#1b2430;
+  --lab-border:#d8dee6;
+  --lab-text:#18202a;
+  --lab-muted:#7d8793;
+  --lab-accent:#d7553e;
+}
+body.dungeon-monster-page{
+  overflow:hidden;
+  background:var(--lab-page);
+}
+.lab-site-header{
+  position:relative;
+  z-index:1200;
+  display:flex;
+  align-items:center;
+  height:var(--lab-header-height);
+  padding:0 30px;
+  border-bottom:1px solid var(--lab-border);
+  background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  box-shadow:0 3px 15px rgba(28,38,49,.06);
+  color:var(--lab-text);
+}
+.lab-site-brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-width:0;
+  width:100%;
+}
+.lab-brand-mark{
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:var(--lab-navy);
+  color:#fff;
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.06em;
+  line-height:1;
+  text-decoration:none;
+}
+.lab-brand-copy{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.lab-brand-title{
+  display:block;
+  width:fit-content;
+  color:var(--lab-text);
+  line-height:1;
+  text-decoration:none;
+}
+.lab-brand-title strong{
+  display:block;
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.lab-brand-lower{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  margin-top:6px;
+}
+.lab-brand-lower>small{
+  flex:0 0 auto;
+  margin:0;
+  color:var(--lab-muted);
+  font-size:13px;
+  font-weight:650;
+  line-height:1.35;
+  white-space:nowrap;
+}
+.lab-site-nav{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  overflow-x:auto;
+  padding:0 0 2px;
+  scrollbar-width:thin;
+}
+.lab-site-nav a{
+  flex:0 0 auto;
+  padding:4px 9px;
+  border:1px solid var(--lab-border);
+  border-radius:7px;
+  background:var(--lab-surface-soft);
+  color:#66717d;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.35;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.lab-site-nav a:hover{
+  border-color:var(--lab-accent);
+  background:#fff;
+  color:var(--lab-accent);
+}
+.lab-site-nav a.active{
+  border-color:var(--lab-accent);
+  background:var(--lab-accent);
+  color:#fff;
+  box-shadow:0 3px 9px rgba(215,85,62,.18);
+}
+.app-stage{
+  height:calc(100vh - var(--lab-header-height)) !important;
+  overflow:hidden !important;
+}
+#simulator-view,#catalog-view{display:none !important;}
+#enemy-view{display:block !important;}
+.info-workspace::before,.enemy-workspace::before{inset:var(--lab-header-height) 0 0 !important;}
+
+@media (max-width:980px){
+  :root{--lab-header-height:90px;}
+  .lab-site-header{
+    height:var(--lab-header-height);
+    padding:9px 16px;
+  }
+  .lab-site-brand{align-items:center;}
+  .lab-brand-copy{width:calc(100% - 55px);}
+  .lab-brand-lower{min-width:0;}
+  .lab-site-nav{max-width:calc(100vw - 100px);}
+}
+@media (max-width:760px){
+  .lab-brand-lower{gap:7px;}
+  .lab-brand-lower>small{display:none;}
+  .lab-site-nav{max-width:calc(100vw - 90px);}
+  .lab-site-nav a{padding:5px 8px;font-size:11px;}
+}
+@media (max-width:460px){
+  :root{--lab-header-height:86px;}
+  .lab-site-header{padding-inline:12px;}
+  .lab-site-brand{gap:9px;}
+  .lab-brand-title strong{font-size:13px;}
+  .lab-site-nav{gap:3px;max-width:calc(100vw - 76px);}
+  .lab-site-nav a{padding:4px 6px;}
+}
+
+/* V109: match the Party Analysis brand position and typography exactly. */
+.lab-site-header {
+  height: 72px;
+  min-height: 72px;
+  padding: 0 30px;
+}
+.lab-site-brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-width: 0;
+}
+.lab-brand-mark {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+}
+.lab-brand-copy {
+  display: grid;
+  grid-template-rows: 27px 27px;
+  align-content: center;
+  width: auto;
+  height: 54px;
+  min-width: 0;
+}
+.lab-brand-title {
+  display: block;
+  align-self: stretch;
+  width: fit-content;
+  height: 27px;
+  margin: 0;
+  line-height: 27px;
+}
+.lab-brand-title strong {
+  display: block;
+  margin: 0;
+  font-size: 16px;
+  line-height: 27px;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.lab-brand-lower {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 12px;
+  height: 27px;
+  min-width: 0;
+  margin: 0;
+}
+.lab-brand-lower > small {
+  display: block;
+  flex: 0 0 auto;
+  height: 27px;
+  margin: 0;
+  color: #7d8793;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 27px;
+  white-space: nowrap;
+}
+.app-stage {
+  height: calc(100vh - 72px) !important;
+}
+.info-workspace::before,
+.enemy-workspace::before {
+  inset: 72px 0 0 !important;
+}
+
+@media (max-width: 980px) {
+  .lab-site-header {
+    height: auto;
+    min-height: 72px;
+    padding: 9px 16px;
+  }
+  .lab-brand-copy {
+    width: calc(100% - 55px);
+  }
+  .app-stage {
+    height: calc(100vh - 90px) !important;
+  }
+  .info-workspace::before,
+  .enemy-workspace::before {
+    inset: 90px 0 0 !important;
+  }
+}
+@media (max-width: 760px) {
+  .lab-brand-lower > small { display: none; }
+}
+@media (max-width: 460px) {
+  .lab-brand-title strong { font-size: 13px; }
+  .app-stage { height: calc(100vh - 86px) !important; }
+  .info-workspace::before,
+  .enemy-workspace::before { inset: 86px 0 0 !important; }
+}
+
+
+/* V10 · shared character logo */
+.lab-brand-mark{overflow:hidden;padding:0;}
+.lab-brand-mark .site-brand-character{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;}

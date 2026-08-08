@@ -1,0 +1,5 @@
+v62
+- Added two bundled party analyses:
+  1. 레바테인 · 울프가드 · 아케쿠리 · 아델리아
+  2. 장방이 · 펠리카 · 아크라이트 · 안탈
+- Updated saved-analyses.js cache version to v62.

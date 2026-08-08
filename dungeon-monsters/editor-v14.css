@@ -1,0 +1,86 @@
+/* V115: fixed +30% monster HP, analysis-results heading scale, and composition total HP labels. */
+
+/* Match the analysis-results page heading hierarchy. */
+.enemy-head .workspace-kicker{
+  margin-bottom:4px;
+  color:var(--accent);
+  font-size:14px;
+  font-weight:950;
+  letter-spacing:.14em;
+  line-height:1.2;
+}
+
+.enemy-head .enemy-title-row{
+  display:block;
+}
+
+.enemy-head .enemy-title-row h1{
+  margin:0 0 6px;
+  color:var(--text);
+  font-size:40px;
+  font-weight:900;
+  line-height:1.15;
+  letter-spacing:-.045em;
+}
+
+.enemy-head > div > p{
+  max-width:780px;
+  margin:0;
+  color:#66717d;
+  font-size:15px;
+  line-height:1.5;
+}
+
+/* Keep title and total HP on one compact line inside each bookmark tab. */
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main{
+  display:flex!important;
+  align-items:baseline;
+  gap:10px;
+  width:100%;
+  min-width:0;
+  margin:0;
+  white-space:nowrap;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > b{
+  flex:0 0 auto;
+  color:inherit;
+  font:inherit;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em{
+  min-width:0;
+  overflow:hidden;
+  color:#697583;
+  font-size:12px;
+  font-style:normal;
+  font-weight:800;
+  line-height:1;
+  text-overflow:ellipsis;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em strong{
+  color:#334252;
+  font-size:13px;
+  font-weight:950;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab.active .composition-tab-main > em{
+  color:#566474;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab.active .composition-tab-main > em strong{
+  color:#1d2935;
+}
+
+.placement-setup-v8 .composition-bookmarks .composition-tab small{
+  margin-top:4px!important;
+}
+
+@media (max-width:760px){
+  .enemy-head .enemy-title-row h1{font-size:34px;}
+  .enemy-head > div > p{font-size:14px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main{gap:8px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em{font-size:11px;}
+  .placement-setup-v8 .composition-bookmarks .composition-tab .composition-tab-main > em strong{font-size:12px;}
+}

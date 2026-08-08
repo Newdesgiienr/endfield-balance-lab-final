@@ -1,0 +1,5 @@
+v64 분석 결과 번들 업데이트
+
+- 신규 파티 분석 5종을 saved-analyses.js에 추가했습니다.
+- 분석 결과 페이지와 제약 추천 페이지에서 신규 자료를 자동으로 읽습니다.
+- party.html, results.html, constraints.html의 번들 캐시 버전을 v64로 갱신했습니다.

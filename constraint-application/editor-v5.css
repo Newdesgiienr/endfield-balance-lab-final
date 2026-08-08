@@ -1,0 +1,78 @@
+/* V5: 정확한 연속 사거리, 웨이브 명칭 정리, 분석 패널 세로 배치 */
+
+/* 상단 기준 스탯 배지는 제거되므로 헤더는 본문만 자연스럽게 사용 */
+.enemy-head{justify-content:flex-start;}
+
+/* 현재 웨이브 / 구성 변화는 각각 한 줄 전체 폭 */
+.pregrid-analysis{
+  grid-template-columns:1fr!important;
+  gap:10px;
+}
+.pregrid-analysis .wave-roster-panel,
+.pregrid-analysis .compare-panel{
+  width:100%;
+}
+.pregrid-analysis .composition-delta{
+  max-height:none!important;
+  overflow:visible!important;
+}
+.pregrid-analysis .delta-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:8px;
+}
+
+/* 사거리는 셀 단위 반올림 대신 연속형 원으로 표현 */
+.battle-grid{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.battle-cell{
+  z-index:0;
+}
+.battle-cell.in-attack-range{
+  background:#f7f9fb!important;
+}
+.battle-cell.range-origin{
+  background:#fff4f5;
+  box-shadow:inset 0 0 0 2px rgba(201,47,58,.34);
+}
+.attack-range-overlay{
+  position:absolute;
+  z-index:1;
+  transform:translate(-50%,-50%);
+  border:2px solid rgba(218,48,62,.78);
+  border-radius:50%;
+  background:rgba(237,72,85,.14);
+  box-shadow:0 0 0 1px rgba(255,255,255,.72) inset,0 6px 22px rgba(197,42,55,.12);
+  pointer-events:none;
+}
+.attack-range-overlay::after{
+  content:attr(data-range-label);
+  position:absolute;
+  left:50%;
+  top:8px;
+  transform:translateX(-50%);
+  padding:3px 7px;
+  border-radius:999px;
+  background:rgba(167,30,42,.9);
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+  box-shadow:0 2px 7px rgba(86,17,23,.2);
+}
+.grid-monster-token{z-index:3;}
+.grid-help strong{color:#b32935;}
+
+/* 큰 화면에서도 분석 카드가 좌우로 갈라지지 않도록 고정 */
+@media(max-width:1450px){
+  .pregrid-analysis{grid-template-columns:1fr!important;}
+  .pregrid-analysis .composition-delta{max-height:none!important;}
+}
+
+@media(max-width:760px){
+  .pregrid-analysis .delta-list{grid-template-columns:1fr;}
+}

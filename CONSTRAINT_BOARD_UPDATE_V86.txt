@@ -1,0 +1,6 @@
+Endfield Balance Lab - Constraint Board V86
+
+- 일반 클릭 총점 반영과 점멸 효과를 대기 없이 즉시 실행
+- 빠른 세 번 클릭 시 최초 클릭 전 총점 상태 복구 후 시너지 연결
+- 충돌 오버레이 검은 배경의 투명도를 높여 원래 제약 마크 가시성 개선
+- constraint-board.css 및 constraint-board.js 캐시 버전 V86 적용

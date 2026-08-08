@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>엔드필드 제약 밸런싱</title>
+<meta content="원본 파티와 스테이지 기준 데이터에 개별 제약 또는 선택한 제약 조합을 적용해 종합 영향을 비교하는 독립형 제약 밸런싱 사이트" name="description"/>
+<link href="styles.css?v=156" rel="stylesheet"/>
+<link href="integration-nav.css?v=10" rel="stylesheet"/>
+<link href="embedded-results.css?v=8" rel="stylesheet"/>
+</head>
+<body>
+<header class="app-topbar integrated-site-topbar">
+  <div class="integrated-site-brand">
+    <a class="integrated-brand-mark" href="../index.html" aria-label="Endfield Balance Lab 파티 분석 페이지"><img class="site-brand-character" src="../../assets/lab-brand-character.jpg" alt=""></a>
+    <div class="integrated-brand-copy">
+      <a class="integrated-brand-title" href="../index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+      <div class="integrated-brand-lower">
+        <small>엔드필드 위기 협약 데이터베이스</small>
+        <nav class="integrated-site-nav" aria-label="페이지 전환">
+          <a href="../glossary.html">용어 사전</a>
+          <a href="../characters.html">캐릭터</a>
+          <a href="../index.html">파티 분석</a>
+          <a href="../results.html">분석 결과</a>
+          <a href="../dungeon-monsters.html">스테이지 구성</a>
+          <a href="../constraints.html">제약 추천</a>
+          <a href="../constraint-board.html">제약 설계</a>
+          <a href="index.html" class="active" aria-current="page">제약 밸런싱</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="page-shell" id="top">
+<section class="page-heading hero-heading archive-style-heading">
+<div>
+<span>CONSTRAINT BALANCING LAB</span>
+<h1>제약 밸런싱</h1>
+<p>원본 파티와 스테이지 기준값을 바탕으로 개별 제약과 선택한 제약 조합의 영향을 비교합니다.</p>
+</div>
+<div class="balance-storage-actions" aria-label="제약 밸런싱 저장 관리">
+<button class="balance-save-button" id="balanceSaveButton" type="button">제약 밸런싱 저장</button>
+<button class="balance-history-button" id="balanceHistoryButton" type="button" aria-controls="balanceHistoryModal" aria-expanded="false">이전 밸런싱 불러오기</button>
+</div>
+</section>
+<div class="balance-history-modal" id="balanceHistoryModal" hidden>
+<div class="balance-history-dialog" role="dialog" aria-modal="true" aria-labelledby="balanceHistoryTitle">
+<header><div><span>SAVED BALANCING</span><h2 id="balanceHistoryTitle">이전 밸런싱 불러오기</h2><p>저장된 버전을 선택하면 모든 제약 설정값을 해당 상태로 복원합니다.</p></div><button type="button" class="balance-history-close" id="balanceHistoryClose" aria-label="닫기">×</button></header>
+<div class="balance-history-list" id="balanceHistoryList"></div>
+</div>
+</div>
+<div class="balance-save-toast" id="balanceSaveToast" role="status" aria-live="polite" hidden></div>
+<section class="section-block" id="party">
+<details class="section-group-details" id="partyGroupDetails">
+<summary class="section-heading section-group-summary">
+<div class="section-title-copy"><span>01 · BASE PARTY</span><h2>원본 파티 분석</h2><p>제약 적용 전 일곱 파티의 구성과 행동 기록입니다.</p></div>
+<span class="fold-action section-group-action"><b class="closed-label">파티 정보 펼치기</b><b class="open-label">파티 정보 접기</b></span>
+</summary>
+<div class="multi-party-list section-group-body" id="partyList"></div>
+</details>
+</section>
+<section class="section-block" id="stage"><details class="section-group-details stage-group-details" id="stageGroupDetails"><summary class="section-heading section-group-summary stage-group-summary">
+<div class="section-title-copy"><span>02 · STAGE SNAPSHOT</span><h2>스테이지 기준 데이터</h2><p>구성 1의 기준 배치와 지정 웨이브 몬스터 강화 [1]·[2]를 적용한 구성 2·3을 함께 비교합니다.</p></div>
+<span class="fold-action section-group-action"><b class="closed-label">스테이지 정보 펼치기</b><b class="open-label">스테이지 정보 접기</b></span></summary><div class="section-group-body stage-group-body"><details class="fold-card card" id="stageDetails">
+<summary class="stage-fold-summary">
+<div><span>현재 분석 스테이지</span><b id="stageTitle">구성 1 · 기준 구성</b></div>
+<div class="summary-metrics stage-summary-compact" id="stageSummary"></div>
+<span class="fold-action"><b class="closed-label">스테이지 기준 펼치기</b><b class="open-label">스테이지 기준 접기</b></span>
+</summary>
+<div class="fold-body">
+<div class="wave-grid" id="waveGrid"></div>
+<details class="inner-card stage-details">
+<summary><span><b>배치 몬스터 원본 스펙</b><small>HP · ATK · DEF · 강인도 · 등장 차수</small></span><strong>펼치기</strong></summary>
+<div class="monster-spec-grid" id="monsterSpecGrid"></div>
+</details>
+</div>
+</details><details class="fold-card card stage-composition-card" id="stageDetailsEnhance1">
+<summary class="stage-fold-summary">
+<div><span>강화 [1] 적용 스테이지</span><b>구성 2 · 강화 [1]</b></div>
+<div class="summary-metrics stage-summary-compact" id="stageSummaryEnhance1"></div>
+<span class="fold-action"><b class="closed-label">스테이지 기준 펼치기</b><b class="open-label">스테이지 기준 접기</b></span>
+</summary>
+<div class="fold-body">
+<div class="wave-grid" id="waveGridEnhance1"></div>
+<details class="inner-card stage-details">
+<summary><span><b>강화 [1] 적용 몬스터 스펙</b><small>지정 개체 HP 50% 증가 · 알파 개체 표시</small></span><strong>펼치기</strong></summary>
+<div class="monster-spec-grid" id="monsterSpecGridEnhance1"></div>
+</details>
+</div>
+</details><details class="fold-card card stage-composition-card" id="stageDetailsEnhance2">
+<summary class="stage-fold-summary">
+<div><span>강화 [2] 적용 스테이지</span><b>구성 3 · 강화 [2]</b></div>
+<div class="summary-metrics stage-summary-compact" id="stageSummaryEnhance2"></div>
+<span class="fold-action"><b class="closed-label">스테이지 기준 펼치기</b><b class="open-label">스테이지 기준 접기</b></span>
+</summary>
+<div class="fold-body">
+<div class="wave-grid" id="waveGridEnhance2"></div>
+<details class="inner-card stage-details">
+<summary><span><b>강화 [2] 적용 몬스터 스펙</b><small>강화 [1] 대상 + 웨이브 3 쌍뿔 아겔로스</small></span><strong>펼치기</strong></summary>
+<div class="monster-spec-grid" id="monsterSpecGridEnhance2"></div>
+</details>
+</div>
+</details></div></details></section>
+<section class="section-block constraint-zone" id="constraints"><details class="section-group-details tuning-group-details" id="constraintTuningDetails" open><summary class="section-heading section-group-summary tuning-group-summary">
+<div class="section-title-copy"><span>03 · LIVE BALANCING</span><h2>제약 수치 조정</h2><p>개별 제약은 단독 영향만 계산하며, 강조된 조합 분석 카드에서는 선택한 제약을 동시에 적용합니다.</p></div>
+<span class="fold-action section-group-action"><b class="closed-label">수치 조정 펼치기</b><b class="open-label">수치 조정 접기</b></span></summary><div class="section-group-body tuning-group-body"><div class="constraint-stack">
+<details class="constraint-group-details" id="dpsConstraintGroup">
+<summary class="constraint-category-heading dps-category-heading constraint-group-summary">
+<div class="constraint-category-copy">
+<span>PARTY DPS CONSTRAINTS</span>
+<h2>파티 DPS 제약</h2>
+<p>원본 파티의 행동 기록을 기준으로 피해량과 행동 시간 변화에 따른 DPS 영향을 비교합니다.</p>
+</div>
+<span class="fold-action constraint-group-action"><b class="closed-label">제약 펼치기</b><b class="open-label">제약 접기</b></span>
+</summary>
+<div class="constraint-group-body">
+<details class="constraint-details card" id="statConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>01</span></span>
+<div><span>오퍼레이터 능력치</span><h3>주요 능력치 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="statSummaryValue">20%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="statReduction"><span>주요 능력치 감소율</span><output id="statReductionValue">20%</output></label>
+<input id="statReduction" max="50" min="0" step="1" type="range" value="20"/>
+<div class="preset-row"><button data-stat="10">10%</button><button class="active" data-stat="20">20%</button><button data-stat="40">40%</button></div>
+</div>
+<div class="formula-panel"><b>계산식</b><code>1 + 0.005 × 주요 능력치 × (1-r) + 0.002 × 보조 능력치</code></div>
+</div>
+<div class="constraint-party-stack" id="statPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="normalConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>02</span></span>
+<div><span>행동 유형</span><h3>메인 오퍼레이터 일반 공격 피해 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="normalSummaryValue">70%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="normalReduction"><span>일반 공격 피해 감소율</span><output id="normalReductionValue">70%</output></label>
+<input id="normalReduction" max="100" min="0" step="1" type="range" value="70"/>
+<div class="preset-row"><button data-normal="30">30%</button><button data-normal="50">50%</button><button class="active" data-normal="70">70%</button><button data-normal="100">100%</button></div>
+</div>
+<div class="formula-panel"><b>적용 대상</b><span>일반 공격 · 일반 공격 마지막 타격 · 처형 공격 · 궁극기 강화 일반 공격</span></div>
+</div>
+<div class="constraint-party-stack" id="normalPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="hpConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>03</span></span>
+<div><span>스테이지 몬스터</span><h3>몬스터 최대 체력 증가</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="hpSummaryValue">30%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="hpIncrease"><span>몬스터 최대 체력 증가율</span><output id="hpIncreaseValue">30%</output></label>
+<input id="hpIncrease" max="200" min="0" step="1" type="range" value="30"/>
+<div class="preset-row"><button class="active" data-hp="30">30%</button><button data-hp="50">50%</button><button data-hp="100">100%</button><button data-hp="200">200%</button></div>
+</div>
+<div class="formula-panel"><b>계산식</b><code>변경 HP = 기본 HP × (1 + 증가율)</code><span>격자 현황판에 배치된 모든 개체에 동일하게 적용합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="hpPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="timeConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>04</span></span>
+<div><span>스테이지 제한시간</span><h3>클리어 제한시간 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="timeSummaryValue">100초 감소</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="timeReduction"><span>클리어 제한시간 감소량</span><output id="timeReductionValue">100초 감소</output></label>
+<input id="timeReduction" max="300" min="0" step="10" type="range" value="100"/>
+<div class="preset-row"><button data-time="0">감소 없음</button><button class="active" data-time="100">100초 감소</button><button data-time="200">200초 감소</button><button data-time="300">300초 감소</button></div>
+<div class="derived-limit"><span>적용 제한시간</span><b id="appliedTimeLimitValue">500초</b></div>
+</div>
+<div class="formula-panel"><b>비교 기준</b><code>적용 제한시간 = 기본 600초 − 감소량</code><code>실질 전투 가능 시간 = 적용 제한시간 − 웨이브 전환 15초</code><span>감소량을 기준으로 제약 강도를 조정합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="timePartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="skillOtherConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>05</span></span>
+<div><span>피해 유형 교환</span><h3>배틀 스킬 피해 감소 · 기타 피해 증가</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting" id="skillOtherSummaryValue"><span>배틀 스킬 피해 -60%</span><span>· 기타 피해 +100%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel dual-control-panel">
+<div class="dual-control-block">
+<label for="battleReduction"><span>배틀 스킬 피해 감소율</span><output id="battleReductionValue">60%</output></label>
+<input id="battleReduction" max="100" min="0" step="1" type="range" value="60"/>
+<div class="preset-row"><button data-battle="30">30%</button><button class="active" data-battle="60">60%</button><button data-battle="100">100%</button></div>
+</div>
+<div class="dual-control-block">
+<label for="otherIncrease"><span>기타 피해 증가율</span><output id="otherIncreaseValue">100%</output></label>
+<input id="otherIncrease" max="200" min="0" step="1" type="range" value="100"/>
+<div class="preset-row"><button data-other="50">50%</button><button class="active" data-other="100">100%</button><button data-other="150">150%</button><button data-other="200">200%</button></div>
+</div>
+</div>
+<div class="formula-panel"><b>적용 기준</b><code>배틀 스킬 피해 × (1 − 감소율)</code><code>기타 피해 × (1 + 증가율)</code><span>기타 피해의 실제 구성은 각 파티 결과에서 우측에 구체적으로 표시합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="skillOtherPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="ultRepeatConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>06</span></span>
+<div><span>궁극기 사용 반복</span><h3>궁극기 반복 피해 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="ultRepeatSummaryValue">50%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="ultRepeatReduction"><span>반복 궁극기 피해 감소율</span><output id="ultRepeatReductionValue">50%</output></label>
+<input id="ultRepeatReduction" max="100" min="0" step="1" type="range" value="50"/>
+<div class="preset-row"><button data-ult-repeat="0">0%</button><button class="active" data-ult-repeat="50">50%</button><button data-ult-repeat="100">100%</button></div>
+</div>
+<div class="formula-panel"><b>적용 기준</b><code>첫 사이클은 원본 피해 유지</code><code>반복 사이클의 실제 궁극기 판정 피해 × (1 − 감소율)</code><span>레바테인과 장방이처럼 궁극기로 강화 상태에 진입하더라도 일반 공격·배틀 스킬·연계 스킬 판정인 공격은 감소 대상에서 제외합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="ultRepeatPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="comboSpeedConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>07</span></span>
+<div><span>행동 주기 교환</span><h3>연계 스킬 재사용시간 감소 · 배틀 스킬 피해 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting" id="comboSpeedSummaryValue"><span>연계 스킬 쿨타임 -60%</span><span>· 배틀 스킬 피해 -60%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel dual-control-panel">
+<div class="dual-control-block">
+<label for="comboCooldownReduction"><span>연계 스킬 재사용시간 감소율</span><output id="comboCooldownReductionValue">60%</output></label>
+<input id="comboCooldownReduction" max="80" min="0" step="1" type="range" value="60"/>
+<div class="preset-row"><button data-speed-cooldown="30">30%</button><button class="active" data-speed-cooldown="60">60%</button><button data-speed-cooldown="80">80%</button></div>
+</div>
+<div class="dual-control-block">
+<label for="speedBattleReduction"><span>배틀 스킬 피해 감소율</span><output id="speedBattleReductionValue">60%</output></label>
+<input id="speedBattleReduction" max="100" min="0" step="1" type="range" value="60"/>
+<div class="preset-row"><button data-speed-battle="30">30%</button><button class="active" data-speed-battle="60">60%</button><button data-speed-battle="100">100%</button></div>
+</div>
+</div>
+<div class="formula-panel"><b>행동 기록 기반 계산</b><code>변경 재사용시간 = 기록에서 관측한 사용 간격 × (1 − 감소율)</code><code>배틀 스킬 피해 × (1 − 감소율)</code><span>파티 전체의 실제 연계 스킬 발생 시각을 발동 기회로 사용하고, 오퍼레이터별 기록상 사용 간격이 회복된 경우에만 추가 사용을 계산합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="comboSpeedPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="statusWindowConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>08</span></span>
+<div><span>상태 시간창</span><h3>상태 부여 후 속성 피해 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting" id="statusWindowSummaryValue"><span>감소 지속 10초</span><span>· 속성 피해 -50%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>5개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel dual-control-panel">
+<div class="dual-control-block">
+<label for="statusWindowDuration"><span>피해 감소 지속시간</span><output id="statusWindowDurationValue">10초</output></label>
+<input id="statusWindowDuration" max="20" min="0" step="1" type="range" value="10"/>
+<div class="preset-row"><button data-status-duration="5">5초</button><button class="active" data-status-duration="10">10초</button><button data-status-duration="15">15초</button></div>
+</div>
+<div class="dual-control-block">
+<label for="statusWindowReduction"><span>해당 속성 피해 감소율</span><output id="statusWindowReductionValue">50%</output></label>
+<input id="statusWindowReduction" max="100" min="0" step="1" type="range" value="50"/>
+<div class="preset-row"><button data-status-reduction="30">30%</button><button class="active" data-status-reduction="50">50%</button><button data-status-reduction="70">70%</button></div>
+</div>
+</div>
+<div class="formula-panel"><b>행동 기록 기반 계산</b><code>실제 상태 이상 발동 뒤 지속시간 동안 대응 속성 피해 × (1 − 감소율)</code><span>DATAFIELD의 원본 행동 순서와 피해량은 변경하지 않습니다. 물리 이상 또는 아츠 이상이 발동한 뒤의 행동부터 적용하며, 같은 시각이라도 원본 기록에서 뒤에 있는 행동은 감소 대상이 될 수 있습니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="statusWindowPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="statusStageConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>09</span></span>
+<div><span>상태 단계 압박</span><h3>상태 단계당 대응 피해 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting" id="statusStageSummaryValue"><span>부착 지속 10초</span><span>· 단계당 피해 -10%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>5개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel dual-control-panel">
+<div class="dual-control-block">
+<label for="statusStageDuration"><span>부착 지속시간</span><output id="statusStageDurationValue">10초</output></label>
+<input id="statusStageDuration" max="20" min="1" step="1" type="range" value="10"/>
+<div class="preset-row"><button data-status-stage-duration="5">5초</button><button class="active" data-status-stage-duration="10">10초</button><button data-status-stage-duration="15">15초</button></div>
+</div>
+<div class="dual-control-block">
+<label for="statusStageReduction"><span>단계당 대응 피해 감소율</span><output id="statusStageReductionValue">10%</output></label>
+<input id="statusStageReduction" max="25" min="0" step="1" type="range" value="10"/>
+<div class="preset-row"><button data-status-stage-reduction="5">5%</button><button class="active" data-status-stage-reduction="10">10%</button><button data-status-stage-reduction="15">15%</button></div>
+</div>
+</div>
+<div class="formula-panel"><b>행동 기록 기반 계산</b><code>현재 상태 단계 × 단계당 피해 감소율</code><code>자연 만료: 부착 종료 0.1초 후 0단계</code><code>스택 소비: 소비 시점부터 0.1초간 소비 직전 단계 유지</code><span>띄우기·넘어뜨리기는 각각 방어 불능 1스택을 쌓고, 강타·갑옷 파괴는 모든 방어 불능 스택을 소모합니다. 같은 아츠 부착은 누적되며 아츠 폭발은 스택을 유지하고, 서로 다른 아츠 부착으로 발생한 아츠 이상은 모든 아츠 부착을 소모합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="statusStagePartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="statusReapplyConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>10</span></span>
+<div><span>상태 재적용 제한</span><h3>방어불능, 동일 아츠부착 재적용 간격 제한</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="statusReapplySummaryValue">재적용 제한 10초</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="statusReapplyInterval"><span>재적용 제한시간</span><output id="statusReapplyIntervalValue">10초</output></label>
+<input id="statusReapplyInterval" max="20" min="0" step="1" type="range" value="10"/>
+<div class="preset-row"><button data-status-reapply="5">5초</button><button class="active" data-status-reapply="10">10초</button><button data-status-reapply="15">15초</button></div>
+</div>
+<div class="formula-panel"><b>행동 기록 기반 대기 계산</b><code>스킬 사용 시각 = max(원본 예정 시각, 마지막 동일 상태 적용 시각 + 제한시간)</code><span>방어불능과 열기·전기·냉기·자연 아츠부착은 종류별로 따로 추적합니다. 제한시간 안에 예정된 동일 상태 부여 스킬은 삭제하지 않고 재적용 가능한 시각까지 기다린 뒤 사용하며, 해당 오퍼레이터의 이후 행동도 누적 대기시간만큼 함께 이동합니다. 원본 피해량은 유지하고 늘어난 계산용 전투시간으로 DPS를 다시 계산합니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="statusReapplyPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="stageEnhanceConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>11</span></span>
+<div><span>지정 개체 강화</span><h3>지정 웨이브 몬스터 체력 강화</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="stageEnhanceSummaryValue">강화 [1]</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel stage-enhance-control">
+<label><span>강화 단계</span><output id="stageEnhanceLevelValue">강화 [1]</output></label>
+<input id="stageEnhanceLevel" type="hidden" value="1"/>
+<div class="preset-row stage-enhance-presets"><button class="active" data-stage-enhance="1">강화 [1]</button><button data-stage-enhance="2">강화 [2]</button></div>
+</div>
+<div class="formula-panel"><b>적용 대상</b><code>강화 [1] = 웨이브 4 삼미·쌍뿔 아겔로스를 α 개체 HP로 교체</code><code>강화 [2] = 강화 [1] + 웨이브 3 쌍뿔 아겔로스를 α 개체 HP로 교체</code><span>구성 1 · 기준 구성에서 지정된 모든 일치 개체를 스테이지 구성 페이지와 동일한 알파 개체 HP로 교체합니다. 파티 원본 피해량과 DPS는 변경하지 않습니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="stageEnhancePartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="highHpCapConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>12</span></span>
+<div><span>순간 피해 제한</span><h3>고체력 적 0.1초 피해 상한</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting" id="highHpCapSummaryValue"><span>적용 HP 100,000 이상</span><span>· 0.1초 상한 25%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel dual-control-panel">
+<div class="dual-control-block">
+<label for="highHpThreshold"><span>적용 최소 체력</span><output id="highHpThresholdValue">100,000</output></label>
+<input id="highHpThreshold" max="200000" min="50000" step="10000" type="range" value="100000"/>
+<div class="preset-row"><button data-high-hp-threshold="50000">50,000</button><button class="active" data-high-hp-threshold="100000">100,000</button><button data-high-hp-threshold="150000">150,000</button><button data-high-hp-threshold="200000">200,000</button></div>
+</div>
+<div class="dual-control-block">
+<label for="highHpCapRate"><span>0.1초 피해 상한</span><output id="highHpCapRateValue">최대 HP의 25%</output></label>
+<input id="highHpCapRate" max="50" min="5" step="1" type="range" value="25"/>
+<div class="preset-row"><button data-high-hp-cap="15">15%</button><button class="active" data-high-hp-cap="25">25%</button><button data-high-hp-cap="35">35%</button></div>
+</div>
+</div>
+<div class="formula-panel"><b>DPS 환산 기준</b><code>0.1초 적용 피해 = min(해당 구간 피해, 대상 최대 HP × 상한율)</code><span>기준 체력이 설정값 이상인 몬스터에게만 적용합니다. 대상 정보가 없는 DATAFIELD 기록은 고체력 몬스터별 상한 결과를 체력 비중으로 합산하여 파티 DPS에 반영합니다. 원본 행동 시각과 피해량은 변경하지 않습니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="highHpCapPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card" id="controlRecoveryConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>13</span></span>
+<div><span>제어 사용 압박</span><h3>제어 상태 중 몬스터 체력 회복</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="controlRecoverySummaryValue">초당 최대 HP 5%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>3개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid">
+<div class="control-panel">
+<label for="controlRecoveryRate"><span>제어 중 몬스터가 매초 회복하는 HP</span><output id="controlRecoveryRateValue">5%</output></label>
+<input id="controlRecoveryRate" max="20" min="0" step="1" type="range" value="5"/>
+<div class="preset-row"><button class="active" data-control-recovery="5">5%</button><button data-control-recovery="10">10%</button><button data-control-recovery="15">15%</button></div>
+</div>
+<div class="formula-panel"><b>계산 방법</b><code>제어가 시작되면 즉시 N% 회복하고, 제어가 이어지는 동안 1초마다 N%씩 다시 회복</code><code>제어가 여러 개 겹쳐도 한 번만 회복하며, 가장 늦게 끝나는 제어 시간까지 계속 계산</code><span>띄우기·넘어뜨리기·강제 동결·끌어당김과 탕탕 궁극기처럼 제어 태그가 붙은 행동을 찾습니다. DATAFIELD에는 어떤 몬스터를 때렸는지 표시가 없어서, 각 몬스터의 최대 HP를 반영한 대표 몬스터로 계산합니다. 같은 시각에는 제어 공격의 피해를 먼저 적용하고, 몬스터가 실제로 잃은 HP보다 많이 회복하지는 않습니다.</span></div>
+</div>
+<div class="constraint-party-stack" id="controlRecoveryPartyResults"></div>
+</div>
+</details>
+<details class="constraint-details card future-constraint-details" id="healingShieldRecoveryPreview">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>14</span></span>
+<div><span>오퍼레이터 회복 압박</span><h3>메인 오퍼레이터가 회복하거나 보호막을 받으면 모든 몬스터 회복</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b class="dual-summary-setting"><span>회복 10% · 보호막 20%</span><span>모든 몬스터 최대 HP 8%</span></b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body future-constraint-body">
+<details class="recovery-reference-details" id="healingShieldCharacterReference">
+<summary class="recovery-reference-summary">
+<div><span>캐릭터별 정보</span><h4>캐릭터별 회복·보호막 정보</h4><p>각 캐릭터가 한 번에 얼마나 회복하거나 보호막을 주는지 보여줍니다.</p></div>
+<span class="reference-fold-action"><b class="closed-label">정보 바 펼치기</b><b class="open-label">정보 바 접기</b></span>
+</summary>
+<div class="recovery-reference-body">
+<div class="reference-method-note reference-method-note-v075">
+<b>계산 기준</b>
+<div class="reference-method-chips"><span>캐릭터 Lv.90</span><span>스킬/재능 최고</span><span>잠재력 0</span><span>무기 Lv.90</span><span>재련 0</span><span>완벽 기질 [9/9/4]</span><span>장비 제외</span></div>
+</div>
+<div class="recovery-reference-legend"><span class="legend-heal">회복</span><span class="legend-hot">지속 회복</span><span class="legend-shield">보호막</span><span class="legend-basis">캐릭터 Lv.90 · 스킬 최고</span><span class="legend-weapon">무기 Lv.90 · 재련 0 · 완벽 기질 [9/9/4]</span></div>
+<div class="recovery-reference-grid">
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="자이히" src="assets/characters/xaihi/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>자이히 · 디도스</h5></div><span class="reference-status verified">즉시 회복 · 메인 오퍼레이터</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Freedom_to_Proselytize" rel="noreferrer" target="_blank">선교의 자유</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>의지 +124 · 치유 효율 +37.14% · 주 능력치 +8%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 의지</dt><dd>295.92<em class="reference-formula">(150 + 124) × 1.08</em></dd></div>
+<div><dt>한 번에 회복하는 HP</dt><dd><strong>752.76</strong><em class="reference-formula">(324 + 295.92×0.76) × 1.3714</em></dd></div>
+<div><dt>회복 횟수</dt><dd>최대 2회 · 총 1,505.52</dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd>7,527.6</dd></div>
+</dl>
+<p>배틀 스킬로 최대 2번 회복합니다. 각 회복은 따로 판정합니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="질베르타" src="assets/characters/gilberta/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>질베르타 · 뒤늦은 편지</h5></div><span class="reference-status verified">즉시 회복 · 메인 오퍼레이터 우선</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Dreams_of_the_Starry_Beach" rel="noreferrer" target="_blank">바다와 별의 꿈</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>지능 +156 · 치유 효율 +46.43% · 보조 능력치 +25.6%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 지능</dt><dd>355.45<em class="reference-formula">(127 + 156) × 1.256</em></dd></div>
+<div><dt>한 번에 회복하는 HP</dt><dd><strong>626.58</strong><em class="reference-formula">(108 + 355.448×0.90) × 1.4643</em></dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd>6,265.8</dd></div>
+<div><dt>발동 조건</dt><dd>지정 공격이 적 2명 이상 명중</dd></div>
+</dl>
+<p>메인 오퍼레이터의 HP가 가득 차 다른 팀원이 회복되면 이 제약은 발동하지 않습니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="아델리아" src="assets/characters/adelia/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>아델리아 · 친구의 그림자</h5></div><span class="reference-status verified">즉시 회복 · 메인 오퍼레이터 우선</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Freedom_to_Proselytize" rel="noreferrer" target="_blank">선교의 자유</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>의지 +124 · 치유 효율 +37.14% · 주 능력치 +8%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 의지</dt><dd>261.36<em class="reference-formula">(118 + 124) × 1.08</em></dd></div>
+<div><dt>그림자 1개가 회복하는 HP</dt><dd><strong>392.25</strong><em class="reference-formula">(90 + 261.36×0.75) × 1.3714</em></dd></div>
+<div><dt>배틀 스킬로 생기는 그림자</dt><dd>3개 · 모두 합치면 1,176.75</dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd>3,922.5</dd></div>
+</dl>
+<p>그림자 3개의 회복량을 합치지 않고, 그림자에 닿아 회복할 때마다 10% 조건을 따로 확인합니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="안탈" src="assets/characters/antal/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>안탈 · 즉흥적인 천재성</h5></div><span class="reference-status verified">즉시 회복 · 팀원/자신</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Dreams_of_the_Starry_Beach" rel="noreferrer" target="_blank">바다와 별의 꿈</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>지능 +156 · 치유 효율 +46.43% · 보조 능력치 +25.6%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 힘</dt><dd>162.02<em class="reference-formula">129 × 1.256</em></dd></div>
+<div><dt>팀원을 한 번 회복하는 HP</dt><dd><strong>371.67</strong><em class="reference-formula">(108 + 162.024×0.90) × 1.4643</em></dd></div>
+<div><dt>자신을 한 번 회복하는 HP</dt><dd><strong>156.05</strong><em class="reference-formula">(45 + 162.024×0.38) × 1.4643</em></dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd class="reference-value-lines"><span>팀원 회복 3,716.7</span><span>자기 회복 1,560.5</span></dd></div>
+</dl>
+<p>증폭된 팀원별로 30초에 최대 1회입니다. 메인 오퍼레이터가 이 회복을 받았을 때만 제약 조건을 확인합니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="hot">
+<header><img alt="스노우샤인" src="assets/characters/snowshine/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>스노우샤인 · 극지 구조</h5></div><span class="reference-status verified">즉시 + 지속 회복 · 범위 아군</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Former_Finery" rel="noreferrer" target="_blank">과거의 일품</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>의지 +156 · 최대 HP +78% · 치유 효율 +16%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 의지</dt><dd>264</dd></div>
+<div><dt>즉시 회복하는 HP</dt><dd><strong>403.68</strong><em class="reference-formula">(216 + 264×0.50) × 1.16</em></dd></div>
+<div><dt>지속 회복</dt><dd><strong>102.45 × 6회 = 614.71</strong><em class="reference-formula">0.5초 간격 · 3초</em></dd></div>
+<div><dt>HP가 낮을 때</dt><dd>HP 55% 이하 · +25%<em class="reference-formula">즉시 504.60 · 지속 총 768.38</em></dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd class="reference-value-lines"><span>즉시 회복 4,036.8</span><span>지속 회복 1~6회 누적 1,024.5~6,147.1</span><span>HP 55% 이하: 즉시 5,046 · 지속 1,280.6~7,683.8</span></dd></div>
+</dl>
+<p>즉시 회복과 지속 회복은 각각 따로 판정합니다. 지속 회복은 누적량이 처음 10%에 도달할 때 한 번만 발동합니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="카뮤" src="assets/characters/camu/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>카뮤 · 죄를 쫓는 자</h5></div><span class="reference-status verified">즉시 회복 · 자신</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Golden_Age" rel="noreferrer" target="_blank">전성기</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>의지 +156 · 치유 효율 +46.43% · 조건부 치유 효율 +6.4%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>한 번에 회복하는 HP</dt><dd><strong>144.53</strong><em class="reference-formula">98.7 × 1.4643</em></dd></div>
+<div><dt>조건부 최대 회복량</dt><dd><strong>150.84</strong><em class="reference-formula">연계 스킬 피해 후 15초 동안</em></dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd class="reference-value-lines"><span>평상시 1,445.3</span><span>조건부 최대 1,508.4</span></dd></div>
+</dl>
+<p>카뮤가 메인 오퍼레이터일 때만 확인합니다. 메인 오퍼레이터가 받는 치유 보정은 아직 더하지 않았습니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="heal">
+<header><img alt="로시" src="assets/characters/rossi/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>로시 · 끓어오르는 피</h5></div><span class="reference-status verified">즉시 회복 · 자신</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Forgeborn_Scathe" rel="noreferrer" target="_blank">용조의 불꽃</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>지능 +156 · 공격력 +39% · 열 피해 +25.6%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0 · 회복에는 지능만 반영</em></dd></div>
+<div><dt>무기 적용 후 지능</dt><dd>274</dd></div>
+<div><dt>일반 상태에서 한 번 회복하는 HP</dt><dd><strong>21.92</strong><em class="reference-formula">274 × 0.08</em></dd></div>
+<div><dt>연소 상태에서 한 번 회복하는 HP</dt><dd><strong>32.88</strong><em class="reference-formula">21.92 × 1.5</em></dd></div>
+<div><dt>10% 조건이 되는 메인 오퍼레이터 최대 HP</dt><dd class="reference-value-lines"><span>일반 상태 219.2</span><span>연소 상태 328.8</span></dd></div>
+</dl>
+<p>잠재력으로 추가되는 회복은 제외했습니다. 로시가 메인 오퍼레이터일 때만 확인합니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="shield">
+<header><img alt="카치르" src="assets/characters/kachir/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>카치르 · 실시간 억제</h5></div><span class="reference-status verified">보호막 · 자신/메인 오퍼레이터 우선</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Thunderberge" rel="noreferrer" target="_blank">천둥의 흔적</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>힘 +156 · 최대 HP +78% · 보호막 부여량 +38.4%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>계산에 쓴 방어력</dt><dd>12<em class="reference-formula">⌊의지 106÷10⌋ × 1.2</em></dd></div>
+<div><dt>한 번에 새로 주는 보호막</dt><dd><strong>1,205.08</strong><em class="reference-formula">(810 + 12×5.06) × 1.384</em></dd></div>
+<div><dt>이 보호막이 20%가 되는 메인 오퍼레이터 최대 HP</dt><dd>6,025.4</dd></div>
+</dl>
+<p>이번 한 번에 실제로 새로 생긴 보호막만 셉니다. 무기의 추가 보호막 조건은 카치르의 해당 스킬에 맞지 않아 계산에 넣지 않았습니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="mixed">
+<header><img alt="엠버" src="assets/characters/amber/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>엠버 · 전선 지원/맹세</h5></div><span class="reference-status verified">보호막 + 회복 · 팀 전체</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>회복 최대 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Former_Finery" rel="noreferrer" target="_blank">과거의 일품</a><em class="reference-formula">의지 +156 · 최대 HP +78% · 치유 효율 +16% · 9/9/4 · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 의지</dt><dd>276</dd></div>
+<div><dt>연계 스킬 한 번의 회복량</dt><dd><strong>1,288.85</strong><em class="reference-formula">(675 + 276×1.58) × 1.16</em></dd></div>
+<div><dt>회복 10% 조건의 최대 HP</dt><dd>12,888.5</dd></div>
+<div class="reference-weapon-row"><dt>보호막 최대 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Thunderberge" rel="noreferrer" target="_blank">천둥의 흔적</a><em class="reference-formula">힘 +156 · 최대 HP +78% · 보호막 부여량 +38.4% · 9/9/4 · 재련 0</em></dd></div>
+<div><dt>보호막 세팅 최대 HP</dt><dd>12,735.90</dd></div>
+<div><dt>궁극기로 주는 보호막</dt><dd><strong>4,406.62</strong><em class="reference-formula">최대 HP 25% × 1.384</em></dd></div>
+<div><dt>보호막 20% 조건의 최대 HP</dt><dd>22,033.1</dd></div>
+<div><dt>무기 추가 보호막</dt><dd><strong>1,974.17</strong><em class="reference-formula">고유 기질 Rank 4 · 연계 스킬 회복 후 · 15초당 1회 · 보호막 부여량 포함</em></dd></div>
+</dl>
+<p>회복 최대와 보호막 최대는 서로 다른 무기를 사용하므로 동시에 적용할 수 없습니다. 목적에 맞는 세팅을 따로 표시했습니다.</p>
+</article>
+<article class="recovery-reference-card" data-reference-kind="shield">
+<header><img alt="미브" src="assets/characters/mive/portrait.png"/><div><small>[캐릭터/무기 90레벨] [기질 994 강화]</small><h5>미브 · 분노</h5></div><span class="reference-status verified">보호막 · 자신</span></header>
+<dl>
+<div class="reference-weapon-row"><dt>적용 무기</dt><dd><a class="reference-weapon-link" href="https://endfield.wiki.gg/wiki/Thunderberge" rel="noreferrer" target="_blank">천둥의 흔적</a></dd></div>
+<div class="reference-weapon-row"><dt>적용 기질</dt><dd>힘 +156 · 최대 HP +78% · 보호막 부여량 +38.4%<em class="reference-formula">완벽 기질 [9/9/4] · 재련 0</em></dd></div>
+<div><dt>무기 적용 후 최대 HP</dt><dd><strong>12,709.20</strong><em class="reference-formula">(5,495 + 힘 329×5) × 1.78</em></dd></div>
+<div><dt>한 번에 새로 주는 보호막</dt><dd><strong>5,276.86</strong><em class="reference-formula">최대 HP 30% × 1.384</em></dd></div>
+<div><dt>이 보호막이 20%가 되는 메인 오퍼레이터 최대 HP</dt><dd>26,384.3</dd></div>
+<div><dt>발동 제한</dt><dd>60초마다 최대 1회</dd></div>
+</dl>
+<p>기존 보호막과 합산하지 않습니다. 미브가 메인 오퍼레이터일 때만 제약 조건을 확인합니다.</p>
+</article>
+</div>
+</div>
+</details>
+<details class="recovery-rationale-details" id="healingShieldRatioRationale" open="">
+<summary class="recovery-rationale-summary">
+<div><span>수치 설정 근거</span><h4>회복 10% · 보호막 20% · 몬스터 최대 HP 8% 지정 사유</h4><p>현재 계산한 회복·보호막 값과 기준 스테이지 수치를 이용해 정한 이유를 보여줍니다.</p></div>
+<span class="reference-fold-action"><b class="closed-label">근거 펼치기</b><b class="open-label">근거 접기</b></span>
+</summary>
+<div class="recovery-rationale-body">
+<div class="rationale-overview-layout">
+<section class="rationale-panel rationale-table-panel">
+<header><h5>기준 데이터 요약</h5><p>현재 계산에 넣은 회복·보호막 수치와 기준 스테이지 값을 먼저 정리합니다.</p></header>
+<div class="rationale-table-rows">
+<div class="rationale-row"><span>직접 회복 6종</span><b>371.67 ~ 1,288.85</b><small>중앙값 515.13</small></div>
+<div class="rationale-row"><span>자기 회복 소량 4종</span><b>21.92 ~ 156.05</b><small>단독 발동 범위가 매우 낮음</small></div>
+<div class="rationale-row"><span>보호막 3종</span><b>1,205.08 ~ 5,276.86</b><small>20% 역산 HP 6,025.4 ~ 26,384.3</small></div>
+<div class="rationale-row"><span>기준 스테이지</span><b>21마리 · 총 HP 2,252,276</b><small>파티 DPS 62,428.6 ~ 101,622.25</small></div>
+</div>
+</section>
+<section class="rationale-panel rationale-chart-panel">
+<header><h5>몬스터 회복률별 추가 전투 시간</h5><p>몬스터가 회복한 HP를 다시 깎는 데 걸리는 시간입니다. 같은 회복량이라도 파티 DPS가 높으면 짧고, 낮으면 길어집니다.</p></header>
+<div aria-hidden="true" class="rationale-time-scale"><span>0초</span><span>1초</span><span>2초</span><span>3초</span><span>4초</span></div>
+<div class="rationale-time-chart">
+<article class="time-compare-row">
+<div class="time-compare-heading"><b>몬스터 5% 회복</b><span>총 112,613.8 HP</span></div>
+<div class="time-bar-line"><label>빠른 파티</label><div class="time-bar-track"><i style="width:27.75%"></i></div><strong>1.11초</strong></div>
+<div class="time-bar-line"><label>느린 파티</label><div class="time-bar-track"><i style="width:45%"></i></div><strong>1.80초</strong></div>
+</article>
+<article class="time-compare-row selected">
+<div class="time-compare-heading"><b>몬스터 8% 회복</b><span>총 180,182.1 HP · 현재 선택</span></div>
+<div class="time-bar-line"><label>빠른 파티</label><div class="time-bar-track"><i style="width:44.25%"></i></div><strong>1.77초</strong></div>
+<div class="time-bar-line"><label>느린 파티</label><div class="time-bar-track"><i style="width:72.25%"></i></div><strong>2.89초</strong></div>
+</article>
+<article class="time-compare-row">
+<div class="time-compare-heading"><b>몬스터 10% 회복</b><span>총 225,227.6 HP</span></div>
+<div class="time-bar-line"><label>빠른 파티</label><div class="time-bar-track"><i style="width:55.5%"></i></div><strong>2.22초</strong></div>
+<div class="time-bar-line"><label>느린 파티</label><div class="time-bar-track"><i style="width:90.25%"></i></div><strong>3.61초</strong></div>
+</article>
+</div>
+<p class="rationale-chart-note"><strong>읽는 법:</strong> 막대가 길수록 몬스터가 회복한 HP를 다시 처리하는 데 더 오래 걸립니다. 예를 들어 8% 회복은 빠른 파티에서 1.77초, 느린 파티에서 2.89초가 추가됩니다.</p>
+</section>
+</div>
+<div class="rationale-reason-grid">
+<section>
+<b>회복 10%: 작은 자기 회복은 대부분 제외</b>
+<p>메인 오퍼레이터나 팀원을 직접 회복하는 6개 판정은 <strong>371.67~1,288.85</strong>로, 10% 기준의 역산 HP가 <strong>3,716.7~12,888.5</strong>입니다. 반면 작은 자기 회복은 <strong>21.92~156.05</strong>라서 10% 기준으로는 <strong>219.2~1,560.5</strong> 정도에서만 단독 발동합니다. 즉, 메인 오퍼레이터 최대 HP가 약 3,700~12,900 구간일 때 직접 회복 6종은 조건에 걸리지만, 220~1,560 구간이 아니면 작은 자기 회복 4종은 단독으로 잘 걸리지 않습니다. 그래서 10%는 두 회복군을 수치상으로 가장 깔끔하게 나누는 기준입니다.</p>
+</section>
+<section>
+<b>지속 회복: 같은 효과는 최초 1회만</b>
+<p>스노우샤인의 지속 회복은 <strong>102.45 × 6회 = 총 614.71</strong>입니다. 매 틱마다 발동시키면 같은 스킬 하나로 몬스터 회복이 최대 6번까지 발생합니다. 현재 기준에서 10% 조건을 매 틱마다 검사하면 한 스킬이 최대 6번의 몬스터 회복을 만들 수 있습니다. 이를 막기 위해 같은 지속 회복은 <strong>누적 실회복량이 처음 10%에 도달할 때 한 번만</strong> 발동하도록 제한합니다.</p>
+</section>
+<section>
+<b>보호막 20%: 보통 보호막과 큰 보호막을 구분</b>
+<p>현재 보호막 수치는 <strong>1,205.08 / 4,406.62 / 5,276.86</strong>입니다. 20% 기준으로 역산하면 메인 오퍼레이터 최대 HP가 각각 <strong>6,025.4 / 22,033.1 / 26,384.3</strong>일 때 발동합니다. 예를 들어 카치르 보호막 1,205.08은 20% 기준이면 메인 오퍼레이터 최대 HP가 6,025.4 이하일 때만 발동하지만, 10% 기준이면 12,050.8 이하까지 발동 범위가 두 배로 넓어집니다. 그래서 20%를 써서 소형 보호막과 대형 보호막을 수치상으로 구분합니다.</p>
+</section>
+<section>
+<b>몬스터 최대 HP 8%: 한 번 발동해도 체감되는 부담</b>
+<p>기준 스테이지 총 HP <strong>2,252,276</strong>에 8%를 적용하면 <strong>180,182.1 HP</strong>입니다. 현재 파티 DPS 범위로 환산하면 약 <strong>1.77~2.89초</strong>의 추가 처리 시간입니다. 5%는 느린 파티 기준으로도 추가 시간이 1.80초에 그쳐 제약 체감이 약하고, 10%는 3.61초까지 늘어나 한 번 발동만으로 부담이 크게 튑니다. 8%는 1.77~2.89초 구간이라 두 값의 중간에서 부담을 만들 수 있어 선택했습니다.</p>
+</section>
+</div>
+<p class="reference-bottom-footnote">정리하면, <strong>회복 10%</strong>는 직접 회복군과 소량 자기 회복군을 수치상으로 분리하고, <strong>보호막 20%</strong>는 소형 보호막과 대형 보호막의 발동 범위를 분리하며, <strong>몬스터 최대 HP 8%</strong>는 기준 스테이지에서 <strong>1.77~2.89초</strong>의 추가 처리 시간을 만드는 값입니다.</p>
+</div>
+</details>
+</div>
+</details>
+<details class="constraint-details card chill-details battle-chill-details" id="battleChillConstraint">
+<summary class="constraint-summary chill-summary">
+<span class="constraint-index"><span>15</span></span>
+<div><span>배틀 스킬 냉기 누적</span><h3>배틀 스킬 사용에 따른 냉기 부착</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="battleChillSummaryValue">단계 I · 2회마다 · 부착 쿨타임 3초</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body chill-body chill-readable-body">
+<section class="chill-readable-intro">
+<div class="toxic-control-heading">
+<span>BATTLE SKILL · COLD ATTACHMENT</span>
+<h4>배틀 스킬 사용 횟수에 따른 냉기 스택 부착</h4>
+<p>스킬과 피해는 그대로 실행하고, 오퍼레이터별 배틀 스킬 기록을 시간 순서대로 판정합니다. 아래 파티 정보 바를 펼치면 해당 파티의 단독·결합 결과와 판정 타임라인을 한곳에서 확인할 수 있습니다.</p>
+</div>
+<div class="constraint-control-grid chill-readable-control-grid">
+<div class="control-panel chill-setting-panel">
+<div class="chill-setting-block">
+<label><span>냉기 부착 단계</span><output id="battleChillStageValue">단계 I · 2회마다</output></label>
+<div class="chill-stage-row">
+<button class="active" data-battle-chill-stage="one" type="button">단계 I<small>2회마다</small></button>
+<button data-battle-chill-stage="two" type="button">단계 II<small>1회마다</small></button>
+</div>
+</div>
+<div class="chill-setting-block">
+<label for="battleChillCooldown"><span>냉기 스택 부착 쿨타임</span><output id="battleChillCooldownValue">3초</output></label>
+<input id="battleChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/>
+<div class="preset-row chill-cooldown-row">
+<button data-battle-chill-cooldown="1" type="button">1초</button><button data-battle-chill-cooldown="2" type="button">2초</button><button class="active" data-battle-chill-cooldown="3" type="button">3초</button><button data-battle-chill-cooldown="4" type="button">4초</button><button data-battle-chill-cooldown="5" type="button">5초</button>
+</div>
+</div>
+</div>
+<div class="formula-panel chill-readable-formula">
+<b>냉기 부착 및 동결 계산</b>
+<code>매 N번째 배틀 스킬 → 냉기 스택 부착 판정</code>
+<code>이전 성공 부착 시각 + 쿨타임 이내 → 냉기 스택 미부착</code>
+<code>4스택 도달 → 해당 시점 이후 행동을 5초 이동 → 스택 0</code>
+<span>부착 쿨타임은 오퍼레이터별로 독립 적용합니다. 동결이 다시 발생하면 그 시점 뒤에 남아 있는 행동만 다시 5초 이동합니다.</span>
+</div>
+</div>
+<div class="chill-rule-strip chill-readable-rule-strip">
+<div><span>단계 I</span><b>2회마다 1스택</b></div>
+<div><span>단계 II</span><b>1회마다 1스택</b></div>
+<div><span>부착 쿨타임</span><b>오퍼레이터별 독립</b></div>
+<div><span>동결 판정</span><b>4스택 · 5초</b></div>
+</div>
+</section>
+<section class="chill-readable-party-section">
+<header class="chill-readable-party-heading">
+<div><span>파티별 분석 · 7개 파티</span><h4>배틀 스킬 냉기 부착 결과</h4><p>모든 정보 바는 같은 너비와 높이의 핵심 지표 네 칸으로 구성됩니다. 필요한 파티만 펼쳐 세부 판정을 확인하세요.</p></div>
+<div class="toxic-distribution-summary"><b id="battleChillPartyRange">-</b><small>DPS 감소율 범위</small></div>
+</header>
+<div class="constraint-party-stack chill-party-stack" id="battleChillPartyResults"></div>
+</section>
+</div>
+</details>
+<details class="constraint-details card chill-details combo-chill-details" id="comboChillConstraint">
+<summary class="constraint-summary chill-summary">
+<span class="constraint-index"><span>16</span></span>
+<div><span>연계 스킬 냉기 누적</span><h3>연계 스킬 사용에 따른 냉기 부착</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="comboChillSummaryValue">단계 I · 2회마다 · 부착 쿨타임 3초</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body chill-body chill-readable-body">
+<section class="chill-readable-intro">
+<div class="toxic-control-heading">
+<span>COMBO SKILL · COLD ATTACHMENT</span>
+<h4>연계 스킬 사용 횟수에 따른 냉기 스택 부착</h4>
+<p>스킬과 피해는 그대로 실행하고, 오퍼레이터별 연계 스킬 기록을 시간 순서대로 판정합니다. 아래 파티 정보 바를 펼치면 해당 파티의 단독·결합 결과와 판정 타임라인을 한곳에서 확인할 수 있습니다.</p>
+</div>
+<div class="constraint-control-grid chill-readable-control-grid">
+<div class="control-panel chill-setting-panel">
+<div class="chill-setting-block">
+<label><span>냉기 부착 단계</span><output id="comboChillStageValue">단계 I · 2회마다</output></label>
+<div class="chill-stage-row">
+<button class="active" data-combo-chill-stage="one" type="button">단계 I<small>2회마다</small></button>
+<button data-combo-chill-stage="two" type="button">단계 II<small>1회마다</small></button>
+</div>
+</div>
+<div class="chill-setting-block">
+<label for="comboChillCooldown"><span>냉기 스택 부착 쿨타임</span><output id="comboChillCooldownValue">3초</output></label>
+<input id="comboChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/>
+<div class="preset-row chill-cooldown-row">
+<button data-combo-chill-cooldown="1" type="button">1초</button><button data-combo-chill-cooldown="2" type="button">2초</button><button class="active" data-combo-chill-cooldown="3" type="button">3초</button><button data-combo-chill-cooldown="4" type="button">4초</button><button data-combo-chill-cooldown="5" type="button">5초</button>
+</div>
+</div>
+</div>
+<div class="formula-panel chill-readable-formula">
+<b>냉기 부착 및 동결 계산</b>
+<code>매 N번째 연계 스킬 → 냉기 스택 부착 판정</code>
+<code>이전 성공 부착 시각 + 쿨타임 이내 → 냉기 스택 미부착</code>
+<code>4스택 도달 → 해당 시점 이후 행동을 5초 이동 → 스택 0</code>
+<span>배틀 스킬 냉기 제약과 함께 적용하면 두 제약의 성공 부착이 하나의 공용 냉기 스택을 채웁니다.</span>
+</div>
+</div>
+<div class="chill-rule-strip chill-readable-rule-strip">
+<div><span>단계 I</span><b>2회마다 1스택</b></div>
+<div><span>단계 II</span><b>1회마다 1스택</b></div>
+<div><span>부착 쿨타임</span><b>오퍼레이터별 독립</b></div>
+<div><span>동결 판정</span><b>4스택 · 5초</b></div>
+</div>
+</section>
+<section class="chill-readable-party-section">
+<header class="chill-readable-party-heading">
+<div><span>파티별 분석 · 7개 파티</span><h4>연계 스킬 냉기 부착 결과</h4><p>모든 정보 바는 같은 너비와 높이의 핵심 지표 네 칸으로 구성됩니다. 필요한 파티만 펼쳐 세부 판정을 확인하세요.</p></div>
+<div class="toxic-distribution-summary"><b id="comboChillPartyRange">-</b><small>DPS 감소율 범위</small></div>
+</header>
+<div class="constraint-party-stack chill-party-stack" id="comboChillPartyResults"></div>
+</section>
+</div>
+</details>
+</div>
+</details>
+<details class="constraint-group-details" id="survivalConstraintGroup">
+<summary class="constraint-category-heading survival-category-heading constraint-group-summary">
+<div class="constraint-category-copy">
+<span>NON-DPS CONSTRAINTS</span>
+<h2>생존 및 유저 컨트롤 제약</h2>
+<p>파티의 공격력 대신 오퍼레이터의 생존 가능 시간과 조작 제한을 비교합니다.</p>
+</div>
+<span class="fold-action constraint-group-action"><b class="closed-label">제약 펼치기</b><b class="open-label">제약 접기</b></span>
+</summary>
+<div class="constraint-group-body">
+<details class="constraint-details card decay-details" id="decayConstraint">
+<summary class="constraint-summary decay-summary">
+<span class="constraint-index"><span>17</span></span>
+<div><span>치유 및 회피 요구치 상승</span><h3>웨이브 사이 치유 자원 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="decaySummaryValue">쇠퇴 I · 치유 물질 3개 · 1개당 최대 HP 30%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body decay-body">
+<section class="decay-unified-panel">
+<div class="toxic-control-heading">
+<span>HEALING MATERIAL MODEL</span>
+<h4>웨이브 사이 치유 물질 제한</h4>
+<p>기본 상태는 웨이브 사이마다 3개씩 총 9개, 쇠퇴 I은 1개씩 총 3개, 쇠퇴 II는 생성되지 않습니다. 치유 물질 회복은 14번 몬스터 회복 제약을 발동시키지 않습니다.</p>
+</div>
+<div class="decay-linked-strip">
+<div><span>기준 몬스터 공격력</span><b id="decayLinkedAttack">표준 1,400</b><small>적 피해 정보 바 설정 연동</small></div>
+<div><span>적이 주는 피해 증가</span><b id="decayLinkedEnemyRate">25%</b><small>공격자 측 피해 보정</small></div>
+<div><span>메인 컨트롤 받는 피해 증가</span><b id="decayLinkedMainRate">25%</b><small>피격자 측 피해 보정</small></div>
+<div><span>독성 물질 1초 피해</span><b id="decayLinkedToxicRate">현재 최대 HP 5%</b><small>환경 피해 참고 모델</small></div>
+</div>
+<section class="decay-formula-panel formula-panel">
+<b>회복 및 복구 판정</b>
+<code>치유 물질 1개 회복량 = 오퍼레이터 최대 HP × 회복률 N%</code>
+<code>풀 HP 복구 필요 개수 = 올림(손실 HP ÷ 치유 물질 1개 회복량)</code>
+<span>초과 회복량이나 전투 전체 이론상 회복 총량은 계산하지 않습니다. 피격 후 생존했다는 전제에서 풀 HP로 돌아가기 위해 필요한 치유 물질 개수만 비교합니다.</span>
+</section>
+<section class="decay-wave-panel">
+<header><div><span>4개 웨이브 · 웨이브 사이 3회</span><h4>치유 물질 생성 흐름</h4><p>선택한 쇠퇴 단계에 따라 각 웨이브 사이에서 생성되는 개수만 달라집니다.</p></div><div class="toxic-distribution-summary"><b id="decayTotalMaterials">총 3개</b><small>전투 전체 생성</small></div></header>
+<div class="decay-wave-flow" id="decayWaveFlow"></div>
+</section>
+<div class="decay-control-grid">
+<div class="toxic-control-block decay-level-block">
+<label><span>쇠퇴 단계</span><output id="decayLevelValue">쇠퇴 I · 총 3개</output></label>
+<div class="decay-level-row" id="decayLevelButtons">
+<button data-decay-level="none" type="button">제약 없음<br/><small>총 9개</small></button>
+<button class="active" data-decay-level="one" type="button">쇠퇴 I<br/><small>총 3개</small></button>
+<button data-decay-level="two" type="button">쇠퇴 II<br/><small>총 0개</small></button>
+</div>
+</div>
+<div class="toxic-control-block">
+<label for="decayHealRate"><span>치유 물질 1개 회복률</span><output id="decayHealRateValue">30%</output></label>
+<input id="decayHealRate" max="50" min="5" step="1" type="range" value="30"/>
+<div class="preset-row decay-rate-row"><button data-decay-rate="20" type="button">20%</button><button class="active" data-decay-rate="30" type="button">30%</button><button data-decay-rate="40" type="button">40%</button></div>
+</div>
+<div class="toxic-control-block decay-damage-model-block">
+<label><span>피격 피해 모델</span><output id="decayDamageModelValue">두 피해 제약 동시 적용</output></label>
+<div class="decay-damage-model-row" id="decayDamageModelButtons">
+<button data-decay-damage-model="base" type="button">기준 공격력</button>
+<button data-decay-damage-model="enemy" type="button">적 피해 증가</button>
+<button data-decay-damage-model="main" type="button">메인 피격 증가</button>
+<button class="active" data-decay-damage-model="combined" type="button">두 제약 동시</button>
+
+</div>
+</div>
+<div class="toxic-control-block">
+<label for="decayShieldPreset"><span>피격 전 보유 보호막</span><output id="decayShieldValue">0</output></label>
+<select id="decayShieldPreset">
+<option value="0">보호막 없음</option>
+<option value="1205.08">카치르 보호막 1,205.08</option>
+<option value="4406.62">엠버 보호막 4,406.62</option>
+<option value="5276.86">미브 보호막 5,276.86</option>
+<option value="custom">직접 입력</option>
+</select>
+<input hidden="" id="decayShieldCustom" max="30000" min="0" step="1" type="number" value="0"/>
+</div>
+<div class="toxic-control-block decay-operator-block">
+<label for="decayOperatorSelect"><span>상세 비교 오퍼레이터</span><output id="decayOperatorHp">-</output></label>
+<select id="decayOperatorSelect"></select>
+<small>Lv.90 · 스킬/재능 최고 · 잠재 0 · 생존 비교용 HP 최대 무기 Lv.90 · 재련 0 · 기질 [9/9/4]</small>
+</div>
+</div>
+</section>
+<section class="decay-selected-panel">
+<header><div><span>선택 오퍼레이터</span><h4 id="decaySelectedName">-</h4><p id="decaySelectedBuild">-</p></div><img alt="" id="decaySelectedPortrait" src=""/></header>
+<div class="decay-selected-metrics">
+<article><span>치유 물질 1개 회복량</span><b id="decayOneHealAmount">-</b><small id="decayOneHealNote">최대 HP의 30%</small></article>
+<article><span>현재 1회 피격 피해</span><b id="decayOneHitDamage">-</b><small id="decayDamageFormulaNote">선택 피해 모델</small></article>
+<article><span>피격 전 보호막</span><b id="decaySelectedShield">-</b><small>피해를 먼저 흡수</small></article>
+<article><span>현재 선택 단계</span><b id="decaySelectedLevel">쇠퇴 I · 3개</b><small>웨이브 사이 전체 보유량 기준</small></article>
+</div>
+<div class="decay-hit-scenarios" id="decayHitScenarios"></div>
+</section>
+<section class="toxic-distribution-panel toxic-distribution-wide decay-distribution-panel">
+<header><div><span>캐릭터 페이지 등록 오퍼레이터 · 28명</span><h4>3회 피격 후 풀 HP 복구 필요 개수</h4><p>같은 피해 모델과 보호막 조건에서 생존한 경우, 각 오퍼레이터가 풀 HP로 돌아가기 위해 필요한 치유 물질 개수를 비교합니다.</p></div><div class="toxic-distribution-summary"><b id="decayOperatorHpRange">-</b><small>최소~최대 HP</small></div></header>
+<div class="decay-operator-results" id="decayOperatorResults"></div>
+</section>
+</div>
+</details>
+<details class="constraint-details card toxic-details" id="toxicResidueConstraint">
+<summary class="constraint-summary toxic-summary">
+<span class="constraint-index"><span>18</span></span>
+<div><span>처치 위치 생존 압박</span><h3>적 처치 시 독성 물질 생성</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="toxicSummaryValue">초당 최대 HP 5%</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body toxic-body">
+<div class="toxic-main-layout">
+<section class="toxic-control-panel">
+<div class="toxic-control-heading"><span>TOXIC RESIDUE MODEL</span><h4>독성 피해 설정</h4><p>일반 회피 상황은 1초 노출, 동결 제약과 겹친 상황은 최대 15초 노출로 비교합니다.</p></div>
+<div class="toxic-controls">
+<div class="toxic-control-block">
+<label for="toxicDamageRate"><span>매초 현재 최대 HP 피해</span><output id="toxicDamageRateValue">5%</output></label>
+<input id="toxicDamageRate" max="10" min="1" step="1" type="range" value="5"/>
+<div class="preset-row"><button data-toxic-rate="2" type="button">2%</button><button class="active" data-toxic-rate="5" type="button">5%</button><button data-toxic-rate="8" type="button">8%</button></div>
+</div>
+<div class="toxic-control-block">
+<label for="toxicShieldPreset"><span>시작 시 보유 보호막</span><output id="toxicShieldValue">0</output></label>
+<select id="toxicShieldPreset">
+<option value="0">보호막 없음</option>
+<option value="1205.08">카치르 보호막 1,205.08</option>
+<option value="4406.62">엠버 보호막 4,406.62</option>
+<option value="5276.86">미브 보호막 5,276.86</option>
+<option value="custom">직접 입력</option>
+</select>
+<input hidden="" id="toxicShieldCustom" max="30000" min="0" step="1" type="number" value="0"/>
+</div>
+<div class="toxic-control-block">
+<label for="toxicOperatorSelect"><span>상세 비교 오퍼레이터</span><output id="toxicOperatorHp">-</output></label>
+<select id="toxicOperatorSelect"></select>
+<small>Lv.90 · 스킬/재능 최고 · 잠재 0 · 생존 비교용 HP 최대 무기 Lv.90 · 재련 0 · 기질 [9/9/4]</small>
+</div>
+</div>
+</section>
+<section class="toxic-zone-panel">
+<div aria-label="반지름 3미터 독성 범위 도식" class="toxic-zone-visual">
+<div class="toxic-zone-circle"><span class="toxic-zone-enemy">처치 위치</span><i class="toxic-radius-line"></i><b>3m</b></div>
+<div class="toxic-zone-scale"><span>지름 6m</span><strong>15초</strong><small>생성 즉시 감소 시작</small></div>
+</div>
+<div class="toxic-zone-facts">
+<div><span>일반 플레이 예상</span><b>1초 · 1회 피해</b></div>
+<div><span>동결 15초 조합</span><b>15초 · 최대 15회 피해</b></div>
+<div><span>범위가 겹칠 때</span><b>피해율은 1회분만 적용</b></div>
+<div><span>동결 제약과의 조합</span><b>15초 동안 범위에서 이탈하지 못하는 최대 압박</b></div>
+</div>
+</section>
+</div>
+<div class="toxic-analysis-layout">
+<section class="toxic-result-panel">
+<header><div><span>선택 오퍼레이터</span><h4 id="toxicSelectedName">-</h4></div><img alt="" id="toxicSelectedPortrait" src=""/></header>
+<div class="toxic-build-note" id="toxicSelectedBuild"></div>
+<div class="toxic-scenario-grid">
+<article><span>일반 이탈</span><b id="toxicOneSecondHp">-</b><small id="toxicOneSecondNote">1초 후 남은 HP</small></article>
+<article class="danger"><span>동결 조합</span><b id="toxicFifteenSecondHp">-</b><small id="toxicFifteenSecondNote">15초 후 남은 HP</small></article>
+<article><span>보호막 소진</span><b id="toxicShieldBreak">-</b><small>HP 피해가 시작되는 시점</small></article>
+</div>
+<div class="toxic-timeline" id="toxicTimeline"></div>
+</section>
+</div>
+<section class="toxic-distribution-panel toxic-distribution-wide">
+<header><div><span>캐릭터 페이지 등록 오퍼레이터 · 28명</span><h4>최대 HP 분포와 15초 생존 결과</h4><p>같은 비율 피해라도 최대 HP가 높을수록 절대 피해량이 커지고, 보호막의 방어 효율은 낮아집니다.</p></div><div class="toxic-distribution-summary"><b id="toxicHpRange">-</b><small>최소~최대 HP</small></div></header>
+<div class="toxic-operator-results" id="toxicOperatorResults"></div>
+</section>
+</div>
+</details>
+<details class="constraint-details card freeze-details" id="freezeReleaseConstraint">
+<summary class="constraint-summary">
+<span class="constraint-index"><span>19</span></span>
+<div><span>생존·해제 강제</span><h3>동결 지속시간 15초 증가</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="freezeSummaryValue">동결 15초 · 열기 유형 스킬로 해제</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body">
+<div class="constraint-control-grid freeze-control-grid">
+<div class="control-panel freeze-control-panel">
+<label for="freezeReleaseType"><span>동결을 즉시 해제하는 유형 스킬</span><output id="freezeReleaseTypeLabel">열기</output></label>
+<div class="freeze-fixed-row">
+<div class="freeze-fixed-chip"><span>동결 지속시간</span><b>15초</b></div>
+<div class="freeze-fixed-chip"><span>해제 판정</span><b>배틀 스킬 · 연계 스킬 · 궁극기</b></div>
+</div>
+<div class="preset-row freeze-release-row" id="freezeReleaseType">
+<button class="active" data-freeze-release="heat" type="button">열기</button>
+<button data-freeze-release="nature" type="button">자연</button>
+<button data-freeze-release="electric" type="button">전기</button>
+<button data-freeze-release="physical" type="button">물리</button>
+</div>
+</div>
+<div class="formula-panel freeze-formula-panel">
+<b>작동 방식</b>
+<code>선택한 유형의 배틀 스킬·연계 스킬·궁극기 중 하나를 사용하면 동결이 즉시 해제됩니다.</code>
+<code>기본 동결 5초를 15초로 늘려, 독성 물질 지속시간 15초와 같은 길이로 맞춥니다.</code>
+<span>독성 물질은 15초 동안 남고, 초당 현재 최대 HP 비율로 피해를 줍니다. 그래서 동결도 같은 15초 기준으로 맞춰 두 제약이 함께 걸렸을 때 플레이어가 지정 유형 스킬을 써서 해제하도록 유도합니다. 즉, 버티기보다 해제 행동을 요구하는 생존·조작 제약입니다.</span>
+</div>
+</div>
+<div class="freeze-info-grid">
+<article class="freeze-info-card">
+<h4>15초 설정 사유</h4>
+<p>독성 물질 생성 제약의 유지 시간이 15초이므로, 동결도 같은 15초로 늘려야 독성 지역에 묶이는 압박이 제대로 생깁니다. 기존 5초 동결은 독성 지역을 빠져나갈 여지가 커서 조합 압박이 약했습니다.</p>
+</article>
+<article class="freeze-info-card">
+<h4>즉시 해제 조건 존재 사유</h4>
+<p>지정한 유형의 스킬을 쓰면 동결을 풀 수 있게 하여, 파티 편성과 실제 스킬 운용이 제약 대응 수단이 되도록 만들었습니다. 같은 전투에서도 어떤 유형을 해제 수단으로 두느냐에 따라 체감 난도가 달라집니다.</p>
+</article>
+</div>
+</div>
+</details>
+<details class="constraint-details card heat-absorption-details" id="heatAbsorptionConstraint">
+<summary class="constraint-summary heat-absorption-summary">
+<span class="constraint-index"><span>20</span></span>
+<div><span>피격 즉시 동결 판정</span><h3>조작: 열량 흡수</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b>적 냉기 부착 공격 피격 시 즉시 동결</b></div>
+<div class="summary-value"><span>관련 몬스터</span><b>3종</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body heat-absorption-body">
+<section class="heat-absorption-intro">
+<div class="toxic-control-heading">
+<span>HEAT ABSORPTION · INSTANT FREEZE</span>
+<h4>현재 냉기 스택과 무관한 적 피격 즉시 동결</h4>
+<p>수정·탁류 아겔로스의 냉기 부착 공격은 이 제약이 적용되면 즉시 동결 공격으로 바뀝니다. 조류 아겔로스는 제약이 없어도 동일 공격에 맞는 즉시 동결되는 기본 예외입니다.</p>
+</div>
+<div class="heat-rule-grid">
+<article>
+<span>적용 조건</span>
+<b>적의 냉기 부착 공격에 피격</b>
+<p>피격 순간 별도의 즉시 동결 판정을 수행합니다. 기존 냉기 스택을 4까지 채우는 판정이 아닙니다.</p>
+</article>
+<article>
+<span>적용 제외</span>
+<b>아군 스킬로 발생한 냉기 스택</b>
+<p>아군의 배틀 스킬·연계 스킬 사용으로 쌓인 냉기 스택에는 열량 흡수의 즉시 동결 규칙을 적용하지 않습니다.</p>
+</article>
+</div>
+<div aria-label="현재 냉기 스택별 판정" class="heat-stack-grid">
+<div><span>현재 0스택</span><b>즉시 동결</b></div>
+<div><span>현재 1스택</span><b>즉시 동결</b></div>
+<div><span>현재 2스택</span><b>즉시 동결</b></div>
+<div><span>현재 3스택</span><b>즉시 동결</b></div>
+</div>
+</section>
+<section class="heat-monster-section">
+<header class="heat-monster-heading"><div><span>고정 적용 대상 · 3종</span><h4>몬스터별 기본 상태와 제약 적용 차이</h4><p>세 카드의 크기와 정보 행을 동일하게 맞춰 차이를 바로 비교할 수 있습니다.</p></div></header>
+<div class="heat-monster-grid">
+<article class="heat-monster-card changed">
+<header><img alt="수정 아겔로스" src="assets/monsters/hedron.png"/><div><span>수정 아겔로스</span><h5>제약으로 판정 변경</h5></div><b class="heat-status-badge changed">변경</b></header>
+<dl>
+<div><dt>기본 상태</dt><dd>냉기 부착 공격</dd></div>
+<div><dt>열량 흡수 적용</dt><dd>피격 즉시 동결</dd></div>
+<div><dt>냉기 스택 조건</dt><dd>0·1·2·3 모두 동일</dd></div>
+</dl>
+<p>열량 흡수 적용 시 해당 냉기 부착 공격이 즉시 동결 판정으로 변경됩니다.</p>
+<a href="https://wiki.skport.com/endfield/detail?mainTypeId=1&amp;subTypeId=3&amp;gameEntryId=394&amp;header=0" rel="noreferrer" target="_blank">도감 정보 보기</a>
+</article>
+<article class="heat-monster-card exception">
+<header><img alt="조류 아겔로스" src="assets/monsters/tidewalker.png"/><div><span>조류 아겔로스</span><h5>기본 상태 예외</h5></div><b class="heat-status-badge exception">예외</b></header>
+<dl>
+<div><dt>기본 상태</dt><dd>피격 즉시 동결</dd></div>
+<div><dt>열량 흡수 적용</dt><dd>추가 변경 없음</dd></div>
+<div><dt>냉기 스택 조건</dt><dd>0·1·2·3 모두 동일</dd></div>
+</dl>
+<p>제약을 적용하지 않아도 해당 공격에 맞으면 즉시 동결됩니다. 다른 두 몬스터와 구분되는 기본 예외입니다.</p>
+<a href="https://wiki.skport.com/endfield/detail?mainTypeId=1&amp;subTypeId=3&amp;gameEntryId=396&amp;header=0" rel="noreferrer" target="_blank">도감 정보 보기</a>
+</article>
+<article class="heat-monster-card changed">
+<header><img alt="탁류 아겔로스" src="assets/monsters/mudflow.png"/><div><span>탁류 아겔로스</span><h5>제약으로 판정 변경</h5></div><b class="heat-status-badge changed">변경</b></header>
+<dl>
+<div><dt>기본 상태</dt><dd>냉기 부착 공격</dd></div>
+<div><dt>열량 흡수 적용</dt><dd>피격 즉시 동결</dd></div>
+<div><dt>냉기 스택 조건</dt><dd>0·1·2·3 모두 동일</dd></div>
+</dl>
+<p>열량 흡수 적용 시 해당 냉기 부착 공격이 즉시 동결 판정으로 변경됩니다.</p>
+<a href="https://wiki.skport.com/endfield/detail?mainTypeId=1&amp;subTypeId=3&amp;gameEntryId=393&amp;header=0" rel="noreferrer" target="_blank">도감 정보 보기</a>
+</article>
+</div>
+</section>
+</div>
+</details>
+<details class="constraint-details card survival-guide-details" id="movementRestrictionConstraint">
+<summary class="constraint-summary survival-guide-summary">
+<span class="constraint-index"><span>21</span></span>
+<div><span>회피·기력 운용 제약</span><h3>이동 제한</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b>기력 회복 속도 50% 감소 · 회피 사용 불가</b></div>
+<div class="summary-value"><span>세부 제약</span><b>2종</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body survival-guide-body">
+<section class="survival-explainer-panel">
+<div class="toxic-control-heading">
+<span>MOVEMENT RESTRICTION</span>
+<h4>회피 자원과 회피 행동을 동시에 제한하는 이동 제약</h4>
+<p>두 제약은 모두 회피와 위치 조정의 자유도를 낮추지만, 제한 방식은 다릅니다. 하나는 회피에 필요한 자원 회복을 느리게 만들고, 다른 하나는 회피 행동 자체를 사용할 수 없게 만듭니다.</p>
+</div>
+<div class="survival-explainer-strip">
+<div><span>환경 · 호흡 불가</span><b>기력 회복 속도 50% 감소</b><small>회피는 가능하지만 회복 간격이 길어집니다.</small></div>
+<div><span>환경 · 속박</span><b>회피 사용 불가</b><small>현재 기력과 관계없이 회피 행동 자체를 사용할 수 없습니다.</small></div>
+</div>
+<div class="survival-explainer-grid movement-guide-grid">
+<article class="survival-explainer-card accent-card">
+<span>기력 회복 제한</span>
+<h4>환경: 호흡 불가</h4>
+<p>회피에 사용하는 기력의 자연 회복 속도가 50% 감소합니다. 회피 자체는 사용할 수 있지만, 소모한 기력을 다시 확보하는 시간이 길어져 연속 회피와 짧은 간격의 위치 조정이 어려워집니다.</p>
+</article>
+<article class="survival-explainer-card accent-card">
+<span>회피 행동 제한</span>
+<h4>환경: 속박</h4>
+<p>현재 기력과 무관하게 회피를 사용할 수 없습니다. 기력 회복 속도가 느려지는 수준이 아니라, 회피 버튼을 통한 즉시 회피 행동 자체를 선택할 수 없는 더 강한 이동 제한입니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>직접적인 영향</span>
+<h4>피격 회피 여유 감소</h4>
+<p>광역 공격 회피, 위험 지형 이탈, 강력한 일격 이후의 위치 조정처럼 짧은 시간 안에 움직여야 하는 상황에서 대응 폭이 줄어듭니다. 특히 회피를 연속으로 섞는 조작 습관일수록 체감이 큽니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>운용상 차이</span>
+<h4>자원 제약과 행동 제약의 구분</h4>
+<p>호흡 불가는 회피 횟수와 사용 간격을 제한하는 자원 제약이고, 속박은 회피 행동 자체를 봉쇄하는 행동 제약입니다. 따라서 속박은 다른 이동 수단이나 사전 위치 선점의 중요도가 훨씬 더 커집니다.</p>
+</article>
+</div>
+</section>
+</div>
+</details>
+<details class="constraint-details card survival-guide-details" id="mainOperatorLockConstraint">
+<summary class="constraint-summary survival-guide-summary">
+<span class="constraint-index"><span>22</span></span>
+<div><span>직접 조작 고정</span><h3>메인 오퍼레이터 전환 제한</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b>전투 시작 후 메인 오퍼레이터 전환 불가</b></div>
+<div class="summary-value"><span>핵심 영향</span><b>조작 고정</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body survival-guide-body">
+<section class="survival-explainer-panel">
+<div class="toxic-control-heading">
+<span>MAIN OPERATOR LOCK</span>
+<h4>전투 시작 시 선택한 메인 오퍼레이터를 끝까지 유지</h4>
+<p>파티 편성은 그대로 유지되지만, 직접 조작 대상으로 지정한 메인 오퍼레이터는 전투 도중 다른 오퍼레이터로 바꿀 수 없습니다. 즉, 위기 대응과 위치 조정의 책임이 한 명에게 계속 남습니다.</p>
+</div>
+<div class="survival-explainer-grid">
+<article class="survival-explainer-card accent-card">
+<span>적용 규칙</span>
+<h4>전환 시도 자체가 불가</h4>
+<p>전투 시작과 동시에 메인 오퍼레이터가 고정됩니다. 이후에는 다른 오퍼레이터를 메인으로 바꾸어 직접 조작하거나, 메인 전환을 활용한 즉시 위치 조정을 수행할 수 없습니다.</p>
+</article>
+<article class="survival-explainer-card accent-card">
+<span>직접적인 영향</span>
+<h4>위치 조정과 회피 부담 집중</h4>
+<p>적 공격을 피하거나 위험 지형을 벗어나는 과정에서 같은 오퍼레이터가 계속 전면에 남습니다. 조작 난도는 메인으로 선택한 오퍼레이터의 생존력과 이동 편의성에 크게 좌우됩니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>파티 운용 영향</span>
+<h4>전면 담당 선정의 중요성 증가</h4>
+<p>강력한 일격 유지, 일반 공격 콤보 연결, 위험 지역 이탈, 해제 스킬 사용 같은 역할을 누가 담당하는지가 더 중요해집니다. 메인을 교체하며 역할을 분담하는 운용은 전제할 수 없습니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>다른 제약과의 관계</span>
+<h4>이동 제한과 함께 체감 상승</h4>
+<p>회피 사용 제한이나 기력 회복 속도 감소와 함께 적용되면, 메인 오퍼레이터가 같은 위치에서 더 오래 위험을 감수해야 합니다. 동결이나 독성 물질처럼 해제나 이탈을 요구하는 제약과도 궁합이 나쁩니다.</p>
+</article>
+</div>
+</section>
+</div>
+</details>
+<details class="constraint-details card survival-guide-details" id="skillGaugeRecoveryConstraint">
+<summary class="constraint-summary survival-guide-summary">
+<span class="constraint-index"><span>23</span></span>
+<div><span>콤보 유지 요구</span><h3>스킬 게이지 자연 회복 제한</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b>12초 동안 일반 공격 마지막 타격이 없으면 자연 회복 중단</b></div>
+<div class="summary-value"><span>핵심 기준</span><b>12초</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body survival-guide-body">
+<section class="survival-explainer-panel">
+<div class="toxic-control-heading">
+<span>SKILL GAUGE RECOVERY LOCK</span>
+<h4>일반 공격 마지막 타격으로 유지되는 스킬 게이지 자연 회복</h4>
+<p>메인 컨트롤 오퍼레이터가 일정 시간 동안 일반 공격 콤보의 마지막 타격을 적중시키지 못하면, 스킬 게이지의 자연 회복이 멈춥니다. 배틀 스킬, 연계 스킬, 궁극기 피해는 강력한 일격으로 보지 않습니다.</p>
+</div>
+<div class="survival-explainer-strip gauge-spec-strip">
+<div><span>최대 보유량</span><b>3칸</b><small>가득 찬 상태를 초과해 저장하지 않습니다.</small></div>
+<div><span>1칸 기준</span><b>100</b><small>게이지 100이 차면 1칸이 완성됩니다.</small></div>
+<div><span>자연 회복 속도</span><b>초당 8</b><small>강력한 일격 조건을 만족하는 동안만 회복합니다.</small></div>
+<div><span>1칸 회복 시간</span><b>12.5초</b><small>100 ÷ 8 기준으로 계산한 완전 회복 시간입니다.</small></div>
+</div>
+<div class="survival-explainer-grid gauge-guide-grid">
+<article class="survival-explainer-card accent-card">
+<span>발동 조건</span>
+<h4>12초 동안 마지막 타격 미적중</h4>
+<p>메인 컨트롤 오퍼레이터가 12초 동안 일반 공격 콤보의 마지막 타격을 적중시키지 못하면 발동합니다. 강력한 일격은 일반 공격 마지막 타격만 해당합니다.</p>
+</article>
+<article class="survival-explainer-card accent-card">
+<span>적용 효과 및 해제</span>
+<h4>자연 회복 중단 · 마지막 타격으로 재개</h4>
+<p>발동 후에는 스킬 게이지의 자연 회복만 멈춥니다. 이미 보유한 게이지는 유지되며, 일반 공격 마지막 타격을 다시 적중시키면 자연 회복이 재개됩니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>12초 기준의 설계 근거</span>
+<h4>12.5초 완충 직전에서 회복 차단</h4>
+<p>게이지 한 칸은 100이고 초당 8씩 회복되므로, 한 칸을 채우는 데 12.5초가 필요합니다. 기준이 12.5초 이상이면 마지막 타격 없이도 한 칸을 채워 사용하는 반복이 가능하므로, 그 직전인 12초를 기준으로 둡니다.</p>
+</article>
+<article class="survival-explainer-card">
+<span>전투 운용 영향</span>
+<h4>콤보 유지와 스킬 순환 동시 요구</h4>
+<p>회피, 동결, 위치 이탈로 일반 공격 콤보가 자주 끊기는 파티일수록 영향을 크게 받습니다. 자연 회복 의존도가 높을수록 배틀 스킬 사용 간격도 함께 늘어날 수 있습니다.</p>
+</article>
+</div>
+</section>
+</div>
+</details>
+<details class="constraint-details card enemy-damage-details" id="enemyDamageConstraint">
+<summary class="constraint-summary enemy-damage-summary">
+<span class="constraint-index"><span>24</span></span>
+<div><span>피격 생존 압박</span><h3>적이 주는 피해 증가</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="enemyDamageSummaryValue">피해 +25% · 표준 공격력 1,400</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body enemy-damage-body">
+<div class="enemy-damage-main-layout">
+<section class="enemy-damage-unified-panel toxic-control-panel">
+<div class="toxic-control-heading"><span>ENEMY DAMAGE MODEL</span><h4>몬스터 공격력 기준 상대 생존 압박 비교</h4><p>실제 스킬 배율 대신 기준 공격력 모델을 사용해, 피해 증가율이 오퍼레이터 생존 횟수에 주는 영향을 비교합니다.</p></div>
+<section class="enemy-damage-note-panel formula-panel">
+<b>계산 기준</b>
+<code>1회 피격 피해 = 기준 공격력 × (1 + 피해 증가율)</code>
+<code>보호막이 먼저 소모되고, 남은 피해만 현재 HP에 반영됩니다.</code>
+<span>이 구간은 실제 몬스터 스킬 계수 전체를 재현하는 목적이 아니라, 동일한 공격력 기준에서 피해 증가율이 오퍼레이터 생존 압박을 얼마나 키우는지 상대 비교하기 위한 정보 바입니다.</span>
+</section>
+<div class="toxic-controls enemy-damage-controls">
+<div class="toxic-control-block">
+<label for="enemyDamageRate"><span>적이 주는 피해 증가</span><output id="enemyDamageRateValue">25%</output></label>
+<input id="enemyDamageRate" max="100" min="0" step="5" type="range" value="25"/>
+<div class="preset-row"><button data-enemy-rate="10" type="button">10%</button><button class="active" data-enemy-rate="25" type="button">25%</button><button data-enemy-rate="50" type="button">50%</button></div>
+</div>
+<div class="toxic-control-block">
+<label for="enemyAttackPreset"><span>기준 몬스터 공격력</span><output id="enemyAttackValue">표준 1,400</output></label>
+<div class="preset-row enemy-attack-row" id="enemyAttackPreset">
+<button data-enemy-attack="800" type="button">하급 800</button>
+<button class="active" data-enemy-attack="1400" type="button">표준 1,400</button>
+<button data-enemy-attack="2200" type="button">강공 2,200</button>
+</div>
+<small>같은 증가율이라도 기준 공격력이 높을수록 HP 감소 구간이 더 빨리 도달합니다.</small>
+</div>
+<div class="toxic-control-block">
+<label for="enemyShieldPreset"><span>시작 시 보유 보호막</span><output id="enemyShieldValue">0</output></label>
+<select id="enemyShieldPreset">
+<option value="0">보호막 없음</option>
+<option value="1205.08">카치르 보호막 1,205.08</option>
+<option value="4406.62">엠버 보호막 4,406.62</option>
+<option value="5276.86">미브 보호막 5,276.86</option>
+<option value="custom">직접 입력</option>
+</select>
+<input hidden="" id="enemyShieldCustom" max="30000" min="0" step="1" type="number" value="0"/>
+</div>
+<div class="toxic-control-block">
+<label for="enemyOperatorSelect"><span>상세 비교 오퍼레이터</span><output id="enemyOperatorHp">-</output></label>
+<select id="enemyOperatorSelect"></select>
+<small>Lv.90 · 스킬/재능 최고 · 잠재 0 · 생존 비교용 HP 최대 무기 Lv.90 · 재련 0 · 기질 [9/9/4]</small>
+</div>
+</div>
+</section>
+</div>
+<div class="enemy-analysis-layout">
+<section class="toxic-result-panel enemy-result-panel survival-result-panel" id="enemySelectedResultPanel">
+<header><div><span>선택 오퍼레이터</span><h4 id="enemySelectedName">-</h4></div><div class="survival-panel-header-actions"><button aria-controls="enemySelectedResultContent" aria-expanded="true" class="survival-panel-toggle" id="enemySelectedResultToggle" type="button">정보 바 접기</button><img alt="" id="enemySelectedPortrait" src=""/></div></header>
+<div class="survival-panel-collapsible-content" id="enemySelectedResultContent">
+<div class="toxic-build-note" id="enemySelectedBuild"></div>
+<div class="toxic-scenario-grid enemy-scenario-grid">
+<article><span>1회 피격 후</span><b id="enemyAfterOneHit">-</b><small id="enemyAfterOneHitNote">남은 HP</small></article>
+<article><span>HP 50% 이하</span><b id="enemyHalfHitCount">-</b><small id="enemyHalfHitNote">해당 구간 진입 횟수</small></article>
+<article><span>HP 25% 이하</span><b id="enemyQuarterHitCount">-</b><small id="enemyQuarterHitNote">위험 구간 진입 횟수</small></article>
+<article class="danger"><span>전투 불능</span><b id="enemyDownHitCount">-</b><small id="enemyDownHitNote">연속 피격 기준</small></article>
+</div>
+<div class="toxic-timeline enemy-hit-timeline" id="enemyHitTimeline"></div>
+</div>
+</section>
+</div>
+<section class="toxic-distribution-panel toxic-distribution-wide enemy-distribution-panel">
+<header><div><span>캐릭터 페이지 등록 오퍼레이터 · 28명</span><h4>최대 HP 분포와 피격 생존 비교</h4><p>같은 공격력이라도 최대 HP가 낮을수록 먼저 위험 구간에 들어갑니다. 피해 증가율이 커질수록 HP 50%·25%·전투 불능 도달 횟수가 빨라집니다.</p></div><div class="distribution-header-metrics"><div class="toxic-distribution-summary"><b id="enemyHpRange">-</b><small>최소~최대 HP</small></div><div class="toxic-distribution-summary incapacitation-average-summary"><b id="enemyAverageDownHits">-</b><small>전체 평균 불능 도달</small></div></div></header>
+<div class="toxic-operator-results enemy-operator-results" id="enemyOperatorResults"></div>
+</section>
+</div>
+</details>
+<details class="constraint-details card main-control-damage-details" id="mainControlDamageConstraint">
+<summary class="constraint-summary main-control-damage-summary">
+<span class="constraint-index"><span>25</span></span>
+<div><span>메인 컨트롤 생존 압박</span><h3>메인 컨트롤 오퍼레이터가 받는 피해 증가</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="mainControlDamageSummaryValue">받는 피해 +25% · 적 피해 설정 연동</b></div>
+<div class="summary-value"><span>관련 파티</span><b>7개</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body main-control-damage-body">
+<section class="main-control-unified-panel">
+<div class="toxic-control-heading">
+<span>MAIN CONTROL DAMAGE MODEL</span>
+<h4>적 피해 증가 적용 여부에 따른 메인 컨트롤 피격 비교</h4>
+<p>각 캐릭터가 메인 컨트롤 오퍼레이터로 지정되었다고 가정하고, 메인 컨트롤 피격 증가만 적용한 경우와 기존 적 피해 증가 제약까지 함께 적용한 경우를 나란히 비교합니다.</p>
+</div>
+<div class="main-control-linked-strip">
+<div><span>연동된 적 피해 증가율</span><b id="mainLinkedEnemyRate">25%</b><small>24번 정보 바에서 변경 시 즉시 반영</small></div>
+<div><span>연동된 기준 몬스터 공격력</span><b id="mainLinkedEnemyAttack">표준 1,400</b><small>24번 공격력 선택과 동일한 값 사용</small></div>
+<div><span>두 제약 최종 배율</span><b id="mainCombinedMultiplier">156.25%</b><small id="mainCombinedMultiplierNote">1.25 × 1.25 = 1.5625</small></div>
+</div>
+<section class="main-control-formula-panel formula-panel">
+<b>곱연산 적용 원리</b>
+<code>메인 피격 증가만 = 기준 공격력 × (1 + 메인 피격 증가율)</code>
+<code>두 제약 동시 적용 = 기준 공격력 × (1 + 적 피해 증가율) × (1 + 메인 피격 증가율)</code>
+<span>적 피해 증가는 공격자 측 보정, 메인 컨트롤 피격 증가는 피격자 측 보정으로 서로 다른 계산 단계에 적용합니다. 각각 25%라면 1.25 × 1.25 = 1.5625이므로 최종 피해는 기준 피해의 156.25%입니다.</span>
+</section>
+<div class="main-control-input-grid">
+<div class="toxic-control-block main-control-rate-block">
+<label for="mainControlDamageRate"><span>메인 컨트롤이 받는 피해 증가</span><output id="mainControlDamageRateValue">25%</output></label>
+<input id="mainControlDamageRate" max="100" min="0" step="5" type="range" value="25"/>
+<div class="preset-row main-control-rate-row"><button data-main-control-rate="10" type="button">10%</button><button class="active" data-main-control-rate="25" type="button">25%</button><button data-main-control-rate="50" type="button">50%</button></div>
+</div>
+<div class="toxic-control-block">
+<label for="mainControlShieldPreset"><span>시작 시 보유 보호막</span><output id="mainControlShieldValue">0</output></label>
+<select id="mainControlShieldPreset">
+<option value="0">보호막 없음</option>
+<option value="1205.08">카치르 보호막 1,205.08</option>
+<option value="4406.62">엠버 보호막 4,406.62</option>
+<option value="5276.86">미브 보호막 5,276.86</option>
+<option value="custom">직접 입력</option>
+</select>
+<input hidden="" id="mainControlShieldCustom" max="30000" min="0" step="1" type="number" value="0"/>
+</div>
+<div class="toxic-control-block">
+<label for="mainControlOperatorSelect"><span>상세 비교 오퍼레이터</span><output id="mainControlOperatorHp">-</output></label>
+<select id="mainControlOperatorSelect"></select>
+<small>목록의 각 캐릭터가 메인 컨트롤 오퍼레이터로 지정된 상황을 개별 계산합니다.</small>
+</div>
+</div>
+</section>
+<section class="main-control-selected-panel survival-result-panel" id="mainControlSelectedResultPanel">
+<header>
+<div><span>선택 오퍼레이터</span><h4 id="mainControlSelectedName">-</h4><p id="mainControlSelectedBuild">-</p></div>
+<div class="survival-panel-header-actions"><button aria-controls="mainControlSelectedResultContent" aria-expanded="true" class="survival-panel-toggle" id="mainControlSelectedResultToggle" type="button">정보 바 접기</button><img alt="" id="mainControlSelectedPortrait" src=""/></div>
+</header>
+<div class="survival-panel-collapsible-content" id="mainControlSelectedResultContent">
+<div class="main-control-scenario-comparison">
+<article class="main-control-scenario-card solo">
+<div class="scenario-card-heading"><span>적 피해 증가 제약 미적용</span><h5>메인 컨트롤 피격 증가만 적용</h5></div>
+<div class="scenario-damage-line"><span>1회 피격 피해</span><b id="mainSoloDamage">-</b></div>
+<div class="scenario-metric-grid">
+<div><span>1회 피격 후 HP</span><b id="mainSoloAfterOne">-</b></div>
+<div><span>HP 50% 이하</span><b id="mainSoloHalf">-</b></div>
+<div><span>HP 25% 이하</span><b id="mainSoloQuarter">-</b></div>
+<div><span>전투 불능</span><b id="mainSoloDown">-</b></div>
+</div>
+</article>
+<article class="main-control-scenario-card combined">
+<div class="scenario-card-heading"><span>적 피해 증가 제약 적용</span><h5>두 제약 곱연산 동시 적용</h5></div>
+<div class="scenario-damage-line"><span>1회 피격 피해</span><b id="mainCombinedDamage">-</b></div>
+<div class="scenario-metric-grid">
+<div><span>1회 피격 후 HP</span><b id="mainCombinedAfterOne">-</b></div>
+<div><span>HP 50% 이하</span><b id="mainCombinedHalf">-</b></div>
+<div><span>HP 25% 이하</span><b id="mainCombinedQuarter">-</b></div>
+<div><span>전투 불능</span><b id="mainCombinedDown">-</b></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="toxic-distribution-panel toxic-distribution-wide main-control-distribution-panel">
+<header><div><span>캐릭터 페이지 등록 오퍼레이터 · 28명</span><h4>메인 컨트롤 지정 시 두 시나리오 생존 결과</h4><p>모든 캐릭터가 동시에 제약을 받는다는 의미가 아니라, 각 캐릭터를 메인 컨트롤 오퍼레이터로 지정했을 때의 결과를 개별 비교합니다.</p></div><div class="distribution-header-metrics"><div class="toxic-distribution-summary"><b id="mainControlHpRange">-</b><small>최소~최대 HP</small></div><div class="toxic-distribution-summary incapacitation-average-summary main-control-average-summary"><b id="mainControlAverageDownHits">-</b><small>단독 평균 / 동시 평균</small></div></div></header>
+<div class="main-control-operator-results" id="mainControlOperatorResults"></div>
+</section>
+</div>
+</details>
+<details class="constraint-details card max-hp-reduction-details" id="maxHpReductionConstraint">
+<summary class="constraint-summary max-hp-reduction-summary">
+<span class="constraint-index"><span>26</span></span>
+<div><span>지속 생존 한계 누적</span><h3>실제 HP 피해에 비례한 최대 HP 감소</h3></div>
+<div class="summary-value current-setting"><span>현재 설정</span><b id="maxHpReductionSummaryValue">근거리 30% · 원거리 50% · 두 제약 동시 적용</b></div>
+<div class="summary-value"><span>관련 캐릭터</span><b>28명</b></div>
+<span class="fold-action"><b class="closed-label">분석 펼치기</b><b class="open-label">분석 접기</b></span>
+</summary>
+<div class="constraint-body max-hp-reduction-body">
+<section class="max-hp-unified-panel">
+<div class="toxic-control-heading">
+<span>MAX HP REDUCTION MODEL</span>
+<h4>보호막 이후 실제 HP 피해에 따른 최대 HP 감소</h4>
+<p>보호막이 흡수한 피해는 제외하고, 실제로 현재 HP에서 차감된 피해에만 근거리·원거리별 감소율을 적용합니다. 감소한 최대 HP는 전투 종료까지 복구되지 않는 것으로 계산합니다.</p>
+</div>
+<div class="max-hp-linked-strip">
+<div><span>연동된 기준 공격력</span><b id="maxHpLinkedAttack">표준 1,400</b><small>24번 정보 바의 공격력 설정</small></div>
+<div><span>연동된 적 피해 증가</span><b id="maxHpLinkedEnemyRate">25%</b><small>24번 정보 바에서 실시간 반영</small></div>
+<div><span>연동된 메인 피격 증가</span><b id="maxHpLinkedMainRate">25%</b><small>25번 정보 바에서 실시간 반영</small></div>
+</div>
+<section class="max-hp-formula-panel formula-panel">
+<b>계산 순서</b>
+<code>실제 HP 피해 = 선택 피해 모델의 1회 피해 − 보호막 흡수량</code>
+<code>최대 HP 감소량 = 실제 HP 피해 × 근거리 또는 원거리 감소율</code>
+<span>검·대검·장병기는 근거리, 권총·아츠 유닛은 원거리로 분류합니다. 초과 피해는 남은 현재 HP까지만 실제 HP 피해로 인정하며, 회복 없이 연속 피격되는 상황을 비교합니다.</span>
+</section>
+<div class="max-hp-control-grid">
+<div class="toxic-control-block max-hp-rate-block">
+<label for="meleeMaxHpReductionRate"><span>근거리 최대 HP 감소율</span><output id="meleeMaxHpReductionRateValue">30%</output></label>
+<input id="meleeMaxHpReductionRate" max="100" min="0" step="5" type="range" value="30"/>
+<div class="preset-row max-hp-rate-row"><button data-melee-max-hp-rate="10" type="button">10%</button><button class="active" data-melee-max-hp-rate="30" type="button">30%</button><button data-melee-max-hp-rate="50" type="button">50%</button></div>
+</div>
+<div class="toxic-control-block max-hp-rate-block">
+<label for="rangedMaxHpReductionRate"><span>원거리 최대 HP 감소율</span><output id="rangedMaxHpReductionRateValue">50%</output></label>
+<input id="rangedMaxHpReductionRate" max="100" min="0" step="5" type="range" value="50"/>
+<div class="preset-row max-hp-rate-row"><button data-ranged-max-hp-rate="30" type="button">30%</button><button class="active" data-ranged-max-hp-rate="50" type="button">50%</button><button data-ranged-max-hp-rate="70" type="button">70%</button></div>
+</div>
+<div class="toxic-control-block max-hp-damage-model-block">
+<label><span>적용할 1회 피해 모델</span><output id="maxHpDamageModelValue">두 제약 동시 적용</output></label>
+<div class="max-hp-damage-model-row" id="maxHpDamageModel">
+<button data-max-hp-damage-model="base" type="button">기준 공격력</button>
+<button data-max-hp-damage-model="enemy" type="button">적 피해 증가</button>
+<button data-max-hp-damage-model="main" type="button">메인 피격 증가</button>
+<button class="active" data-max-hp-damage-model="both" type="button">두 제약 동시</button>
+</div>
+</div>
+<div class="toxic-control-block">
+<label for="maxHpReductionShieldPreset"><span>시작 시 보유 보호막</span><output id="maxHpReductionShieldValue">0</output></label>
+<select id="maxHpReductionShieldPreset">
+<option value="0">보호막 없음</option>
+<option value="1205.08">카치르 보호막 1,205.08</option>
+<option value="4406.62">엠버 보호막 4,406.62</option>
+<option value="5276.86">미브 보호막 5,276.86</option>
+<option value="custom">직접 입력</option>
+</select>
+<input hidden="" id="maxHpReductionShieldCustom" max="30000" min="0" step="1" type="number" value="0"/>
+</div>
+<div class="toxic-control-block max-hp-operator-block">
+<label for="maxHpReductionOperatorSelect"><span>상세 비교 오퍼레이터</span><output id="maxHpReductionOperatorHp">-</output></label>
+<select id="maxHpReductionOperatorSelect"></select>
+<small id="maxHpReductionOperatorType">근거리·원거리 분류와 현재 감소율을 함께 표시합니다.</small>
+</div>
+</div>
+</section>
+<section class="max-hp-selected-panel survival-result-panel" id="maxHpReductionSelectedResultPanel">
+<header>
+<div><span>선택 오퍼레이터</span><div class="max-hp-selected-title"><h4 id="maxHpReductionSelectedName">-</h4><b id="maxHpReductionSelectedType">-</b></div><p id="maxHpReductionSelectedBuild">-</p></div>
+<div class="survival-panel-header-actions"><button aria-controls="maxHpReductionSelectedResultContent" aria-expanded="true" class="survival-panel-toggle" id="maxHpReductionSelectedResultToggle" type="button">정보 바 접기</button><img alt="" id="maxHpReductionSelectedPortrait" src=""/></div>
+</header>
+<div class="survival-panel-collapsible-content" id="maxHpReductionSelectedResultContent">
+<div class="max-hp-selected-metrics">
+<article><span>적용 1회 피해</span><b id="maxHpReductionDamage">-</b><small id="maxHpReductionDamageModelNote">선택 피해 모델</small></article>
+<article><span>1회 실제 HP 피해</span><b id="maxHpReductionActualDamage">-</b><small id="maxHpReductionShieldNote">보호막 흡수 후</small></article>
+<article><span>1회 최대 HP 감소</span><b id="maxHpReductionOneLoss">-</b><small id="maxHpReductionRateNote">감소율 적용</small></article>
+<article class="danger"><span>전투 불능</span><b id="maxHpReductionDownHit">-</b><small>회복 없는 연속 피격 기준</small></article>
+</div>
+<div class="max-hp-three-hit-summary">
+<div><span>3회 피격 후 현재 HP / 최대 HP</span><b id="maxHpReductionThreeHitState">-</b></div>
+<div><span>누적 최대 HP 감소</span><b id="maxHpReductionThreeHitLoss">-</b></div>
+<div><span>남은 보호막</span><b id="maxHpReductionThreeHitShield">-</b></div>
+</div>
+<div class="max-hp-timeline" id="maxHpReductionTimeline"></div>
+</div>
+</section>
+<section class="toxic-distribution-panel toxic-distribution-wide max-hp-distribution-panel">
+<header><div><span>캐릭터 페이지 등록 오퍼레이터 · 28명</span><h4>근거리·원거리 감소율 적용 결과</h4><p>각 캐릭터의 무기 유형에 맞는 감소율을 적용하고, 같은 피해 모델과 보호막 조건에서 3회 피격 후 상태와 전투 불능 시점을 비교합니다.</p></div><div class="distribution-header-metrics"><div class="toxic-distribution-summary"><b id="maxHpReductionRateRange">30% / 50%</b><small>근거리 / 원거리</small></div><div class="toxic-distribution-summary incapacitation-average-summary"><b id="maxHpReductionAverageDownHits">-</b><small>전체 평균 불능 도달</small></div></div></header>
+<div class="max-hp-operator-results" id="maxHpReductionOperatorResults"></div>
+</section>
+</div>
+</details>
+</div>
+</details>
+
+</div></div></details></section><section class="section-block combination-zone" id="combination">
+<details class="section-group-details combo-group-details" id="comboGroupDetails" open>
+<summary class="section-heading section-group-summary combo-group-summary">
+<div class="section-title-copy">
+<span>04 · COMBINATION ANALYSIS</span>
+<h2>제약 조합 분석</h2>
+<p>선택한 제약을 동시에 적용해 파티별 종합 결과와 제한시간 변화를 비교합니다.</p>
+</div>
+<span class="fold-action section-group-action"><b class="closed-label">조합 분석 펼치기</b><b class="open-label">조합 분석 접기</b></span>
+</summary>
+<div class="section-group-body combo-group-body"><details class="constraint-details card combo-details" id="comboConstraint">
+<summary class="constraint-category-heading constraint-group-summary combo-category-summary">
+<div class="constraint-category-copy">
+<span>COMBINATION ANALYSIS</span>
+<h2>제약 조합 분석</h2>
+<p>선택한 제약을 동시에 적용해 파티별 종합 결과와 제한시간 변화를 비교합니다.</p>
+</div>
+<span class="fold-action constraint-group-action combo-category-action"><b class="closed-label">조합 분석 펼치기</b><b class="open-label">조합 분석 접기</b></span>
+</summary>
+<div class="combo-summary-runtime" hidden>
+<b id="comboSummaryValue">선택 없음</b>
+<div class="combo-summary-chips" id="comboSummaryChips"></div>
+</div>
+<div class="constraint-body combo-body">
+<div class="combo-intro-row">
+<div><span class="combo-kicker">COMBINATION ENGINE</span><h4>선택 제약 동시 적용</h4><p>개별 제약의 감소율을 더하지 않고, 원본 파티와 스테이지에 정해진 순서대로 다시 적용합니다.</p></div>
+<div class="combo-actions"><button class="combo-primary-button" id="comboLoadSettings">개별 제약 설정 불러오기</button><button class="combo-secondary-button" id="comboReset">조합 초기화</button><button aria-controls="comboConstraintControls" aria-expanded="false" class="combo-constraint-toggle" id="comboConstraintToggle" type="button"><span id="comboConstraintToggleLabel">제약 펼치기</span></button></div>
+</div>
+<div class="combo-constraint-controls" hidden="" id="comboConstraintControls">
+<div class="combo-selector-grid">
+<article class="combo-selector" data-combo-card="stat">
+<header><label><input id="comboStatEnabled" type="checkbox"/><span><small>오퍼레이터 능력치</small><b>주요 능력치 감소</b></span></label><output id="comboStatValue">20%</output></header>
+<input id="comboStatReduction" max="50" min="0" step="1" type="range" value="20"/>
+<div class="preset-row combo-presets"><button data-combo-stat="10" type="button">10%</button><button class="active" data-combo-stat="20" type="button">20%</button><button data-combo-stat="40" type="button">40%</button></div>
+</article>
+<article class="combo-selector" data-combo-card="normal">
+<header><label><input id="comboNormalEnabled" type="checkbox"/><span><small>행동 유형</small><b>일반 공격 피해 감소</b></span></label><output id="comboNormalValue">70%</output></header>
+<input id="comboNormalReduction" max="100" min="0" step="1" type="range" value="70"/>
+<div class="preset-row combo-presets"><button data-combo-normal="30" type="button">30%</button><button data-combo-normal="50" type="button">50%</button><button class="active" data-combo-normal="70" type="button">70%</button><button data-combo-normal="100" type="button">100%</button></div>
+</article>
+<article class="combo-selector combo-selector-dual" data-combo-card="skillOther">
+<header><label><input id="comboSkillOtherEnabled" type="checkbox"/><span><small>피해 유형 교환</small><b>배틀 스킬 피해 감소 · 기타 피해 증가</b></span></label><output class="dual-output-lines" id="comboSkillOtherValue"><span>배틀 스킬 피해 -60%</span><span>기타 피해 +100%</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>배틀 스킬 감소</span><b id="comboBattleReductionInline">60%</b></label><input id="comboBattleReduction" max="100" min="0" step="1" type="range" value="60"/><div class="preset-row combo-presets"><button data-combo-battle="30" type="button">30%</button><button class="active" data-combo-battle="60" type="button">60%</button><button data-combo-battle="100" type="button">100%</button></div></div>
+<div><label><span>기타 피해 증가</span><b id="comboOtherIncreaseInline">100%</b></label><input id="comboOtherIncrease" max="200" min="0" step="1" type="range" value="100"/><div class="preset-row combo-presets"><button data-combo-other="50" type="button">50%</button><button class="active" data-combo-other="100" type="button">100%</button><button data-combo-other="200" type="button">200%</button></div></div>
+</div>
+</article>
+<article class="combo-selector combo-selector-dual disabled" data-combo-card="comboSpeed">
+<header><label><input id="comboComboSpeedEnabled" type="checkbox"/><span><small>행동 주기 교환</small><b>연계 스킬 재사용시간 감소 · 배틀 스킬 피해 감소</b></span></label><output class="dual-output-lines" id="comboComboSpeedValue"><span>연계 스킬 쿨타임 -60%</span><span>배틀 스킬 피해 -60%</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>연계 스킬 재사용시간 감소</span><b id="comboCooldownReductionInline">60%</b></label><input disabled="" id="comboComboCooldownReduction" max="80" min="0" step="1" type="range" value="60"/><div class="preset-row combo-presets"><button data-combo-cooldown="30" type="button">30%</button><button class="active" data-combo-cooldown="60" type="button">60%</button><button data-combo-cooldown="80" type="button">80%</button></div></div>
+<div><label><span>배틀 스킬 피해 감소</span><b id="comboSpeedBattleReductionInline">60%</b></label><input disabled="" id="comboSpeedBattleReduction" max="100" min="0" step="1" type="range" value="60"/><div class="preset-row combo-presets"><button data-combo-speed-battle="30" type="button">30%</button><button class="active" data-combo-speed-battle="60" type="button">60%</button><button data-combo-speed-battle="100" type="button">100%</button></div></div>
+</div>
+</article>
+<article class="combo-selector" data-combo-card="ultRepeat">
+<header><label><input id="comboUltRepeatEnabled" type="checkbox"/><span><small>궁극기 사용 반복</small><b>궁극기 반복 피해 감소</b></span></label><output id="comboUltRepeatValue">50%</output></header>
+<input id="comboUltRepeatReduction" max="100" min="0" step="1" type="range" value="50"/>
+<div class="preset-row combo-presets"><button data-combo-ult-repeat="0" type="button">0%</button><button class="active" data-combo-ult-repeat="50" type="button">50%</button><button data-combo-ult-repeat="100" type="button">100%</button></div>
+</article>
+<article class="combo-selector combo-selector-dual" data-combo-card="statusWindow">
+<header><label><input id="comboStatusWindowEnabled" type="checkbox"/><span><small>상태 시간창</small><b>상태 부여 후 속성 피해 감소</b></span></label><output class="dual-output-lines" id="comboStatusWindowValue"><span>감소 지속 10초</span><span>속성 피해 -50%</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>피해 감소 지속시간</span><b id="comboStatusDurationInline">10초</b></label><input id="comboStatusWindowDuration" max="20" min="0" step="1" type="range" value="10"/><div class="preset-row combo-presets"><button data-combo-status-duration="5" type="button">5초</button><button class="active" data-combo-status-duration="10" type="button">10초</button><button data-combo-status-duration="15" type="button">15초</button></div></div>
+<div><label><span>해당 속성 피해 감소</span><b id="comboStatusReductionInline">50%</b></label><input id="comboStatusWindowReduction" max="100" min="0" step="1" type="range" value="50"/><div class="preset-row combo-presets"><button data-combo-status-reduction="30" type="button">30%</button><button class="active" data-combo-status-reduction="50" type="button">50%</button><button data-combo-status-reduction="70" type="button">70%</button></div></div>
+</div>
+</article>
+<article class="combo-selector combo-selector-dual" data-combo-card="statusStage">
+<header><label><input id="comboStatusStageEnabled" type="checkbox"/><span><small>상태 단계 압박</small><b>상태 단계당 대응 피해 감소</b></span></label><output class="dual-output-lines" id="comboStatusStageValue"><span>부착 지속 10초</span><span>단계당 피해 -10%</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>부착 지속시간</span><b id="comboStatusStageDurationInline">10초</b></label><input id="comboStatusStageDuration" max="20" min="1" step="1" type="range" value="10"/><div class="preset-row combo-presets"><button data-combo-status-stage-duration="5" type="button">5초</button><button class="active" data-combo-status-stage-duration="10" type="button">10초</button><button data-combo-status-stage-duration="15" type="button">15초</button></div></div>
+<div><label><span>단계당 피해 감소</span><b id="comboStatusStageReductionInline">10%</b></label><input id="comboStatusStageReduction" max="25" min="0" step="1" type="range" value="10"/><div class="preset-row combo-presets"><button data-combo-status-stage-reduction="5" type="button">5%</button><button class="active" data-combo-status-stage-reduction="10" type="button">10%</button><button data-combo-status-stage-reduction="15" type="button">15%</button></div></div>
+</div>
+</article>
+<article class="combo-selector disabled" data-combo-card="statusReapply">
+<header><label><input id="comboStatusReapplyEnabled" type="checkbox"/><span><small>상태 재적용 제한</small><b>방어불능, 동일 아츠부착 재적용 간격 제한</b></span></label><output id="comboStatusReapplyValue">재적용 제한 10초</output></header>
+<input disabled="" id="comboStatusReapplyInterval" max="20" min="0" step="1" type="range" value="10"/>
+<div class="preset-row combo-presets"><button data-combo-status-reapply="5" type="button">5초</button><button class="active" data-combo-status-reapply="10" type="button">10초</button><button data-combo-status-reapply="15" type="button">15초</button></div>
+</article>
+<article class="combo-selector combo-selector-dual combo-selector-chill disabled" data-combo-card="battleChill">
+<header><label><input id="comboBattleChillEnabled" type="checkbox"/><span><small>배틀 스킬 냉기 누적</small><b>배틀 스킬 사용에 따른 냉기 부착</b></span></label><output class="dual-output-lines" id="comboBattleChillValue"><span>단계 I · 2회마다</span><span>부착 쿨타임 3초</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>냉기 부착 단계</span><b id="comboBattleChillStageInline">단계 I</b></label><input disabled="" id="comboBattleChillStage" max="2" min="1" step="1" type="range" value="1"/><div class="preset-row combo-presets chill-stage-presets"><button class="active" data-combo-battle-chill-stage="1" type="button">단계 I<small>2회마다</small></button><button data-combo-battle-chill-stage="2" type="button">단계 II<small>1회마다</small></button></div></div>
+<div><label><span>냉기 스택 부착 쿨타임</span><b id="comboBattleChillCooldownInline">3초</b></label><input disabled="" id="comboBattleChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/><div class="preset-row combo-presets chill-cooldown-presets"><button data-combo-battle-chill-cooldown="1" type="button">1초</button><button data-combo-battle-chill-cooldown="2" type="button">2초</button><button class="active" data-combo-battle-chill-cooldown="3" type="button">3초</button><button data-combo-battle-chill-cooldown="4" type="button">4초</button><button data-combo-battle-chill-cooldown="5" type="button">5초</button></div></div>
+</div>
+</article>
+<article class="combo-selector combo-selector-dual combo-selector-chill disabled" data-combo-card="comboChill">
+<header><label><input id="comboComboChillEnabled" type="checkbox"/><span><small>연계 스킬 냉기 누적</small><b>연계 스킬 사용에 따른 냉기 부착</b></span></label><output class="dual-output-lines" id="comboComboChillValue"><span>단계 I · 2회마다</span><span>부착 쿨타임 3초</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>냉기 부착 단계</span><b id="comboComboChillStageInline">단계 I</b></label><input disabled="" id="comboComboChillStage" max="2" min="1" step="1" type="range" value="1"/><div class="preset-row combo-presets chill-stage-presets"><button class="active" data-combo-combo-chill-stage="1" type="button">단계 I<small>2회마다</small></button><button data-combo-combo-chill-stage="2" type="button">단계 II<small>1회마다</small></button></div></div>
+<div><label><span>냉기 스택 부착 쿨타임</span><b id="comboComboChillCooldownInline">3초</b></label><input disabled="" id="comboComboChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/><div class="preset-row combo-presets chill-cooldown-presets"><button data-combo-combo-chill-cooldown="1" type="button">1초</button><button data-combo-combo-chill-cooldown="2" type="button">2초</button><button class="active" data-combo-combo-chill-cooldown="3" type="button">3초</button><button data-combo-combo-chill-cooldown="4" type="button">4초</button><button data-combo-combo-chill-cooldown="5" type="button">5초</button></div></div>
+</div>
+</article>
+<article class="combo-selector disabled" data-combo-card="stageEnhance">
+<header><label><input id="comboStageEnhanceEnabled" type="checkbox"/><span><small>지정 개체 강화</small><b>지정 웨이브 몬스터 체력 강화</b></span></label><output id="comboStageEnhanceValue">강화 [1]</output></header>
+<input id="comboStageEnhanceLevel" type="hidden" value="1"/>
+<div class="preset-row combo-presets stage-enhance-presets"><button class="active" data-combo-stage-enhance="1" type="button">강화 [1]</button><button data-combo-stage-enhance="2" type="button">강화 [2]</button></div>
+</article>
+<article class="combo-selector combo-selector-dual disabled" data-combo-card="highHpCap">
+<header><label><input id="comboHighHpCapEnabled" type="checkbox"/><span><small>순간 피해 제한</small><b>고체력 적 0.1초 피해 상한</b></span></label><output class="dual-output-lines" id="comboHighHpCapValue"><span>적용 HP 100,000 이상</span><span>0.1초 상한 25%</span></output></header>
+<div class="combo-dual-ranges">
+<div><label><span>적용 최소 체력</span><b id="comboHighHpThresholdInline">100,000</b></label><input disabled="" id="comboHighHpThreshold" max="200000" min="50000" step="10000" type="range" value="100000"/><div class="preset-row combo-presets"><button data-combo-high-hp-threshold="50000" type="button">50,000</button><button class="active" data-combo-high-hp-threshold="100000" type="button">100,000</button><button data-combo-high-hp-threshold="150000" type="button">150,000</button><button data-combo-high-hp-threshold="200000" type="button">200,000</button></div></div>
+<div><label><span>0.1초 피해 상한</span><b id="comboHighHpCapInline">25%</b></label><input disabled="" id="comboHighHpCapRate" max="50" min="5" step="1" type="range" value="25"/><div class="preset-row combo-presets"><button data-combo-high-hp-cap="15" type="button">15%</button><button class="active" data-combo-high-hp-cap="25" type="button">25%</button><button data-combo-high-hp-cap="35" type="button">35%</button></div></div>
+</div>
+</article>
+<article class="combo-selector disabled" data-combo-card="controlRecovery">
+<header><label><input id="comboControlRecoveryEnabled" type="checkbox"/><span><small>제어 사용 압박</small><b>제어 상태 중 몬스터 체력 회복</b></span></label><output id="comboControlRecoveryValue">초당 5%</output></header>
+<input disabled="" id="comboControlRecoveryRate" max="20" min="0" step="1" type="range" value="5"/>
+<div class="preset-row combo-presets"><button class="active" data-combo-control-recovery="5" type="button">5%</button><button data-combo-control-recovery="10" type="button">10%</button><button data-combo-control-recovery="15" type="button">15%</button></div>
+</article>
+<article class="combo-selector" data-combo-card="hp">
+<header><label><input id="comboHpEnabled" type="checkbox"/><span><small>스테이지 몬스터</small><b>몬스터 최대 체력 증가</b></span></label><output id="comboHpValue">30%</output></header>
+<input id="comboHpIncrease" max="200" min="0" step="1" type="range" value="30"/>
+<div class="preset-row combo-presets"><button class="active" data-combo-hp="30" type="button">30%</button><button data-combo-hp="50" type="button">50%</button><button data-combo-hp="100" type="button">100%</button><button data-combo-hp="200" type="button">200%</button></div>
+</article>
+<article class="combo-selector" data-combo-card="time">
+<header class="combo-time-header"><label><input id="comboTimeEnabled" type="checkbox"/><span><small>스테이지 제한시간</small><b>클리어 제한시간 감소</b></span></label><span aria-live="polite" class="combo-time-inline"><span>적용 제한시간 <b id="comboAppliedTimeLimit">600초</b></span></span><output id="comboTimeValue">100초</output></header>
+<input id="comboTimeReduction" max="300" min="0" step="10" type="range" value="100"/>
+<div class="preset-row combo-presets"><button data-combo-time="0" type="button">0초</button><button class="active" data-combo-time="100" type="button">100초</button><button data-combo-time="200" type="button">200초</button><button data-combo-time="300" type="button">300초</button></div>
+</article>
+</div>
+<div class="combo-selected-chips" id="comboSelectedChips"></div>
+</div>
+<details class="combo-party-results-details" id="comboPartyResultsDetails">
+<summary class="constraint-category-heading combo-strength-summary combo-party-results-summary">
+<div class="constraint-category-copy">
+<span>PARTY COMBINATION RESULTS</span>
+<h2>파티별 제약 조합 결과</h2>
+<p>선택한 제약을 동시에 적용한 각 파티의 DPS·예상 클리어 시간·남은 시간을 비교합니다.</p>
+</div>
+<span class="fold-action combo-strength-action combo-party-results-action"><b class="closed-label">파티 결과 펼치기</b><b class="open-label">파티 결과 접기</b></span>
+</summary>
+<div class="combo-party-results-body">
+<div class="constraint-party-stack combo-party-stack" id="comboPartyResults"></div>
+</div>
+</details>
+<details class="combo-strength-details" id="comboStrengthDetails">
+<summary class="constraint-category-heading combo-strength-summary">
+<div class="constraint-category-copy">
+<span>INDIVIDUAL CONSTRAINT RATING</span>
+<h2>제약별 강도·점수 판정</h2>
+<p>선택한 각 제약을 현재 설정값으로 단독 적용해 1·2·3점 중 적절한 점수를 개별 판정합니다.</p>
+</div>
+<span class="fold-action combo-strength-action"><b class="closed-label">강도 분석 펼치기</b><b class="open-label">강도 분석 접기</b></span>
+</summary>
+<div class="combo-strength-body">
+<div class="combo-strength-top-grid">
+<section class="combo-strength-card combo-strength-chart-card" aria-labelledby="comboStrengthChartTitle">
+<header><div><span>DPS CONTRIBUTION</span><h3 id="comboStrengthChartTitle">현재 조합 DPS 감소 기여도</h3></div><b id="comboStrengthContributionCount">0개 분석</b></header>
+<div class="combo-strength-chart-layout">
+<div class="combo-strength-donut" id="comboStrengthDonut" role="img" aria-label="선택된 제약이 없습니다.">
+<div class="combo-strength-donut-center"><span>평균 DPS 변화</span><strong id="comboStrengthDonutValue">+0%</strong><small id="comboStrengthDonutSub">선택 없음</small></div>
+</div>
+<div class="combo-strength-legend" id="comboStrengthLegend"><div class="combo-strength-empty">선택된 제약이 없습니다.</div></div>
+</div>
+<p class="combo-strength-note">원형 차트는 현재 조합에서 각 제약이 만든 평균 DPS 감소 기여를 표시합니다. 각 행의 점수는 해당 제약만 현재 수치로 단독 적용한 별도 판정입니다.</p>
+</section>
+<section class="combo-strength-card combo-strength-grade-card" aria-labelledby="comboStrengthGradeTitle">
+<header><div><span>POINT RECOMMENDATION</span><h3 id="comboStrengthGradeTitle">제약별 권장 점수</h3></div><b id="comboStrengthScoreCount">0개 판정</b></header>
+<div class="combo-strength-score-list" id="comboStrengthScoreList"><div class="combo-strength-empty">선택된 제약이 없습니다.</div></div>
+<p class="combo-strength-score-note">다른 제약은 모두 해제하고 해당 제약 하나만 적용한 결과로 점수를 판정합니다.</p>
+</section>
+</div>
+<section class="combo-strength-card combo-strength-party-card">
+<header><div><span>INDIVIDUAL RATING DETAILS</span><h3>제약별 단독 적용 판정 근거</h3></div><b id="comboStrengthScoreSummary">1점 0개 · 2점 0개 · 3점 0개</b></header>
+<div class="combo-strength-party-grid combo-strength-score-grid" id="comboStrengthScoreGrid"><div class="combo-strength-empty">선택된 제약이 없습니다.</div></div>
+</section>
+</div>
+</details>
+<details class="combo-strength-details combo-rating-criteria-details" id="comboRatingCriteriaDetails">
+<summary class="constraint-category-heading combo-strength-summary combo-rating-criteria-summary">
+<div class="constraint-category-copy">
+<span>RATING METHOD</span>
+<h2>제약별 강도·점수 판정 기준</h2>
+<p>단독 적용 부담, 불리한 파티 가중치와 파티 편향 보정까지 새 점수 기준을 공식과 함께 설명합니다.</p>
+</div>
+<span class="fold-action combo-strength-action combo-rating-criteria-action"><b class="closed-label">판정 기준 펼치기</b><b class="open-label">판정 기준 접기</b></span>
+</summary>
+<div class="combo-rating-criteria-body">
+<section class="combo-rating-intro">
+<span>HOW IT WORKS</span>
+<h3>각 제약을 다른 제약 없이 하나만 적용해 7개 파티에 미치는 부담을 비교합니다.</h3>
+<p>DPS 감소뿐 아니라 몬스터 HP 증가와 제한시간 감소도 같은 기준으로 비교합니다. 일반적인 파티의 부담과 가장 불리한 파티의 부담 차이까지 함께 계산해 특정 파티만 심하게 약해지는 제약을 따로 보정합니다.</p>
+</section>
+<div class="combo-rating-formula-grid">
+<section class="combo-rating-formula-card">
+<header><span>STEP 1</span><h3>파티별 단독 적용 부담</h3></header>
+<div class="combo-rating-formula-expression">
+<strong>단독 적용 부담</strong>
+<div class="formula-line"><span>=</span><b>(단독 적용 스테이지 HP ÷ 무제약 스테이지 HP)</b></div>
+<div class="formula-line formula-multiply"><span>×</span><b>(무제약 DPS ÷ 단독 적용 DPS)</b></div>
+<div class="formula-line formula-multiply"><span>×</span><b>(무제약 전투 가능 시간 ÷ 단독 적용 전투 가능 시간)</b></div>
+<div class="formula-line formula-result"><span>−</span><b>1, 이후 × 100%</b></div>
+</div>
+<p>결과가 <strong>+20%</strong>라면 그 파티가 무제약 상태보다 20% 더 높은 전투 부담을 받는다는 뜻입니다. DPS를 직접 바꾸지 않는 HP·시간 제약도 같은 공식으로 비교합니다.</p>
+</section>
+<section class="combo-rating-formula-card">
+<header><span>STEP 2</span><h3>기본 강도</h3></header>
+<div class="combo-rating-formula-expression combo-rating-index-expression">
+<strong>기본 강도</strong>
+<div class="formula-line"><span>=</span><b>중앙 파티 부담 × 45%</b></div>
+<div class="formula-line formula-plus"><span>+</span><b>두 번째로 불리한 파티 부담 × 30%</b></div>
+<div class="formula-line formula-plus"><span>+</span><b>가장 불리한 파티 부담 × 25%</b></div>
+<div class="formula-line formula-result"><span>≥</span><b>최솟값 0으로 제한</b></div>
+</div>
+<p>보통 파티의 체감이 중심이 되도록 하면서, 불리한 파티 두 곳의 결과도 함께 반영합니다. 그래서 평균이 낮아도 일부 파티가 크게 약해지는 제약을 놓치지 않습니다.</p>
+</section>
+<section class="combo-rating-formula-card">
+<header><span>STEP 3</span><h3>파티 편향 보정과 최종 지수</h3></header>
+<div class="combo-rating-formula-expression combo-rating-index-expression">
+<strong>파티 편향</strong>
+<div class="formula-line"><span>=</span><b>가장 불리한 파티 부담 − 중앙 파티 부담</b></div>
+<div class="formula-line formula-plus"><span>+</span><b>편향 보정 = 파티 편향 × 50%</b></div>
+<div class="formula-line formula-result"><span>=</span><b>최종 강도 지수 = 기본 강도 + 편향 보정</b></div>
+</div>
+<p>특정 파티만 유독 심하게 불리하면 최고 부담과 중앙 부담의 차이가 커집니다. 그 차이의 절반을 점수에 더해, 저격성이 높은 제약이 과소평가되지 않도록 합니다.</p>
+</section>
+</div>
+<section class="combo-rating-term-section">
+<header><span>TERM GUIDE</span><h3>공식에 사용되는 값</h3></header>
+<div class="combo-rating-term-grid">
+<article><b>중앙 파티 부담</b><p>7개 파티를 부담이 낮은 순서로 정렬했을 때 네 번째 값입니다. 일반적인 파티가 받는 영향을 나타냅니다.</p></article>
+<article><b>두 번째로 불리한 파티 부담</b><p>7개 파티 중 두 번째로 높은 부담입니다. 한 파티만의 우연한 극단값이 아니라 불리한 쪽의 반복되는 영향을 반영합니다.</p></article>
+<article><b>가장 불리한 파티 부담</b><p>7개 파티 중 가장 높은 부담입니다. 해당 제약에 가장 크게 손해 보는 파티의 결과입니다.</p></article>
+<article><b>파티 편향</b><p>가장 불리한 파티 부담에서 중앙 파티 부담을 뺀 차이입니다. 값이 클수록 특정 파티를 집중적으로 약화시키는 제약입니다.</p></article>
+<article><b>전투 가능 시간</b><p>적용 제한시간에서 웨이브 전환시간을 뺀 실제 공격 가능 시간입니다. 계산 안정성을 위해 최소 1초로 처리합니다.</p></article>
+</div>
+</section>
+<section class="combo-rating-grade-section">
+<header><span>POINT RULE</span><h3>1·2·3점 판정</h3></header>
+<div class="combo-rating-grade-grid">
+<article class="grade-1"><strong>1점</strong><div><b>강도 지수 20 미만</b><p>대부분의 파티에 비교적 가벼운 영향을 주는 제약입니다.</p></div></article>
+<article class="grade-2"><strong>2점</strong><div><b>강도 지수 20 이상 50 미만</b><p>파티 구성에 따라 체감 차이가 분명하게 나타나는 중간 강도의 제약입니다.</p></div></article>
+<article class="grade-3"><strong>3점</strong><div><b>강도 지수 50 이상</b><p>대부분의 파티에 큰 부담을 주거나 특정 파티를 매우 강하게 압박하는 제약입니다.</p></div></article>
+</div>
+<div class="combo-rating-upgrade-rule">
+<b>점수 자동 상향 조건</b>
+<p><strong>최고 부담이 35% 이상</strong>, <strong>파티 편향이 15%p 이상</strong>, 또는 <strong>제한시간 초과 파티가 1개 이상</strong>이면 최소 2점으로 올립니다.</p>
+<p><strong>최고 부담이 80% 이상</strong>, <strong>파티 편향이 40%p 이상</strong>, 또는 <strong>7개 파티 중 3개 이상이 제한시간을 초과</strong>하면 3점으로 판정합니다.</p>
+</div>
+</section>
+</div>
+</details>
+</div>
+</details></div>
+</details>
+</section>
+</main>
+<button aria-controls="comboQuickDrawer" aria-expanded="false" aria-label="제약 조합 빠른 조정 열기" class="combo-quick-launcher" id="comboQuickLauncher" type="button">
+<span aria-hidden="true">‹</span>
+</button>
+<aside aria-labelledby="comboQuickTitle" aria-modal="false" class="combo-quick-drawer" hidden="" id="comboQuickDrawer" role="dialog">
+<header class="combo-quick-header">
+<div class="combo-quick-heading-copy">
+<small>COMBINATION CONTROLS</small>
+<div class="combo-quick-title-row">
+<h2 id="comboQuickTitle">제약 조합 빠른 조정</h2>
+<button aria-label="제약 조합 빠른 조정 창 이동" class="combo-quick-drag-handle" id="comboQuickDragHandle" title="잡고 드래그하여 창 이동" type="button"><span aria-hidden="true"></span></button>
+<button class="combo-quick-selection-reset" id="comboQuickSelectionReset" type="button" title="빠른 조정 창과 선택 제약 동시 적용 정보 바의 선택을 모두 해제합니다.">선택 초기화</button>
+</div>
+<p>본문의 제약 조합 수치와 같은 값으로 연결됩니다.</p>
+</div>
+<button aria-label="제약 조합 빠른 조정 닫기" class="combo-quick-close" id="comboQuickClose" type="button">×</button>
+</header>
+<div class="combo-quick-body">
+<article class="combo-quick-control" data-popup-combo-card="stat">
+<header><label><input id="popupComboStatEnabled" type="checkbox"/><span><small>오퍼레이터 능력치</small><b>주요 능력치 감소</b></span></label><output id="popupComboStatValue">20%</output></header>
+<input id="popupComboStatReduction" max="50" min="0" step="1" type="range" value="20"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-stat="10" type="button">10%</button><button data-popup-combo-stat="20" type="button">20%</button><button data-popup-combo-stat="40" type="button">40%</button></div>
+</article>
+<article class="combo-quick-control" data-popup-combo-card="normal">
+<header><label><input id="popupComboNormalEnabled" type="checkbox"/><span><small>행동 유형</small><b>일반 공격 피해 감소</b></span></label><output id="popupComboNormalValue">70%</output></header>
+<input id="popupComboNormalReduction" max="100" min="0" step="1" type="range" value="70"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-normal="30" type="button">30%</button><button data-popup-combo-normal="50" type="button">50%</button><button data-popup-combo-normal="70" type="button">70%</button><button data-popup-combo-normal="100" type="button">100%</button></div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual" data-popup-combo-card="skillOther">
+<header><label><input id="popupComboSkillOtherEnabled" type="checkbox"/><span><small>피해 유형 교환</small><b>배틀 스킬 피해 감소 · 기타 피해 증가</b></span></label><output class="dual-output-lines" id="popupComboSkillOtherValue"><span>배틀 스킬 피해 -60%</span><span>기타 피해 +100%</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>배틀 스킬 감소</span><b id="popupComboBattleReductionInline">60%</b></label><input id="popupComboBattleReduction" max="100" min="0" step="1" type="range" value="60"/><div class="preset-row popup-combo-presets"><button data-popup-combo-battle="30" type="button">30%</button><button data-popup-combo-battle="60" type="button">60%</button><button data-popup-combo-battle="100" type="button">100%</button></div></div>
+<div><label><span>기타 피해 증가</span><b id="popupComboOtherIncreaseInline">100%</b></label><input id="popupComboOtherIncrease" max="200" min="0" step="1" type="range" value="100"/><div class="preset-row popup-combo-presets"><button data-popup-combo-other="50" type="button">50%</button><button data-popup-combo-other="100" type="button">100%</button><button data-popup-combo-other="200" type="button">200%</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual disabled" data-popup-combo-card="comboSpeed">
+<header><label><input id="popupComboComboSpeedEnabled" type="checkbox"/><span><small>행동 주기 교환</small><b>연계 스킬 재사용시간 감소 · 배틀 스킬 피해 감소</b></span></label><output class="dual-output-lines" id="popupComboComboSpeedValue"><span>연계 스킬 쿨타임 -60%</span><span>배틀 스킬 피해 -60%</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>연계 스킬 재사용시간 감소</span><b id="popupComboCooldownReductionInline">60%</b></label><input disabled="" id="popupComboComboCooldownReduction" max="80" min="0" step="1" type="range" value="60"/><div class="preset-row popup-combo-presets"><button data-popup-combo-cooldown="30" type="button">30%</button><button data-popup-combo-cooldown="60" type="button">60%</button><button data-popup-combo-cooldown="80" type="button">80%</button></div></div>
+<div><label><span>배틀 스킬 피해 감소</span><b id="popupComboSpeedBattleReductionInline">60%</b></label><input disabled="" id="popupComboSpeedBattleReduction" max="100" min="0" step="1" type="range" value="60"/><div class="preset-row popup-combo-presets"><button data-popup-combo-speed-battle="30" type="button">30%</button><button data-popup-combo-speed-battle="60" type="button">60%</button><button data-popup-combo-speed-battle="100" type="button">100%</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control" data-popup-combo-card="ultRepeat">
+<header><label><input id="popupComboUltRepeatEnabled" type="checkbox"/><span><small>궁극기 사용 반복</small><b>궁극기 반복 피해 감소</b></span></label><output id="popupComboUltRepeatValue">50%</output></header>
+<input id="popupComboUltRepeatReduction" max="100" min="0" step="1" type="range" value="50"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-ult-repeat="0" type="button">0%</button><button data-popup-combo-ult-repeat="50" type="button">50%</button><button data-popup-combo-ult-repeat="100" type="button">100%</button></div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual" data-popup-combo-card="statusWindow">
+<header><label><input id="popupComboStatusWindowEnabled" type="checkbox"/><span><small>상태 시간창</small><b>상태 부여 후 속성 피해 감소</b></span></label><output class="dual-output-lines" id="popupComboStatusWindowValue"><span>감소 지속 10초</span><span>속성 피해 -50%</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>피해 감소 지속시간</span><b id="popupComboStatusDurationInline">10초</b></label><input id="popupComboStatusWindowDuration" max="20" min="0" step="1" type="range" value="10"/><div class="preset-row popup-combo-presets"><button data-popup-combo-status-duration="5" type="button">5초</button><button data-popup-combo-status-duration="10" type="button">10초</button><button data-popup-combo-status-duration="15" type="button">15초</button></div></div>
+<div><label><span>해당 속성 피해 감소</span><b id="popupComboStatusReductionInline">50%</b></label><input id="popupComboStatusWindowReduction" max="100" min="0" step="1" type="range" value="50"/><div class="preset-row popup-combo-presets"><button data-popup-combo-status-reduction="30" type="button">30%</button><button data-popup-combo-status-reduction="50" type="button">50%</button><button data-popup-combo-status-reduction="70" type="button">70%</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual" data-popup-combo-card="statusStage">
+<header><label><input id="popupComboStatusStageEnabled" type="checkbox"/><span><small>상태 단계 압박</small><b>상태 단계당 대응 피해 감소</b></span></label><output class="dual-output-lines" id="popupComboStatusStageValue"><span>부착 지속 10초</span><span>단계당 피해 -10%</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>부착 지속시간</span><b id="popupComboStatusStageDurationInline">10초</b></label><input id="popupComboStatusStageDuration" max="20" min="1" step="1" type="range" value="10"/><div class="preset-row popup-combo-presets"><button data-popup-combo-status-stage-duration="5" type="button">5초</button><button data-popup-combo-status-stage-duration="10" type="button">10초</button><button data-popup-combo-status-stage-duration="15" type="button">15초</button></div></div>
+<div><label><span>단계당 피해 감소</span><b id="popupComboStatusStageReductionInline">10%</b></label><input id="popupComboStatusStageReduction" max="25" min="0" step="1" type="range" value="10"/><div class="preset-row popup-combo-presets"><button data-popup-combo-status-stage-reduction="5" type="button">5%</button><button data-popup-combo-status-stage-reduction="10" type="button">10%</button><button data-popup-combo-status-stage-reduction="15" type="button">15%</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control disabled" data-popup-combo-card="statusReapply">
+<header><label><input id="popupComboStatusReapplyEnabled" type="checkbox"/><span><small>상태 재적용 제한</small><b>방어불능, 동일 아츠부착 재적용 간격 제한</b></span></label><output id="popupComboStatusReapplyValue">재적용 제한 10초</output></header>
+<input disabled="" id="popupComboStatusReapplyInterval" max="20" min="0" step="1" type="range" value="10"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-status-reapply="5" type="button">5초</button><button data-popup-combo-status-reapply="10" type="button">10초</button><button data-popup-combo-status-reapply="15" type="button">15초</button></div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual combo-quick-control-chill disabled" data-popup-combo-card="battleChill">
+<header><label><input id="popupComboBattleChillEnabled" type="checkbox"/><span><small>배틀 스킬 냉기 누적</small><b>배틀 스킬 사용에 따른 냉기 부착</b></span></label><output class="dual-output-lines" id="popupComboBattleChillValue"><span>단계 I · 2회마다</span><span>부착 쿨타임 3초</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>냉기 부착 단계</span><b id="popupComboBattleChillStageInline">단계 I</b></label><input disabled="" id="popupComboBattleChillStage" max="2" min="1" step="1" type="range" value="1"/><div class="preset-row popup-combo-presets chill-stage-presets"><button data-popup-combo-battle-chill-stage="1" type="button">단계 I<small>2회마다</small></button><button data-popup-combo-battle-chill-stage="2" type="button">단계 II<small>1회마다</small></button></div></div>
+<div><label><span>냉기 스택 부착 쿨타임</span><b id="popupComboBattleChillCooldownInline">3초</b></label><input disabled="" id="popupComboBattleChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/><div class="preset-row popup-combo-presets chill-cooldown-presets"><button data-popup-combo-battle-chill-cooldown="1" type="button">1초</button><button data-popup-combo-battle-chill-cooldown="2" type="button">2초</button><button data-popup-combo-battle-chill-cooldown="3" type="button">3초</button><button data-popup-combo-battle-chill-cooldown="4" type="button">4초</button><button data-popup-combo-battle-chill-cooldown="5" type="button">5초</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual combo-quick-control-chill disabled" data-popup-combo-card="comboChill">
+<header><label><input id="popupComboComboChillEnabled" type="checkbox"/><span><small>연계 스킬 냉기 누적</small><b>연계 스킬 사용에 따른 냉기 부착</b></span></label><output class="dual-output-lines" id="popupComboComboChillValue"><span>단계 I · 2회마다</span><span>부착 쿨타임 3초</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>냉기 부착 단계</span><b id="popupComboComboChillStageInline">단계 I</b></label><input disabled="" id="popupComboComboChillStage" max="2" min="1" step="1" type="range" value="1"/><div class="preset-row popup-combo-presets chill-stage-presets"><button data-popup-combo-combo-chill-stage="1" type="button">단계 I<small>2회마다</small></button><button data-popup-combo-combo-chill-stage="2" type="button">단계 II<small>1회마다</small></button></div></div>
+<div><label><span>냉기 스택 부착 쿨타임</span><b id="popupComboComboChillCooldownInline">3초</b></label><input disabled="" id="popupComboComboChillCooldown" max="6" min="0" step="0.5" type="range" value="3"/><div class="preset-row popup-combo-presets chill-cooldown-presets"><button data-popup-combo-combo-chill-cooldown="1" type="button">1초</button><button data-popup-combo-combo-chill-cooldown="2" type="button">2초</button><button data-popup-combo-combo-chill-cooldown="3" type="button">3초</button><button data-popup-combo-combo-chill-cooldown="4" type="button">4초</button><button data-popup-combo-combo-chill-cooldown="5" type="button">5초</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control disabled" data-popup-combo-card="stageEnhance">
+<header><label><input id="popupComboStageEnhanceEnabled" type="checkbox"/><span><small>지정 개체 강화</small><b>지정 웨이브 몬스터 체력 강화</b></span></label><output id="popupComboStageEnhanceValue">강화 [1]</output></header>
+<input id="popupComboStageEnhanceLevel" type="hidden" value="1"/>
+<div class="preset-row popup-combo-presets stage-enhance-presets"><button data-popup-combo-stage-enhance="1" type="button">강화 [1]</button><button data-popup-combo-stage-enhance="2" type="button">강화 [2]</button></div>
+</article>
+<article class="combo-quick-control combo-quick-control-dual disabled" data-popup-combo-card="highHpCap">
+<header><label><input id="popupComboHighHpCapEnabled" type="checkbox"/><span><small>순간 피해 제한</small><b>고체력 적 0.1초 피해 상한</b></span></label><output class="dual-output-lines" id="popupComboHighHpCapValue"><span>적용 HP 100,000 이상</span><span>0.1초 상한 25%</span></output></header>
+<div class="popup-dual-ranges">
+<div><label><span>적용 최소 체력</span><b id="popupComboHighHpThresholdInline">10만</b></label><input disabled="" id="popupComboHighHpThreshold" max="200000" min="50000" step="10000" type="range" value="100000"/><div class="preset-row popup-combo-presets"><button data-popup-combo-high-hp-threshold="50000" type="button">5만</button><button data-popup-combo-high-hp-threshold="100000" type="button">10만</button><button data-popup-combo-high-hp-threshold="150000" type="button">15만</button><button data-popup-combo-high-hp-threshold="200000" type="button">20만</button></div></div>
+<div><label><span>0.1초 피해 상한</span><b id="popupComboHighHpCapInline">25%</b></label><input disabled="" id="popupComboHighHpCapRate" max="50" min="5" step="1" type="range" value="25"/><div class="preset-row popup-combo-presets"><button data-popup-combo-high-hp-cap="15" type="button">15%</button><button data-popup-combo-high-hp-cap="25" type="button">25%</button><button data-popup-combo-high-hp-cap="35" type="button">35%</button></div></div>
+</div>
+</article>
+<article class="combo-quick-control disabled" data-popup-combo-card="controlRecovery">
+<header><label><input id="popupComboControlRecoveryEnabled" type="checkbox"/><span><small>제어 사용 압박</small><b>제어 상태 중 몬스터 체력 회복</b></span></label><output id="popupComboControlRecoveryValue">초당 5%</output></header>
+<input disabled="" id="popupComboControlRecoveryRate" max="20" min="0" step="1" type="range" value="5"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-control-recovery="5" type="button">5%</button><button data-popup-combo-control-recovery="10" type="button">10%</button><button data-popup-combo-control-recovery="15" type="button">15%</button></div>
+</article>
+<article class="combo-quick-control" data-popup-combo-card="hp">
+<header><label><input id="popupComboHpEnabled" type="checkbox"/><span><small>스테이지 몬스터</small><b>몬스터 최대 체력 증가</b></span></label><output id="popupComboHpValue">30%</output></header>
+<input id="popupComboHpIncrease" max="200" min="0" step="1" type="range" value="30"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-hp="30" type="button">30%</button><button data-popup-combo-hp="50" type="button">50%</button><button data-popup-combo-hp="100" type="button">100%</button><button data-popup-combo-hp="200" type="button">200%</button></div>
+</article>
+<article class="combo-quick-control" data-popup-combo-card="time">
+<header><label><input id="popupComboTimeEnabled" type="checkbox"/><span><small>스테이지 제한시간</small><b>클리어 제한시간 감소</b></span></label><output id="popupComboTimeValue">100초</output></header>
+<div class="combo-quick-time-meta"><span>적용 제한시간 <b id="popupComboAppliedTimeLimit">500초</b></span></div>
+<input id="popupComboTimeReduction" max="300" min="0" step="10" type="range" value="100"/>
+<div class="preset-row popup-combo-presets"><button data-popup-combo-time="0" type="button">0초</button><button data-popup-combo-time="100" type="button">100초</button><button data-popup-combo-time="200" type="button">200초</button><button data-popup-combo-time="300" type="button">300초</button></div>
+</article>
+</div>
+</aside>
+<div aria-labelledby="exclusiveConstraintTitle" aria-modal="true" class="constraint-modal" hidden="" id="exclusiveConstraintModal" role="dialog">
+<div class="constraint-modal-backdrop"></div>
+<div class="constraint-modal-card" role="document">
+<h2 id="exclusiveConstraintTitle">동시에 적용할 수 없는 제약입니다</h2>
+<p>두 제약은 같은 선택 그룹에 속해 하나만 적용할 수 있습니다.</p>
+<button id="exclusiveConstraintConfirm" type="button">확인</button>
+</div>
+</div>
+<script src="data.js?v=155"></script>
+<script src="../../control-time/data.js?v=9"></script>
+<script src="../../control-time/engine.js?v=1"></script>
+<script src="default-balance.js?v=154"></script>
+<script src="app.js?v=158"></script>
+<script src="embedded-results.js?v=5"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+/* V112: larger wave summary typography with automatic per-card fitting. */
+.placement-setup-v8 .wave-overview-card{
+  container-type:inline-size;
+  container-name:wave-summary-card;
+}
+
+.placement-setup-v8 .wave-card-heading small{
+  font-size:11px!important;
+  line-height:1!important;
+}
+
+.placement-setup-v8 .wave-card-heading strong{
+  display:block;
+  width:100%;
+  min-width:0;
+  font-size:20px!important;
+  line-height:1.05!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+}
+
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric strong{
+  font-size:20px!important;
+  line-height:1!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+}
+
+.placement-setup-v8 .wave-card-metrics-compact .metric-unit,
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric small{
+  font-size:10px!important;
+  line-height:1!important;
+}
+
+/* CSS-only fallback for browsers where ResizeObserver is unavailable. */
+@container wave-summary-card (max-width:285px){
+  .wave-card-heading strong,
+  .wave-card-metrics-compact .wave-metric strong{font-size:18px!important;}
+  .wave-card-heading small,
+  .wave-card-metrics-compact .metric-unit,
+  .wave-card-metrics-compact .wave-metric small{font-size:9px!important;}
+}
+
+@container wave-summary-card (max-width:245px){
+  .wave-card-heading strong{font-size:16px!important;}
+  .wave-card-metrics-compact .wave-metric strong{font-size:15px!important;}
+  .wave-card-metrics-compact .wave-metric{padding-inline:5px!important;}
+}
+
+@container wave-summary-card (max-width:210px){
+  .wave-card-heading strong{font-size:14px!important;}
+  .wave-card-metrics-compact .wave-metric strong{font-size:13px!important;}
+  .wave-card-heading small,
+  .wave-card-metrics-compact .metric-unit,
+  .wave-card-metrics-compact .wave-metric small{font-size:8px!important;}
+}
+
+
+/* V113: base monster HP + editable global HP buff control. */
+.enemy-title-row{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  min-width:0;
+  flex-wrap:wrap;
+}
+
+.enemy-title-row h1{
+  margin:0;
+}
+
+.hp-buff-control{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  min-height:46px;
+  padding:7px 10px 7px 14px;
+  border:1px solid #d6dde6;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(31,45,61,.08);
+  color:#293542;
+  white-space:nowrap;
+}
+
+.hp-buff-label{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:-.02em;
+}
+
+.hp-buff-input-shell{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  min-width:88px;
+  height:32px;
+  padding:0 8px;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#f5f8fb;
+}
+
+.hp-buff-input-shell:focus-within{
+  border-color:#f05c4b;
+  box-shadow:0 0 0 3px rgba(240,92,75,.13);
+}
+
+#monster-hp-buff-input{
+  width:58px;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#e84d3d;
+  font:900 16px/1 inherit;
+  text-align:right;
+  appearance:textfield;
+}
+
+#monster-hp-buff-input::-webkit-inner-spin-button,
+#monster-hp-buff-input::-webkit-outer-spin-button{
+  margin:0;
+}
+
+.hp-buff-input-shell b{
+  color:#e84d3d;
+  font-size:14px;
+  line-height:1;
+}
+
+.hp-buff-control small{
+  color:#768392;
+  font-size:10px;
+  font-weight:800;
+}
+
+@media (max-width:760px){
+  .enemy-title-row{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:12px;
+  }
+  .hp-buff-control{
+    width:100%;
+    justify-content:flex-start;
+    white-space:normal;
+  }
+  .hp-buff-control small{
+    margin-left:auto;
+  }
+}

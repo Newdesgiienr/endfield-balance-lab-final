@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <base href="dungeon-monsters/">
+  <meta name="description" content="몬스터 데이터베이스에서 적을 골라 스테이지 웨이브별 격자에 배치하는 Endfield Balance Lab 스테이지 내 적 배치 페이지">
+  <title>스테이지 내 적 배치 | Endfield Balance Lab</title>
+  <link rel="stylesheet" href="style.css?v=107"/>
+  <link rel="stylesheet" href="dashboard.css?v=107"/>
+  <link rel="stylesheet" href="redesign.css?v=107"/>
+  <link rel="stylesheet" href="editor-v3.css?v=107"/>
+  <link rel="stylesheet" href="editor-v4.css?v=107"/>
+  <link rel="stylesheet" href="editor-v5.css?v=107"/>
+  <link rel="stylesheet" href="editor-v6.css?v=107"/>
+  <link rel="stylesheet" href="editor-v7.css?v=107"/>
+  <link rel="stylesheet" href="editor-v8.css?v=107"/>
+  <link rel="stylesheet" href="editor-v9.css?v=107"/>
+  <link rel="stylesheet" href="editor-v10.css?v=107"/>
+  <link rel="stylesheet" href="editor-v11.css?v=107"/>
+  <link rel="stylesheet" href="editor-v12.css?v=107"/>
+  <link rel="stylesheet" href="integration.css?v=110"/>
+  <link rel="stylesheet" href="editor-v13.css?v=113"/>
+  <link rel="stylesheet" href="editor-v15.css?v=123"/>
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body class="dungeon-monster-page">
+<header class="lab-site-header">
+  <div class="lab-site-brand">
+    <a class="lab-brand-mark" href="../index.html" aria-label="Endfield Balance Lab 파티 분석 페이지"><img class="site-brand-character" src="../assets/lab-brand-character.jpg" alt=""></a>
+    <div class="lab-brand-copy">
+      <a class="lab-brand-title" href="../index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+      <div class="lab-brand-lower">
+        <small>엔드필드 위기 협약 데이터베이스</small>
+        <nav class="lab-site-nav" aria-label="페이지 전환">
+          <a href="../glossary.html">용어 사전</a>
+          <a href="../characters.html">캐릭터</a>
+          <a href="../index.html">파티 분석</a>
+          <a href="../results.html">분석 결과</a>
+          <a href="../dungeon-monsters.html" class="active" aria-current="page">스테이지 구성</a>
+          <a href="../constraints.html">제약 추천</a>
+          <a href="../constraint-board.html">제약 설계</a>
+          <a href="../constraint-balancing/index.html">제약 밸런싱</a>
+          <a href="../control-time/index.html">컨트롤 시간</a>
+          <a href="../constraint-application/index.html">제약 적용</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="app-stage">
+  <section id="simulator-view" class="app-view">
+    <div class="sim-wrapper">
+      <header class="sim-header">
+        <div class="small-title">CONTINGENCY INDICATOR SELECTOR</div>
+        <div class="main-title">지표 선택</div>
+        <p class="sim-subtitle">연결 구조와 충돌 조건을 유지한 선택 시뮬레이터</p>
+      </header>
+
+      <main class="sim-main sim-main-stacked">
+        <section class="sim-board-shell">
+          <div class="sim-body">
+            <section class="board-wrap" aria-label="지표 선택 보드">
+              <div id="grid-area" class="grid-area"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="side-panel selected-panel-wide" aria-label="선택된 지표 목록">
+          <div class="panel-header">
+            <div><span>선택된 지표</span><small>선택 순서대로 확인하고 개별 제거할 수 있습니다.</small></div>
+            <div class="panel-header-actions">
+              <div class="selected-score-box"><small>총합 점수</small><strong id="selected-score">0★</strong></div>
+              <div class="selected-count-box"><small>선택 수</small><strong id="selected-count">0</strong></div>
+              <button class="panel-reset-btn" onclick="resetSelected()">전체 초기화</button>
+            </div>
+          </div>
+          <div id="panel-list" class="panel-list panel-list-wide"></div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <section id="catalog-view" class="app-view info-workspace">
+    <div class="workspace-head">
+      <div>
+        <div class="workspace-kicker">INDICATOR DATABASE</div>
+        <h1>지표 정보</h1>
+        <p>인게임의 단계별 연결 레이아웃을 그대로 따라가며, 선택한 지표의 효과와 관계를 하단에서 넓게 확인합니다.</p>
+      </div>
+      <div class="workspace-metrics catalog-metrics-independent">
+        <div><small>전체 지표</small><strong id="catalog-total">0</strong></div>
+        <div><small>현재 열람</small><strong id="catalog-focus-name">없음</strong></div>
+        <div><small>지표 점수</small><strong id="catalog-focus-score">-</strong></div>
+      </div>
+    </div>
+
+    <div class="catalog-toolbar">
+      <label class="search-box"><span>⌕</span><input id="catalog-search" type="search" placeholder="지표 이름·설명 검색"></label>
+      <div class="filter-group" id="catalog-type-filters">
+        <button class="filter-chip active" data-filter="all">전체</button>
+        <button class="filter-chip" data-filter="team">팀</button>
+        <button class="filter-chip" data-filter="control">조작</button>
+        <button class="filter-chip" data-filter="env">환경</button>
+      </div>
+      <div class="filter-group" id="catalog-tier-filters">
+        <button class="filter-chip active" data-tier="all">전 단계</button>
+        <button class="filter-chip" data-tier="1">1★</button>
+        <button class="filter-chip" data-tier="2">2★</button>
+        <button class="filter-chip" data-tier="3">3★</button>
+      </div>
+    </div>
+
+    <section class="catalog-board-panel">
+      <div class="catalog-board-heading">
+        <div><span>INDICATOR MAP</span><h2>단계별 지표 구조</h2></div>
+        <p>카드를 누르면 하단 상세 정보가 바뀝니다. 검색·필터 조건에 맞지 않는 카드는 흐리게 표시됩니다.</p>
+      </div>
+      <div id="catalog-board-wrap" class="catalog-board-scroll">
+        <div id="catalog-grid-area" class="grid-area catalog-grid-area"></div>
+      </div>
+    </section>
+
+    <section id="catalog-detail" class="catalog-detail catalog-detail-wide">
+      <div class="empty-detail"><span>◈</span><strong>지표를 선택하세요</strong><p>위의 지표 아이콘을 누르면 효과와 관계 정보가 이 영역에 표시됩니다.</p></div>
+    </section>
+  </section>
+
+  <section id="enemy-view" class="app-view enemy-workspace active">
+    <div class="workspace-head enemy-head">
+      <div>
+        <div class="workspace-kicker">DUNGEON ENEMY EDITOR</div>
+        <div class="enemy-title-row">
+          <h1>스테이지 내 적 배치</h1>
+        </div>
+        <p>왼쪽 몬스터 데이터베이스에서 아이콘을 끌어 오른쪽 정사각형 격자에 배치합니다. 구성과 웨이브별 배치 내용은 서로 독립적으로 저장됩니다.</p>
+      </div>
+    </div>
+
+    <div class="enemy-editor-grid">
+      <section class="monster-palette-panel">
+        <div class="panel-title-row palette-title">
+          <div><span>MONSTER DATABASE</span><h2>몬스터 데이터베이스</h2></div>
+          <small>왼쪽에서 오른쪽으로 드래그</small>
+        </div>
+        <div class="palette-controls">
+          <label class="search-box compact"><span>⌕</span><input id="monster-search" type="search" placeholder="이름·ID 검색"></label>
+          <div class="monster-filter-row" id="monster-filters">
+            <button class="filter-chip active" data-monster-filter="all">전체</button>
+            <button class="filter-chip" data-monster-filter="current">현재 웨이브</button>
+            <button class="filter-chip" data-monster-filter="common">일반</button>
+            <button class="filter-chip" data-monster-filter="advanced">상급</button>
+            <button class="filter-chip" data-monster-filter="elite">정예·알파</button>
+          </div>
+        </div>
+        <div id="monster-palette" class="monster-palette"></div>
+      </section>
+
+      <section class="placement-panel">
+        <div class="placement-setup placement-setup-v7 placement-setup-v8">
+          <section class="composition-strip" aria-label="몬스터 구성 선택 영역">
+            <div class="composition-tabs composition-bookmarks" id="composition-tabs" role="tablist" aria-label="몬스터 구성 선택">
+              <button class="composition-tab active" data-composition="1" role="tab" aria-selected="true"><span class="composition-tab-main"><span class="composition-tab-copy"><small>[기본] 구성</small><b>구성 1</b></span><em>총체력: <strong data-composition-total="1">0</strong></em></span></button>
+              <button class="composition-tab" data-composition="2" role="tab" aria-selected="false"><span class="composition-tab-main"><span class="composition-tab-copy"><small>[강화 1] 구성</small><b>구성 2</b></span><em>총체력: <strong data-composition-total="2">0</strong></em></span></button>
+              <button class="composition-tab" data-composition="3" role="tab" aria-selected="false"><span class="composition-tab-main"><span class="composition-tab-copy"><small>[강화 2] 구성</small><b>구성 3</b></span><em>총체력: <strong data-composition-total="3">0</strong></em></span></button>
+            </div>
+          </section>
+          <section class="wave-overview-strip wave-overview-strip-compact" aria-label="웨이브 선택 및 요약">
+            <div class="wave-tabs wave-tabs-overview" id="wave-tabs" aria-label="웨이브 선택"></div>
+          </section>
+        </div>
+
+        <div class="pregrid-analysis">
+          <section class="wave-roster-panel compact-roster-panel">
+            <div class="panel-title-row"><div><span>CURRENT WAVE</span><h2>현재 웨이브 배치</h2></div><span id="wave-total-label" class="quiet-label"></span></div>
+            <div id="wave-list" class="wave-list editable-wave-list"></div>
+          </section>
+        </div>
+
+        <section class="grid-command-card" aria-label="배치 격자 조작 영역">
+          <div class="panel-title-row placement-title">
+            <div><h2 id="placement-title">구성 1 · 웨이브 1 배치 격자</h2></div>
+            <div class="placement-actions">
+              <span id="grid-scale-label" class="quiet-label">1칸 = 2m · 소수점 비례 표시</span>
+              <button id="reset-wave-btn" class="secondary-action" type="button">현재 웨이브 복원</button>
+              <button id="reset-composition-btn" class="secondary-action danger-lite" type="button">현재 구성 복원</button>
+              <button id="export-placement-json-btn" class="secondary-action export-action" type="button">JSON 내보내기</button>
+              <button id="export-grid-image-btn" class="secondary-action export-action" type="button">이미지로 내보내기</button>
+            </div>
+          </div>
+          <div class="grid-help grid-help-with-action">
+            <span>드래그로 배치·이동하세요. 빈 격자를 드래그하면 다중 선택되고, 선택 마크 하나를 끌면 함께 이동합니다(셀·교차점 유지). 사거리 기준: 1칸=2m.</span>
+            <button id="range-toggle-btn" class="range-toggle-btn active" type="button" aria-pressed="true"><span class="range-toggle-dot"></span><b>전체 범위 숨기기</b></button>
+          </div>
+        </section>
+        <div class="battle-grid-shell battle-grid-shell-with-orders">
+          <div id="battle-grid" class="battle-grid" role="grid" aria-label="몬스터 배치 격자"></div>
+          <aside class="spawn-order-controls" aria-label="웨이브 내부 등장 순서 지정">
+            <div class="spawn-order-heading">
+              <small>WAVE ORDER</small>
+              <strong>등장 순서 지정</strong>
+              <span id="spawn-order-selection-count">선택 없음</span>
+            </div>
+            <p>격자 빈 곳을 드래그하거나 <kbd>Shift</kbd> 클릭으로 여러 마리를 선택하세요. 선택된 마크를 끌면 함께 이동합니다.</p>
+            <button id="assign-spawn-order-1-btn" class="spawn-order-button order-one" type="button" disabled>
+              <span>1차</span><b>1차 적 배치</b>
+            </button>
+            <button id="assign-spawn-order-2-btn" class="spawn-order-button order-two" type="button" disabled>
+              <span>2차</span><b>2차 적 배치</b>
+            </button>
+            <button id="assign-spawn-order-3-btn" class="spawn-order-button order-three" type="button" disabled>
+              <span>3차</span><b>3차 적 배치</b>
+            </button>
+          </aside>
+        </div>
+        <div id="placement-inspector" class="placement-inspector"></div>
+      </section>
+    </div>
+
+    <details class="monster-table-details">
+      <summary>전체 몬스터 상세 스탯 표 열기</summary>
+      <section class="monster-database">
+        <div class="panel-title-row database-title"><div><span>MONSTER STATS</span><h2>상세 스탯 표</h2></div></div>
+        <div class="monster-table-wrap">
+          <table class="monster-table">
+            <thead><tr><th>몬스터</th><th>분류</th><th>HP</th><th>ATK</th><th>DEF</th><th>강인도</th><th>사거리</th><th>주요 저항 / 특징</th></tr></thead>
+            <tbody id="monster-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </details>
+  </section>
+</main>
+
+<div id="monster-modal" class="monster-modal" aria-hidden="true">
+  <button class="modal-backdrop" type="button" aria-label="닫기"></button>
+  <article class="monster-modal-card">
+    <button class="modal-close" type="button">×</button>
+    <div id="monster-modal-content"></div>
+  </article>
+</div>
+
+<div id="image-export-modal" class="export-choice-modal" aria-hidden="true">
+  <button class="export-choice-backdrop" type="button" aria-label="내보내기 창 닫기"></button>
+  <section class="export-choice-card" role="dialog" aria-modal="true" aria-labelledby="image-export-title">
+    <small>GRID IMAGE EXPORT</small>
+    <h2 id="image-export-title">몬스터 사거리도 포함하시겠습니까?</h2>
+    <p>현재 구성의 현재 웨이브 격자판만 PNG 이미지로 저장합니다.</p>
+    <div class="export-choice-actions">
+      <button id="export-grid-with-range-btn" class="primary-export-choice" type="button">예 · 사거리 포함</button>
+      <button id="export-grid-without-range-btn" type="button">아니오 · 사거리 제외</button>
+      <button id="cancel-grid-export-btn" class="cancel-export-choice" type="button">취소</button>
+    </div>
+  </section>
+</div>
+
+<script src="data.js?v=107"></script>
+<script src="enemy-data.js?v=113"></script>
+<script src="monster-export-assets.js?v=107"></script>
+<script src="script.js?v=107"></script>
+<script src="dashboard.js?v=123"></script>
+</body>
+</html>

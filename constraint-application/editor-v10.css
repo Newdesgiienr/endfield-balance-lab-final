@@ -1,0 +1,110 @@
+/* V10: 웨이브 카드 안에서 마릿수와 총 HP를 같은 위계로 안정적으로 표시 */
+.placement-setup-v8 .wave-overview-card{
+  grid-template-columns:minmax(92px,1fr) 66px minmax(96px,112px)!important;
+  gap:0!important;
+  padding:12px 12px!important;
+  overflow:hidden;
+}
+
+/* 중첩 그리드를 없애고 두 수치 칸을 카드의 직접 열로 사용한다. */
+.placement-setup-v8 .wave-card-metrics-compact{
+  display:contents!important;
+}
+
+.placement-setup-v8 .wave-card-heading{
+  min-width:0;
+  padding-right:10px;
+}
+.placement-setup-v8 .wave-card-heading small{
+  font-size:9px!important;
+}
+.placement-setup-v8 .wave-card-heading strong{
+  font-size:16px!important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric{
+  box-sizing:border-box;
+  min-width:0;
+  height:42px;
+  padding:0 9px!important;
+  border-left:1px solid #dfe5eb;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  gap:4px;
+  overflow:hidden;
+}
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric:last-child{
+  padding-right:0!important;
+}
+
+/* 마릿수와 HP 숫자는 동일한 서체·크기·굵기를 사용한다. */
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric strong{
+  display:block;
+  width:100%;
+  min-width:0;
+  margin:0;
+  color:inherit;
+  font-family:inherit;
+  font-size:16px!important;
+  font-weight:1000;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.035em;
+  line-height:1;
+  text-align:right;
+  white-space:nowrap;
+  overflow:visible;
+  text-overflow:clip;
+}
+
+/* '마리', '몬스터', '총 HP'는 숫자보다 작게 통일한다. */
+.placement-setup-v8 .wave-card-metrics-compact .metric-unit,
+.placement-setup-v8 .wave-card-metrics-compact .wave-metric small{
+  font-family:inherit;
+  font-size:9px!important;
+  font-weight:900;
+  letter-spacing:0;
+  line-height:1;
+  white-space:nowrap;
+}
+.placement-setup-v8 .wave-card-metrics-compact .metric-unit{
+  display:inline-block;
+  margin-left:3px;
+  vertical-align:baseline;
+}
+
+@media(max-width:1280px){
+  .placement-setup-v8 .wave-overview-card{
+    grid-template-columns:minmax(84px,1fr) 60px minmax(90px,104px)!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  .placement-setup-v8 .wave-card-heading strong{
+    font-size:15px!important;
+  }
+  .placement-setup-v8 .wave-card-metrics-compact .wave-metric strong{
+    font-size:15px!important;
+  }
+  .placement-setup-v8 .wave-card-metrics-compact .wave-metric{
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+}
+
+@media(max-width:980px){
+  .placement-setup-v8 .wave-overview-card{
+    grid-template-columns:minmax(110px,1fr) 72px minmax(110px,130px)!important;
+  }
+  .placement-setup-v8 .wave-card-metrics-compact .wave-metric strong{
+    font-size:17px!important;
+  }
+}
+
+@media(max-width:620px){
+  .placement-setup-v8 .wave-overview-card{
+    grid-template-columns:minmax(96px,1fr) 66px minmax(100px,116px)!important;
+  }
+}

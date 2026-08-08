@@ -1,0 +1,172 @@
+/* V7: 구성/웨이브 구조 분리, 2m 격자, 전체 공격 범위와 중첩 표시 */
+
+/* 구성 탭은 독립된 전체 폭 영역으로 분리한다. */
+.placement-setup-v7{
+  padding:0!important;
+  background:#eef1f4!important;
+  border-bottom:1px solid var(--border);
+}
+.composition-strip{
+  padding:12px 16px 0;
+  background:#f5f7f9;
+  border-bottom:1px solid #d7dde4;
+}
+.composition-strip .composition-bookmarks{
+  width:100%;
+  margin:0;
+}
+.wave-overview-strip{
+  padding:14px 16px 15px;
+  background:#eef1f4;
+}
+
+/* 웨이브 1~4에서 마릿수와 평균 사거리를 동시에 확인한다. */
+.placement-setup-v7 .wave-tabs-overview{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin:0;
+}
+.placement-setup-v7 .wave-overview-card{
+  width:100%;
+  height:68px;
+  min-height:68px;
+  padding:10px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  text-align:left;
+  border-radius:10px;
+}
+.placement-setup-v7 .wave-overview-card>span{
+  font-size:15px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.wave-card-metrics{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  min-width:74px;
+  line-height:1.2;
+}
+.wave-card-metrics strong{
+  font-size:14px;
+  color:inherit;
+  white-space:nowrap;
+}
+.wave-card-metrics small{
+  margin-top:4px;
+  font-size:10px;
+  color:#788390;
+  white-space:nowrap;
+}
+.wave-overview-card.active .wave-card-metrics small{color:#a83b45;}
+
+/* 편집 대상 검은 카드는 제거하고, 남은 요약 3개를 같은 폭으로 정렬한다. */
+.placement-setup-v7 .placement-summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:9px;
+  margin:9px 0 0;
+}
+.placement-setup-v7 .placement-summary .summary-card{
+  height:76px;
+  min-height:76px;
+  border-radius:10px;
+  background:#fff;
+}
+.placement-setup-v7 .placement-summary .summary-card strong{
+  font-size:18px;
+}
+
+/* 도움말 우측에 전체 범위 토글을 둔다. */
+.grid-help-with-action{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  min-height:48px;
+  padding:9px 17px;
+}
+.grid-help-with-action>span{
+  flex:1 1 auto;
+  min-width:0;
+}
+.range-toggle-btn{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  padding:0 13px;
+  border:1px solid #cbd3dc;
+  border-radius:9px;
+  background:#fff;
+  color:#4d5864;
+  font:inherit;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+  transition:border-color .14s,background .14s,color .14s,box-shadow .14s;
+}
+.range-toggle-btn:hover{
+  border-color:#e34c59;
+  color:#b52d3a;
+}
+.range-toggle-btn.active{
+  border-color:#d83b49;
+  background:#fff1f3;
+  color:#a72734;
+  box-shadow:0 0 0 2px rgba(216,59,73,.08);
+}
+.range-toggle-dot{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:2px solid #df4050;
+  background:rgba(237,72,85,.15);
+  box-shadow:inset 0 0 0 2px #fff;
+}
+.range-toggle-btn.active .range-toggle-dot{
+  background:#df4050;
+}
+.range-toggle-btn.active::after{
+  content:"중첩: 보라색";
+  margin-left:2px;
+  color:#6748b8;
+  font-size:9px;
+  font-weight:900;
+}
+
+/* 모든 공격 범위를 픽셀 단위로 합성해 중첩 영역을 별도 색으로 표시한다. */
+.all-ranges-canvas{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  image-rendering:auto;
+}
+.grid-monster-token{z-index:4!important;}
+.attack-range-overlay{z-index:2!important;}
+
+/* 2m 환산 시 원이 커져도 격자 밖 레이아웃을 밀지 않는다. */
+.battle-grid{
+  overflow:hidden!important;
+}
+
+@media(max-width:1180px){
+  .placement-setup-v7 .wave-tabs-overview{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .placement-setup-v7 .placement-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+}
+@media(max-width:760px){
+  .composition-strip{padding:10px 10px 0;}
+  .wave-overview-strip{padding:10px;}
+  .placement-setup-v7 .wave-tabs-overview{grid-template-columns:1fr 1fr;}
+  .placement-setup-v7 .placement-summary{grid-template-columns:1fr!important;}
+  .grid-help-with-action{align-items:flex-start;flex-direction:column;}
+  .range-toggle-btn{align-self:stretch;justify-content:center;}
+}
