@@ -1,0 +1,5 @@
+V17 등장 몬스터 페이지 통합
+- 상단 메뉴: 분석 결과 → 등장 몬스터 → 스테이지 구성
+- 신규 페이지: monster-patterns/index.html
+- 업로드된 endfield_monster_pattern_page_v139_boardbg 기반
+- 기존 DPS/컨트롤/제약/보상 계산 로직 변경 없음

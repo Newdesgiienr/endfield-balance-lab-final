@@ -575,6 +575,7 @@
               <a href="characters.html">캐릭터</a>
               <a href="index.html" class="active" aria-current="page">파티 분석</a>
               <a href="results.html?partyDpr=${encodeURIComponent(window.devicePixelRatio || 1)}">분석 결과</a>
+              <a href="monster-patterns/index.html">등장 몬스터</a>
               <a href="dungeon-monsters.html">스테이지 구성</a>
               <a href="constraints.html">제약 추천</a>
               <a href="constraint-board.html">제약 설계</a>
