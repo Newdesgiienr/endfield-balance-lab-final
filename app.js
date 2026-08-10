@@ -397,6 +397,7 @@
               <a href="constraint-balancing/index.html">제약 밸런싱</a>
               <a href="control-time/index.html">컨트롤 시간</a>
               <a href="constraint-application/index.html">제약 적용</a>
+              <a href="reward/index.html">보상 설계</a>
             </nav>
           </div>
         </div>

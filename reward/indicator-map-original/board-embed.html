@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>단계별 지표 구조</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="redesign.css">
+  <link rel="stylesheet" href="editor-v3.css">
+  <link rel="stylesheet" href="editor-v4.css">
+  <link rel="stylesheet" href="editor-v5.css">
+  <link rel="stylesheet" href="editor-v6.css">
+  <link rel="stylesheet" href="editor-v7.css">
+  <link rel="stylesheet" href="editor-v8.css">
+  <link rel="stylesheet" href="editor-v9.css">
+  <link rel="stylesheet" href="editor-v10.css">
+  <link rel="stylesheet" href="editor-v11.css">
+  <link rel="stylesheet" href="editor-v12.css">
+  <link rel="stylesheet" href="constraint-application.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent;overflow:hidden;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif}
+    body.constraint-only-stage{min-height:0}
+    .constraint-dashboard-board{margin:0!important;border-radius:15px!important;overflow:hidden!important}
+    .constraint-board-heading{min-height:84px!important}
+    .constraint-only-stage .sim-board-shell{margin:0!important}
+    .constraint-only-stage .sim-board-shell .sim-body{height:auto!important;min-height:0!important}
+    .constraint-only-stage .sim-board-shell .board-wrap{height:438px!important;min-height:438px!important;margin:0!important;padding-top:12px!important}
+    .selected-panel-wide{display:none!important}
+    .screen-flash{position:fixed!important}
+  </style>
+</head>
+<body class="constraint-only-stage">
+  <section class="sim-board-shell constraint-dashboard-board">
+    <div class="constraint-board-heading">
+      <div>
+        <span>INDICATOR MAP</span>
+        <h2>단계별 지표 구조</h2>
+      </div>
+      <p>검색·필터 조건에 맞지 않는 카드는 흐리게 표시됩니다. 지표를 누르면 기존 선택·잠금·충돌 규칙이 그대로 적용됩니다.</p>
+    </div>
+    <div class="sim-body">
+      <section class="board-wrap" aria-label="지표 선택 보드">
+        <div id="grid-area" class="grid-area"></div>
+      </section>
+    </div>
+  </section>
+  <section class="side-panel selected-panel-wide" aria-hidden="true">
+    <div class="panel-header"><div class="panel-header-actions"><div class="selected-score-box"><strong id="selected-score">0★</strong></div><div class="selected-count-box"><strong id="selected-count">0</strong></div></div></div>
+    <div id="panel-list" class="panel-list panel-list-wide"></div>
+  </section>
+  <span id="total-pts" hidden>0</span><span id="warn-text" hidden></span>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

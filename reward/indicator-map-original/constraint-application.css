@@ -1,0 +1,1282 @@
+/* V21 보드는 원본 구조를 유지하고, 불필요한 선택 목록·부가 페이지는 표시하지 않습니다. */
+#simulator-view .selected-panel-wide {
+  display: none !important;
+}
+
+.constraint-only-topbar {
+  grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
+}
+
+.constraint-page-title {
+  align-self: center;
+  color: #f4f7fa;
+  font-size: 15px;
+  font-weight: 950;
+  letter-spacing: .04em;
+}
+
+.constraint-only-topbar .topbar-status {
+  justify-self: end;
+}
+
+.constraint-top-reset {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #4a5564;
+  border-radius: 8px;
+  background: #29313c;
+  color: #f4f7fa;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.constraint-top-reset:hover {
+  background: #343e4b;
+}
+
+.constraint-only-stage {
+  min-height: calc(100vh - 64px);
+}
+
+.constraint-result-shell {
+  margin-top: 18px;
+  border: 1px solid #313b49;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eef2f6;
+  box-shadow: 0 14px 34px rgba(8, 13, 21, .16);
+}
+
+.constraint-result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  background: #151b23;
+  color: #fff;
+  border-bottom: 1px solid #394454;
+}
+
+.constraint-result-heading span {
+  display: block;
+  color: #8fa2b8;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .11em;
+}
+
+.constraint-result-heading h2 {
+  margin: 3px 0 4px;
+  font-size: 20px;
+}
+
+.constraint-result-heading p {
+  margin: 0;
+  color: #b9c4d0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.constraint-result-status {
+  flex: 0 0 auto;
+  min-width: 132px;
+  padding: 9px 12px;
+  border: 1px solid #4b596b;
+  border-radius: 9px;
+  color: #dbe4ee;
+  background: #222b36;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.constraint-result-frame {
+  display: block;
+  width: 100%;
+  min-height: 560px;
+  height: clamp(560px, 72vh, 900px);
+  border: 0;
+  background: #eef2f6;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .constraint-only-topbar {
+    grid-template-columns: 1fr auto;
+  }
+  .constraint-page-title {
+    display: none;
+  }
+  .constraint-result-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .constraint-result-status {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .constraint-only-topbar {
+    grid-template-columns: 1fr;
+  }
+  .constraint-only-topbar .topbar-status {
+    justify-self: stretch;
+  }
+}
+
+/* V4: 전체 페이지 세로 스크롤 복구
+   V21 원본은 화면 고정형이라 body/app-stage/sim-wrapper에 높이 고정과 overflow:hidden이 있습니다.
+   독립 통합 페이지에서는 결과 목록까지 페이지 자체가 자연스럽게 내려가도록 해제합니다. */
+html {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+body {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.app-stage.constraint-only-stage {
+  height: auto !important;
+  min-height: calc(100vh - var(--appbar-h, 82px)) !important;
+  overflow: visible !important;
+}
+
+.constraint-only-stage .app-view,
+.constraint-only-stage .app-view.active {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.constraint-only-stage .sim-wrapper {
+  height: auto !important;
+  min-height: calc(100vh - var(--appbar-h, 82px)) !important;
+  grid-template-rows: auto auto !important;
+  overflow: visible !important;
+}
+
+.constraint-only-stage .sim-main.sim-main-stacked {
+  overflow: visible !important;
+}
+
+.constraint-result-shell,
+.constraint-result-frame {
+  max-width: 100%;
+}
+
+/* V5 · 보드 하단 빈 공간 제거 + 단계 라벨 복원 */
+.constraint-only-stage .sim-main.sim-main-stacked {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-rows: none !important;
+  align-items: stretch !important;
+  overflow: visible !important;
+}
+
+.constraint-only-stage .sim-board-shell {
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden !important;
+}
+
+.constraint-only-stage .sim-board-shell .sim-body,
+.constraint-only-stage .sim-board-shell .board-wrap {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.constraint-only-stage .sim-board-shell .board-wrap {
+  margin-top: 0 !important;
+  padding-top: 12px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.constraint-only-stage .sim-board-shell .grid-area {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+/* 원본 V21처럼 1★ · 2★ · 3★를 선명한 흰색으로 고정합니다. */
+.constraint-only-stage .row-label {
+  position: relative !important;
+  z-index: 5 !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  background: #11151b !important;
+}
+
+.constraint-only-stage .row-label .tier-num,
+.constraint-only-stage .row-label .tier-icon {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, .9) !important;
+}
+
+.constraint-only-stage .row-label .tier-num {
+  font-size: 58px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.constraint-only-stage .row-label .tier-icon {
+  font-size: 18px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+/* V6 · 지표 정보의 검색/필터 기능을 제약 적용 현황판 디자인으로 통합 */
+.constraint-workspace-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 26px 20px 22px;
+  border-bottom: 1px solid #cfd5dd;
+  background: #eef1f5;
+  color: #171d26;
+}
+
+.constraint-workspace-kicker {
+  color: #e94a58;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.constraint-workspace-head h1 {
+  margin: 7px 0 0;
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -.045em;
+}
+
+.constraint-workspace-head p {
+  max-width: 900px;
+  margin: 13px 0 0;
+  color: #66717d;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.constraint-workspace-metrics {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.constraint-workspace-metrics > div {
+  min-width: 124px;
+  padding: 14px 16px;
+  border: 1px solid #d5dbe3;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(26, 32, 40, .04);
+}
+
+.constraint-workspace-metrics small {
+  display: block;
+  color: #707a86;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.constraint-workspace-metrics strong {
+  display: block;
+  margin-top: 7px;
+  color: #151b23;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.constraint-board-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  padding: 0 6px;
+}
+
+.constraint-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(400px, 100%);
+  height: 48px;
+  padding: 0 13px;
+  border: 1px solid #d5dbe3;
+  border-radius: 10px;
+  background: #fff;
+  color: #171d26;
+  box-sizing: border-box;
+}
+
+.constraint-search-box > span {
+  flex: 0 0 auto;
+  color: #84909d;
+  font-size: 18px;
+}
+
+.constraint-search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #171d26;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.constraint-search-box input::placeholder {
+  color: #98a0aa;
+}
+
+.constraint-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.constraint-filter-chip {
+  height: 42px;
+  padding: 0 15px;
+  border: 1px solid #d5dbe3;
+  border-radius: 9px;
+  background: #fff;
+  color: #626c78;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, color .16s ease;
+}
+
+.constraint-filter-chip:hover {
+  color: #171d26;
+  border-color: #aeb6c0;
+}
+
+.constraint-filter-chip.active {
+  color: #fff;
+  background: #171d26;
+  border-color: #171d26;
+}
+
+.constraint-dashboard-board {
+  border: 1px solid #d5dbe3 !important;
+  border-radius: 15px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 26px rgba(27, 34, 43, .07) !important;
+}
+
+.constraint-board-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 17px 22px;
+  border-bottom: 1px solid #d5dbe3;
+  background: #fff;
+  color: #171d26;
+}
+
+.constraint-board-heading span {
+  display: block;
+  color: #e94a58;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .14em;
+}
+
+.constraint-board-heading h2 {
+  margin: 4px 0 0;
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 950;
+}
+
+.constraint-board-heading p {
+  max-width: 680px;
+  margin: 0;
+  color: #707a86;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.55;
+  text-align: right;
+}
+
+/* 검색·필터에 맞지 않는 카드는 원본 지표 정보 페이지처럼 흐리게 표시합니다. */
+.constraint-only-stage #grid-area .card.constraint-filter-muted {
+  opacity: .16 !important;
+  filter: grayscale(1) saturate(.12) !important;
+  pointer-events: none !important;
+}
+
+/* 단계 숫자 왼쪽의 노랑·주황·빨강 띠를 row-label 위로 복원합니다. */
+.constraint-only-stage .row-wrap > .tier-bar {
+  z-index: 20 !important;
+  width: 9px !important;
+  pointer-events: none !important;
+}
+
+.constraint-only-stage .row-label {
+  padding-left: 9px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1080px) {
+  .constraint-workspace-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .constraint-workspace-metrics {
+    width: 100%;
+  }
+  .constraint-workspace-metrics > div {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .constraint-board-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .constraint-board-heading p {
+    text-align: left;
+  }
+}
+
+@media (max-width: 720px) {
+  .constraint-workspace-head {
+    padding: 22px 14px 18px;
+  }
+  .constraint-workspace-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .constraint-workspace-metrics > div {
+    padding: 12px;
+  }
+  .constraint-workspace-metrics strong {
+    font-size: 21px;
+  }
+  .constraint-board-toolbar {
+    padding: 0;
+  }
+  .constraint-search-box {
+    width: 100%;
+  }
+  .constraint-filter-group {
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 2px;
+  }
+  .constraint-filter-chip {
+    flex: 0 0 auto;
+  }
+}
+
+/* V7 · 결과 영역도 지표 정보 화면처럼 좌우 여백을 두어 답답함을 줄입니다. */
+.constraint-result-shell {
+  width: auto !important;
+  margin: 22px clamp(18px, 2.1vw, 36px) 28px !important;
+}
+
+@media (max-width: 720px) {
+  .constraint-result-shell {
+    margin: 16px 10px 22px !important;
+  }
+}
+
+
+/* V8 · 좌우 여백은 결과창 내부가 아니라 페이지 전체 콘텐츠에 적용합니다. */
+.app-stage.constraint-only-stage {
+  box-sizing: border-box !important;
+  padding: 18px clamp(20px, 2.3vw, 44px) 34px !important;
+}
+
+.constraint-only-stage .sim-wrapper {
+  width: 100% !important;
+  max-width: 1920px !important;
+  margin: 0 auto !important;
+}
+
+/* 파티 결과창 내부에 따로 넣었던 좌우 공백은 제거합니다. */
+.constraint-result-shell {
+  width: 100% !important;
+  margin: 22px 0 28px !important;
+}
+
+@media (max-width: 720px) {
+  .app-stage.constraint-only-stage {
+    padding: 10px 10px 22px !important;
+  }
+  .constraint-result-shell {
+    margin: 16px 0 22px !important;
+  }
+}
+
+/* V14 · 제약 조합 저장/불러오기 push drawer */
+:root {
+  --constraint-combo-drawer-width: 438px;
+}
+
+.app-stage.constraint-only-stage {
+  transition: padding-right .26s ease;
+}
+
+.app-stage.constraint-only-stage.constraint-combo-drawer-open {
+  padding-right: calc(clamp(20px, 2.3vw, 44px) + var(--constraint-combo-drawer-width)) !important;
+}
+
+.constraint-combo-drawer-toggle {
+  position: fixed;
+  z-index: 320;
+  top: 50%;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 86px;
+  padding: 0;
+  border: 1px solid #c2cad4;
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+  background: #fff;
+  color: #17202b;
+  cursor: pointer;
+  box-shadow: -7px 8px 22px rgba(25, 34, 45, .14);
+  transform: translateY(-50%);
+  transition: right .26s ease, background .14s ease, color .14s ease;
+}
+
+.constraint-combo-drawer-toggle:hover,
+.constraint-combo-drawer-toggle:focus-visible {
+  background: #e6533d;
+  color: #fff;
+  outline: none;
+}
+
+.constraint-combo-drawer-toggle > span {
+  display: block;
+  font-size: 31px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+body.constraint-combo-drawer-is-open .constraint-combo-drawer-toggle {
+  right: var(--constraint-combo-drawer-width);
+}
+
+.constraint-combo-drawer {
+  position: fixed;
+  z-index: 310;
+  top: var(--appbar-h, 82px);
+  right: 0;
+  bottom: 0;
+  width: var(--constraint-combo-drawer-width);
+  border-left: 1px solid #cfd6df;
+  background: #f5f7fa;
+  box-shadow: -16px 0 36px rgba(25, 34, 45, .13);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+  transition: transform .26s ease, opacity .2s ease;
+}
+
+.constraint-combo-drawer.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.constraint-combo-drawer-inner {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.constraint-combo-drawer-heading {
+  padding: 21px 21px 16px;
+  border-bottom: 1px solid #d5dbe3;
+  background: #fff;
+}
+
+.constraint-combo-drawer-heading small {
+  display: block;
+  color: #e6533d;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .12em;
+  line-height: 1.35;
+}
+
+.constraint-combo-drawer-heading h2 {
+  margin: 3px 0 5px;
+  color: #171d26;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 950;
+  letter-spacing: -.035em;
+}
+
+.constraint-combo-drawer-heading p {
+  margin: 0;
+  color: #6b7682;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.constraint-combo-tabs {
+  position: sticky;
+  z-index: 6;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #d7dde5;
+  background: rgba(245, 247, 250, .97);
+  backdrop-filter: blur(8px);
+}
+
+.constraint-combo-tab {
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid #cfd6df;
+  border-radius: 9px;
+  background: #fff;
+  color: #596573;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.constraint-combo-tab.active {
+  border-color: #171d26;
+  background: #171d26;
+  color: #fff;
+}
+
+.constraint-combo-tab span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: #384452;
+  font-size: 11px;
+}
+
+.constraint-combo-tab.active span {
+  background: #fff;
+  color: #171d26;
+}
+
+.constraint-combo-panel {
+  display: none;
+  padding: 15px 14px 28px;
+}
+
+.constraint-combo-panel.active {
+  display: block;
+}
+
+.constraint-combo-current-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.constraint-combo-current-summary > div {
+  padding: 13px 14px;
+  border: 1px solid #d7dde5;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.constraint-combo-current-summary small {
+  display: block;
+  color: #707b87;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.constraint-combo-current-summary strong {
+  display: block;
+  margin-top: 5px;
+  color: #171d26;
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.constraint-combo-name-field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.constraint-combo-name-field > span {
+  color: #5e6976;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.constraint-combo-name-field input {
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 13px;
+  border: 1px solid #bcc6d1;
+  border-radius: 9px;
+  outline: 0;
+  background: #fff;
+  color: #171d26;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.constraint-combo-name-field input:focus {
+  border-color: #61728a;
+  box-shadow: 0 0 0 3px rgba(75, 96, 124, .12);
+}
+
+.constraint-combo-section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 5px 2px 9px;
+}
+
+.constraint-combo-section-title strong {
+  color: #171d26;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.constraint-combo-section-title span {
+  color: #7b8692;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.constraint-combo-constraint-list,
+.constraint-combo-saved-list {
+  display: grid;
+  gap: 9px;
+}
+
+.constraint-combo-empty {
+  padding: 34px 18px;
+  border: 1px dashed #c8d0da;
+  border-radius: 11px;
+  background: #fff;
+  color: #74808d;
+  text-align: center;
+}
+
+.constraint-combo-empty strong {
+  display: block;
+  color: #3c4753;
+  font-size: 14px;
+}
+
+.constraint-combo-empty p {
+  margin: 7px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.constraint-combo-constraint-card {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 11px;
+  padding: 10px;
+  border: 1px solid #d5dce5;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.constraint-combo-constraint-card img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 7px;
+  background: #202731;
+}
+
+.constraint-combo-constraint-card-copy {
+  min-width: 0;
+}
+
+.constraint-combo-constraint-card-copy small {
+  display: block;
+  color: #e6533d;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .02em;
+}
+
+.constraint-combo-constraint-card-copy strong {
+  display: block;
+  margin-top: 3px;
+  color: #171d26;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 950;
+}
+
+.constraint-combo-constraint-card-copy p {
+  margin: 6px 0 0;
+  color: #586573;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.constraint-combo-save-actions {
+  position: sticky;
+  bottom: 0;
+  margin-top: 14px;
+  padding: 12px 0 2px;
+  background: linear-gradient(to bottom, rgba(245,247,250,0), #f5f7fa 18px);
+}
+
+.constraint-combo-primary-button {
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  border-radius: 9px;
+  background: #e6533d;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.constraint-combo-primary-button:hover { background: #ce4430; }
+.constraint-combo-primary-button:disabled { opacity: .45; cursor: not-allowed; }
+
+.constraint-combo-save-actions p {
+  margin: 8px 4px 0;
+  color: #7a8591;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.constraint-combo-saved-card {
+  overflow: hidden;
+  border: 1px solid #d5dce5;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.constraint-combo-saved-card-head {
+  padding: 12px 13px 11px;
+  border-bottom: 1px solid #e0e5eb;
+}
+
+.constraint-combo-saved-card-head > div:first-child {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.constraint-combo-saved-card-head h3 {
+  min-width: 0;
+  margin: 0;
+  color: #171d26;
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 950;
+}
+
+.constraint-combo-saved-score {
+  flex: 0 0 auto;
+  color: #e6533d;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.constraint-combo-saved-meta {
+  margin-top: 5px;
+  color: #78838f;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.constraint-combo-saved-constraints {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px 11px;
+}
+
+.constraint-combo-saved-constraint {
+  display: grid;
+  grid-template-columns: 32px minmax(0,1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.constraint-combo-saved-constraint img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #202731;
+}
+
+.constraint-combo-saved-constraint span {
+  min-width: 0;
+  overflow: hidden;
+  color: #394552;
+  font-size: 11.5px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.constraint-combo-saved-constraint b {
+  color: #7b8692;
+  font-size: 10px;
+}
+
+.constraint-combo-saved-card-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.constraint-combo-load-button,
+.constraint-combo-delete-button {
+  min-height: 38px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.constraint-combo-load-button {
+  border: 1px solid #171d26;
+  background: #171d26;
+  color: #fff;
+}
+
+.constraint-combo-delete-button {
+  min-width: 64px;
+  border: 1px solid #cfd6df;
+  background: #fff;
+  color: #7b4d49;
+}
+
+.constraint-combo-site-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: #687583;
+  font-size: 9px;
+  font-weight: 900;
+  vertical-align: 1px;
+}
+
+.constraint-combo-toast {
+  position: fixed;
+  z-index: 350;
+  left: 50%;
+  bottom: 24px;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #171d26;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(15, 20, 28, .24);
+  font-size: 12px;
+  font-weight: 850;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.constraint-combo-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 1180px) {
+  :root { --constraint-combo-drawer-width: 390px; }
+  .app-stage.constraint-only-stage.constraint-combo-drawer-open {
+    padding-right: calc(18px + var(--constraint-combo-drawer-width)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  :root { --constraint-combo-drawer-width: min(360px, 88vw); }
+  .constraint-combo-drawer { top: var(--appbar-h, 82px); }
+  .app-stage.constraint-only-stage.constraint-combo-drawer-open {
+    padding-right: calc(10px + var(--constraint-combo-drawer-width)) !important;
+  }
+  .constraint-combo-drawer-toggle { transition: none; }
+  .constraint-combo-drawer { transition: none; }
+}
+
+
+/* V15 · 2차 지표 마커 */
+.constraint-only-stage #grid-area .card .second-phase-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 35;
+  min-width: 42px;
+  height: 26px;
+  padding: 0 11px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -52%);
+  border: 2px solid #f6f8fb;
+  border-radius: 999px;
+  background: #ee5a47;
+  color: #fff;
+  box-shadow: 0 3px 9px rgba(0,0,0,.28);
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.constraint-only-stage #grid-area .card.selected .second-phase-badge {
+  background: #ff654f;
+  border-color: #fff;
+}
+
+
+/* V16 · 상단 선택/합계 상태 박스 제거, 단계 필터 우측에 선택 초기화 버튼 배치 */
+.constraint-selection-reset {
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #df4f3c;
+  border-radius: 11px;
+  background: #e75a45;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(222, 77, 58, .16);
+  transition: transform .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.constraint-selection-reset:hover {
+  background: #d94d39;
+  border-color: #d34734;
+}
+
+.constraint-selection-reset:active {
+  transform: translateY(1px);
+}
+
+
+/* V18 · 저장된 제약 조합 카드: 제목 수정 / 목록 접기 / 개별 JSON 내보내기 */
+.constraint-combo-saved-title-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+.constraint-combo-saved-title-wrap {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.constraint-combo-saved-title-wrap h3 {
+  min-width: 0;
+}
+
+.constraint-combo-rename-button {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  border: 1px solid #cfd6df;
+  border-radius: 8px;
+  background: #fff;
+  color: #64717e;
+  cursor: pointer;
+  transition: border-color .14s ease, background .14s ease, color .14s ease;
+}
+
+.constraint-combo-rename-button:hover,
+.constraint-combo-rename-button:focus-visible {
+  border-color: #e6533d;
+  background: #fff5f2;
+  color: #e6533d;
+  outline: none;
+}
+
+.constraint-combo-rename-button svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.constraint-combo-saved-constraints[hidden] {
+  display: none !important;
+}
+
+.constraint-combo-saved-card-actions {
+  grid-template-columns: minmax(0, 1.55fr) minmax(66px, .78fr) minmax(82px, .95fr) minmax(50px, .58fr) !important;
+  gap: 6px !important;
+}
+
+.constraint-combo-load-button,
+.constraint-combo-collapse-button,
+.constraint-combo-export-button,
+.constraint-combo-delete-button {
+  width: 100%;
+  min-width: 0 !important;
+  min-height: 38px;
+  padding: 0 7px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.constraint-combo-collapse-button,
+.constraint-combo-export-button {
+  border: 1px solid #cfd6df;
+  background: #fff;
+  color: #394552;
+}
+
+.constraint-combo-collapse-button:hover,
+.constraint-combo-collapse-button:focus-visible,
+.constraint-combo-export-button:hover,
+.constraint-combo-export-button:focus-visible {
+  border-color: #98a4b1;
+  background: #f6f8fa;
+  outline: none;
+}
+
+.constraint-combo-delete-button {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+@media (max-width: 760px) {
+  .constraint-combo-saved-card-actions {
+    grid-template-columns: minmax(0, 1.45fr) minmax(62px, .78fr) minmax(74px, .92fr) minmax(46px, .56fr) !important;
+    gap: 5px !important;
+  }
+
+  .constraint-combo-load-button,
+  .constraint-combo-collapse-button,
+  .constraint-combo-export-button,
+  .constraint-combo-delete-button {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 10px;
+  }
+}
+
+
+/* Integrated V9 · 남은 시간 계산 모드 */
+.constraint-time-mode-toggle{display:inline-flex;align-items:center;gap:6px;padding:4px;border:1px solid #4b596b;border-radius:11px;background:#222b36;white-space:nowrap}
+.constraint-time-mode-button{min-height:38px;padding:8px 15px;border:1px solid transparent;border-radius:8px;background:transparent;color:#c2ccd7;font-size:13px;font-weight:850;line-height:1;cursor:pointer;transition:background .15s ease,color .15s ease,border-color .15s ease,box-shadow .15s ease}
+.constraint-time-mode-button:hover{color:#fff;background:#2d3846}
+.constraint-time-mode-button.active{border-color:#d7553e;background:#d7553e;color:#fff;box-shadow:0 3px 9px rgba(215,85,62,.22)}
+@media(max-width:760px){.constraint-time-mode-toggle{width:100%}.constraint-time-mode-button{flex:1 1 0}}
+
+/* V12 · 제약 조합 제목 검색 */
+.constraint-combo-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 3px 0 5px;
+}
+
+.constraint-combo-heading-row h2 {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.constraint-combo-search-field {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.constraint-combo-search-field input {
+  width: 100%;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: 1px solid #aebdce;
+  border-radius: 8px;
+  outline: 0;
+  background: #fff;
+  color: #171d26;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 30px;
+}
+
+.constraint-combo-search-field input::placeholder {
+  color: #7c8794;
+}
+
+.constraint-combo-search-field input:focus {
+  border-color: #61728a;
+  box-shadow: 0 0 0 3px rgba(75, 96, 124, .12);
+}

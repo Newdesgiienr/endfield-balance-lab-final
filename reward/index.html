@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>보상 설계 | Endfield Balance Lab</title>
+  <link rel="stylesheet" href="reward.css">
+</head>
+<body>
+<header class="integrated-site-topbar">
+  <div class="integrated-site-brand">
+    <a class="integrated-brand-mark" href="../index.html" aria-label="Endfield Balance Lab"><img src="assets/lab-brand-character.jpg" alt=""></a>
+    <div class="integrated-brand-copy">
+      <a class="integrated-brand-title" href="../index.html"><strong>ENDFIELD BALANCE LAB</strong></a>
+      <div class="integrated-brand-lower">
+        <small>엔드필드 위기 협약 데이터베이스</small>
+        <nav class="integrated-site-nav" aria-label="페이지 전환">
+          <a href="../glossary.html">용어 사전</a><a href="../characters.html">캐릭터</a><a href="../index.html">파티 분석</a><a href="../results.html">분석 결과</a>
+          <a href="../dungeon-monsters.html">스테이지 구성</a><a href="../constraints.html">제약 추천</a><a href="../constraint-board.html">제약 설계</a><a href="../constraint-balancing/index.html">제약 밸런싱</a>
+          <a href="../control-time/index.html">컨트롤 시간</a><a href="../constraint-application/index.html">제약 적용</a><a class="active" href="#reward-top" aria-current="page">보상 설계</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="reward-top" class="page-shell">
+  <section class="workspace-head">
+    <div>
+      <div class="eyebrow">CONTINGENCY CONTRACT · RE-IGNITION</div>
+      <h1>보상 정보</h1>
+      <p>위기 협약의 상점 교환 품목과 임무 조건·보상을 한 페이지에서 바로 확인합니다.</p>
+    </div>
+  </section>
+
+  <nav class="section-nav card" aria-label="보상 섹션 이동">
+    <a href="#shop"><b>01</b><span>시크릿 생추어리</span><small>상점 16개 품목</small></a>
+    <a href="#periodic"><b>02</b><span>주기 임무</span><small>지정 제약 조합 7개</small></a>
+    <a href="#score"><b>03</b><span>지표 총합 임무</span><small>5 / 10 / 15 / 20★</small></a>
+    <a href="#milestone"><b>04</b><span>단계 임무</span><small>누적 조건 2개</small></a>
+  </nav>
+
+  <section id="shop" class="section-block">
+    <div class="section-heading simple-heading">
+      <div><span class="eyebrow">SECRET SANCTUARY</span><h2>상점 · 시크릿 생추어리</h2></div>
+    </div>
+    <details class="fold-panel card">
+      <summary class="fold-summary shop-summary">
+        <div class="fold-number">01</div>
+        <div class="fold-title"><small>SECRET SANCTUARY</small><h3>시크릿 생추어리</h3><span>결정화 화폐로 이벤트 보상을 교환합니다.</span></div>
+        <div class="fold-stat"><small>교환 품목</small><strong>17개</strong></div>
+        <div class="fold-reward currency-summary"><img class="currency-icon hq-currency" data-hq="Vitrified Coin.png" data-fallback="assets/rewards/crystal.png" src="assets/rewards/crystal.png" alt="결정화 화폐"><div><small>사용 화폐</small><strong>결정화 화폐</strong></div></div>
+        <span class="chevron-box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span>
+      </summary>
+      <div class="fold-detail shop-panel-detail">
+        <div class="shop-toolbar">
+          <label class="search-box"><span>⌕</span><input id="shop-search" type="search" placeholder="아이템 이름 검색"></label>
+          <div class="shop-count"><span>표시 중</span><strong id="shop-count">17</strong><small>/ 17</small></div>
+          <button id="shop-reset" class="subtle-button" type="button">기본값 복원</button>
+        </div>
+        <div class="shop-table-wrap">
+          <div class="shop-table-head" role="row"><div>아이템</div><div>교환 수량</div><div>구매 제한</div><div>필요 결정화 화폐</div></div>
+          <div id="shop-table" class="shop-table"></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="fold-panel card settlement-panel">
+      <summary class="fold-summary settlement-summary">
+        <div class="fold-number">02</div>
+        <div class="fold-title"><small>SHOP SETTLEMENT</small><h3>상점 보상 결산</h3><span>무한 교환을 제외한 한정 품목을 모두 구매했을 때의 결산입니다.</span></div>
+        <div class="fold-stat"><small>획득 품목</small><strong><span id="settlement-item-count">16</span>종</strong></div>
+        <div class="fold-reward currency-summary">
+          <img class="currency-icon hq-currency" data-hq="Vitrified Coin.png" data-fallback="assets/rewards/crystal.png" src="assets/rewards/crystal.png" alt="결정화 화폐">
+          <div><small>총 필요 화폐</small><strong>결정화 화폐 <span id="settlement-total">8,575</span></strong></div>
+        </div>
+        <span class="chevron-box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span>
+      </summary>
+      <div class="fold-detail settlement-detail">
+        <div class="settlement-overview">
+          <div class="settlement-overview-copy">
+            <span>한정 교환 전체 구매 비용</span>
+            <strong><img class="currency-icon hq-currency" data-hq="Vitrified Coin.png" data-fallback="assets/rewards/crystal.png" src="assets/rewards/crystal.png" alt="결정화 화폐"> 결정화 화폐 <b id="settlement-total-large">8,575</b></strong>
+          </div>
+          <p>구매 제한이 ∞인 <b>탈로시안 화폐 ×500</b> 교환은 계산에서 제외합니다. 아래 수치는 상점에서 현재 입력한 교환 수량·가격·구매 제한을 기준으로 자동 갱신됩니다.</p>
+        </div>
+        <div id="settlement-grid" class="settlement-grid"></div>
+      </div>
+    </details>
+
+    <details class="fold-panel card rationale-panel">
+      <summary class="fold-summary rationale-summary">
+        <div class="fold-number">03</div>
+        <div class="fold-title"><small>REWARD DESIGN NOTES</small><h3>보상 구성 의도</h3><span>상점 보상을 육성 기준과 최종 획득량에 맞춰 한 줄씩 비교합니다.</span></div>
+        <div class="fold-stat"><small>분석 항목</small><strong>11개</strong></div>
+        <div class="fold-reward rationale-highlight"><div><small>핵심 방향</small><strong>주력 파티의 육성 병목 완화</strong></div></div>
+        <span class="chevron-box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span>
+      </summary>
+      <div class="fold-detail rationale-detail">
+        <div class="rationale-intro">
+          <div><span>DESIGN INTERPRETATION</span><strong>한 캐릭터를 완성시키기보다, 주력 파티의 여러 육성 병목을 동시에 줄이는 구성</strong></div>
+        </div>
+
+        <div class="rationale-table-wrap">
+          <div class="rationale-table-head" role="row">
+            <div>상점 보상</div>
+            <div>최종 획득량</div>
+            <div>육성 기준 설계 근거</div>
+            <div>추가 설명</div>
+          </div>
+          <div class="rationale-table" role="table" aria-label="보상 구성 의도">
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">오로베릴</div>
+              <div class="rationale-final-qty">×2,000</div>
+              <div class="rationale-benchmark">헤드헌팅 <b>4회분</b></div>
+              <div class="rationale-reason">헤드헌팅 <b>4회분</b>. 1회가 <b>500 오로베릴</b>이므로 총 2,000은 정확히 4회에 해당합니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">탈로시안 화폐</div>
+              <div class="rationale-final-qty">×750,000</div>
+              <div class="rationale-benchmark">주력 오퍼레이터 1명 + 주력 무기 1개의 <b>고레벨 레벨링 비용에 근접</b></div>
+              <div class="rationale-reason">오퍼레이터 1→90 레벨업에 <b>385,420</b>, 무기 1→90에 <b>341,390</b>이 필요해서 합계가 <b>726,810</b>입니다. 한정 상점의 750,000은 이 비용을 거의 전부 충당합니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">고급 인지 매개체</div>
+              <div class="rationale-final-qty">×30</div>
+              <div class="rationale-benchmark">총 <b>300,000 오퍼레이터 EXP</b></div>
+              <div class="rationale-reason">1개당 <b>10,000 EXP</b>라 총 <b>300,000 EXP</b>. 오퍼레이터 70→80은 누적 EXP 차이가 약 <b>302,270</b>이라, 고레벨 구간 1회분에 거의 대응합니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">무기 점검 세트</div>
+              <div class="rationale-final-qty">×60</div>
+              <div class="rationale-benchmark">총 <b>600,000 무기 EXP</b></div>
+              <div class="rationale-reason">1개당 <b>10,000 무기 EXP</b>라 총 <b>600,000 EXP</b>. 무기 하나의 1→60에는 약 <b>290,540 EXP</b>가 필요하므로, 두 개를 올리면 약 <b>581,080 EXP</b>가 들어가는 규모입니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">중형 모형 틀</div>
+              <div class="rationale-final-qty">×20</div>
+              <div class="rationale-benchmark">주력 무기 <b>튜닝·상한 돌파 1회분</b>에 대응</div>
+              <div class="rationale-reason">무기 튜닝 Stage 3에서 <b>정확히 20개</b>가 필요하며, 해당 튜닝을 통해 무기 레벨 상한을 <b>80</b>까지 개방하는 데 대응합니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">냉각제</div>
+              <div class="rationale-final-qty">×600</div>
+              <div class="rationale-benchmark">고단계 기질 식각의 <b>보장 시도에 의미 있는 분량</b></div>
+              <div class="rationale-reason">높은 단계의 기질 식각 보장에 사용합니다. 스킬 속성 Lv.3 보장은 <b>300개</b>라 정확히 <b>2회</b>, 일반 속성 Lv.6 보장은 <b>450개</b>가 필요합니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">프로토콜 프리즘 세트</div>
+              <div class="rationale-final-qty">×225</div>
+              <div class="rationale-benchmark">주력 오퍼레이터의 <b>여러 스킬 중후반 강화</b>를 함께 진행할 수 있는 양</div>
+              <div class="rationale-reason">대표적인 스킬 강화 구간에서 7→11까지 한 스킬에 <b>68개</b>가 필요합니다. 225개면 동일 비용 구조의 스킬 <b>3개에 204개</b>를 사용하고도 21개가 남는 규모입니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">프로토콜 디스크 세트</div>
+              <div class="rationale-final-qty">×20</div>
+              <div class="rationale-benchmark">다음 <b>정예화 요구량의 상당 부분</b>을 보조</div>
+              <div class="rationale-reason">오퍼레이터 정예화 III에는 약 <b>24개</b>, 정예화 IV에는 약 <b>36개</b>가 필요한 사례가 있어, 20개는 다음 정예화에 필요한 수량의 상당 부분을 미리 확보하는 규모입니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">존속의 흔적</div>
+              <div class="rationale-final-qty">×10</div>
+              <div class="rationale-benchmark">핵심 스킬의 <b>최종 강화 구간</b>에 집중할 수 있는 희소 재료</div>
+              <div class="rationale-reason">스킬 10·11·12단계에서 각각 <b>1·2·3개</b>가 필요해 한 스킬의 최종 강화 구간에 총 <b>6개</b>가 들어갑니다. 10개면 핵심 스킬 하나를 끝까지 올리고 다음 스킬에도 사용할 수 있습니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">고급 희귀 재료 5종</div>
+              <div class="rationale-final-qty">각 ×15</div>
+              <div class="rationale-benchmark">상위 정예화용 재료를 <b>종류별 기본 재고</b>로 확보</div>
+              <div class="rationale-reason">상위 정예화에서 해당 고급 재료 <b>20개</b>를 요구하는 사례가 있습니다. 각 15개는 그 기준의 <b>75%</b>에 해당해, 여러 계열의 상위 정예화 준비량을 고르게 확보하는 구성입니다.</div>
+            </article>
+            <article class="rationale-row" role="row">
+              <div class="rationale-reward-name">고급 육성 선택 상자 I</div>
+              <div class="rationale-final-qty">×10</div>
+              <div class="rationale-benchmark">필요한 고급 재료를 골라 <b>고정 지급의 편차를 보정</b></div>
+              <div class="rationale-reason">상자 1개에서 고급 재료를 <b>2개</b> 선택하므로 10상자는 총 <b>20개 선택분</b>입니다. 고정 지급 15개에 상자 3개분 6개를 더하면 <b>21개</b>가 되어, 필요한 계열의 20개 요구량을 선택적으로 넘길 수 있습니다.</div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="periodic" class="section-block">
+    <div class="section-heading simple-heading">
+      <div><span class="eyebrow">CYCLE MISSIONS</span><h2>주기 임무</h2><p>임무별 요구 제약과 효과를 확인하고, 아래 지표 보드에서 필요한 제약을 직접 선택할 수 있습니다.</p></div>
+    </div>
+
+    <iframe class="indicator-map-frame" src="indicator-map-original/board-embed.html" title="단계별 지표 구조" loading="eager"></iframe>
+
+    <div id="periodic-list" class="mission-stack"></div>
+  </section>
+
+  <section id="score" class="section-block">
+    <div class="section-heading simple-heading"><div><span class="eyebrow">TOTAL TEST CRITERIA MISSIONS</span><h2>지표 총합 임무</h2></div></div>
+    <div id="score-grid" class="score-grid"></div>
+  </section>
+
+  <section id="milestone" class="section-block">
+    <div class="section-heading simple-heading"><div><span class="eyebrow">PHASE MISSIONS</span><h2>단계 임무</h2><p>이벤트 누적 진행도에 따라 획득하는 프로필 보상입니다.</p></div></div>
+    <div class="milestone-grid">
+      <article class="milestone card">
+        <div class="milestone-icon"><img data-hq="Contingent Inscription frame.png" data-fallback="assets/rewards/crisis-engraving.png" src="assets/rewards/crisis-engraving.png" alt="프로필 프레임 · 위기 각인"></div>
+        <div><small>누적 결정화 화폐</small><h3>결정화 화폐 누적 8,500개 획득</h3><p>현재 보유량이 아니라 이벤트 기간 동안의 누적 획득량을 기준으로 합니다.</p></div>
+        <div class="milestone-reward"><span>보상</span><strong>프로필 프레임 · 위기 각인</strong></div>
+      </article>
+      <article class="milestone card">
+        <div class="milestone-icon"><img data-hq="Ancient Contract profile.png" data-fallback="assets/rewards/ancient-contract.png" src="assets/rewards/ancient-contract.png" alt="프로필 · 고대의 협약"></div>
+        <div><small>협약 임무 완료 수</small><h3>협약 임무 누적 12개 완료</h3><p>주기 임무·지표 총합 임무 등 이벤트의 협약 임무 완료 수를 누적합니다.</p></div>
+        <div class="milestone-reward"><span>보상</span><strong>프로필 · 고대의 협약</strong></div>
+      </article>
+    </div>
+  </section>
+
+  <footer class="page-footer"><div><strong>ENDFIELD BALANCE LAB · REWARD PAGE</strong><span>독립 페이지 빌드 · 기존 프로젝트에 폴더 단위 병합 가능</span></div><a href="#reward-top">맨 위로 ↑</a></footer>
+</main>
+
+<div id="floating-tooltip" class="floating-tooltip" role="tooltip"><strong></strong><span></span></div>
+<script src="constraint-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
