@@ -1439,5 +1439,267 @@ window.DEFAULT_CONSTRAINT_COMBINATIONS = [
     ],
     "createdAt": "2026-08-07T07:48:55.112Z",
     "source": "site"
+  },
+  {
+    "id": "combo-1786460159401-q7egv5",
+    "name": "[픽업 캐릭터 명함] 최대 클리어 가능선 2",
+    "totalScore": 50,
+    "selectedCount": 25,
+    "selectedIds": [
+      "2-5",
+      "2-6",
+      "3-7",
+      "2-8",
+      "2-9",
+      "3-10",
+      "3-11",
+      "2-10",
+      "2-11",
+      "1-11",
+      "1-10",
+      "2-14",
+      "2-18",
+      "1-18",
+      "2-15",
+      "1-14",
+      "2-2",
+      "2-16",
+      "2-17",
+      "2-4",
+      "3-13",
+      "1-22",
+      "1-3",
+      "3-1",
+      "3-23"
+    ],
+    "constraints": [
+      {
+        "id": "2-5",
+        "name": "팀: 억제 II",
+        "category": "팀",
+        "tier": 2,
+        "score": 2,
+        "effect": "오퍼레이터가 적의 방어불능 또는 아츠부착 스택 수치를 증가시키면, 해당 오퍼레이터가 주는 해당 유형의 피해 -90%, 10초간 지속",
+        "icon": "assets/icons/억제2.png"
+      },
+      {
+        "id": "2-6",
+        "name": "팀: 참수 II",
+        "category": "팀",
+        "tier": 2,
+        "score": 2,
+        "effect": "메인 컨트롤 오퍼레이터가 받는 피해 +100%",
+        "icon": "assets/icons/참수2.png"
+      },
+      {
+        "id": "3-7",
+        "name": "환경: 속박",
+        "category": "환경",
+        "tier": 3,
+        "score": 3,
+        "effect": "회피 불가",
+        "icon": "assets/icons/속박.png"
+      },
+      {
+        "id": "2-8",
+        "name": "환경: 쇠퇴 II",
+        "category": "환경",
+        "tier": 2,
+        "score": 2,
+        "effect": "웨이브 사이에 치유 물질이 생성되지 않음",
+        "icon": "assets/icons/쇠퇴2.png"
+      },
+      {
+        "id": "2-9",
+        "name": "팀: 부러진 칼날 II",
+        "category": "팀",
+        "tier": 2,
+        "score": 2,
+        "effect": "오퍼레이터가 궁극기를 1회 사용할 때마다, 해당 오퍼레이터가 이후 사용하는 궁극기 피해 100% 감소",
+        "icon": "assets/icons/칼날2.png"
+      },
+      {
+        "id": "3-10",
+        "name": "팀: 피로",
+        "category": "팀",
+        "tier": 3,
+        "score": 3,
+        "effect": "오퍼레이터의 일반공격 피해 -70%",
+        "icon": "assets/icons/피로.png"
+      },
+      {
+        "id": "3-11",
+        "name": "팀: 쇠약",
+        "category": "팀",
+        "tier": 3,
+        "score": 3,
+        "effect": "오퍼레이터가 받은 데미지의 일부 수치만큼 최대 생명력 감소(근거리오퍼:30%,원거리오퍼:50%)",
+        "icon": "assets/icons/쇠퇴.png"
+      },
+      {
+        "id": "2-10",
+        "name": "조작: 질주",
+        "category": "조작",
+        "tier": 2,
+        "score": 2,
+        "effect": "적 이동속도 +100%, 0.1초 내에 받는 피해는 최대 생명력의 25%를 초과하지 않음",
+        "icon": "assets/icons/모름2.png"
+      },
+      {
+        "id": "2-11",
+        "name": "환경: 동시 성장",
+        "category": "환경",
+        "tier": 2,
+        "score": 2,
+        "effect": "메인 컨트롤 오퍼레이터가 최대 HP의 10% 이상으로 회복하거나 20% 이상에 해당하는 보호막을 얻을 때, 전장의 모든 적도 최대 HP의 8%를 회복한다",
+        "icon": "assets/icons/모름3.png"
+      },
+      {
+        "id": "1-11",
+        "name": "팀: 중압",
+        "category": "팀",
+        "tier": 1,
+        "score": 1,
+        "effect": "메인 컨트롤 오퍼가 12초 내 적에게 강력한 일격 피해를 주지 않으면, 스킬 게이지 자연회복 중단",
+        "icon": "assets/icons/중압.png"
+      },
+      {
+        "id": "1-10",
+        "name": "조작: 보호벽",
+        "category": "조작",
+        "tier": 1,
+        "score": 1,
+        "effect": "각 적은 5초마다 방어불능 또는 같은 유형의 아츠부착을 1회만 부여받을 수 있음",
+        "icon": "assets/icons/보호벽.png"
+      },
+      {
+        "id": "2-14",
+        "name": "환경: 분리",
+        "category": "환경",
+        "tier": 2,
+        "score": 2,
+        "effect": "전투가 시작된 후 메인 컨트롤 오퍼레이터 전환 불가",
+        "icon": "assets/icons/분리.png"
+      },
+      {
+        "id": "2-18",
+        "name": "조작: 열량 흡수",
+        "category": "조작",
+        "tier": 2,
+        "score": 2,
+        "effect": "적이 메인 컨트롤 오퍼에게 냉기 부착을 부여하는 대신, 즉시 동결",
+        "icon": "assets/icons/열량흡수.png"
+      },
+      {
+        "id": "1-18",
+        "name": "환경: 융해",
+        "category": "환경",
+        "tier": 1,
+        "score": 1,
+        "effect": "오퍼레이터가 받는 동결 지속시간 15초 증가. 열기 유형 스킬을 사용할 경우, 동결 해제 가능",
+        "icon": "assets/icons/열기분해.png"
+      },
+      {
+        "id": "2-15",
+        "name": "조작: 독성 II",
+        "category": "조작",
+        "tier": 2,
+        "score": 2,
+        "effect": "처치 당한 적이 독성 물질을 남기고 오퍼레이터가 독성 물질의 범위에 있을 때, 매초마다 최대 생명력의 5% 피해를 입음",
+        "icon": "assets/icons/독성2.png"
+      },
+      {
+        "id": "1-14",
+        "name": "조작: 부착",
+        "category": "조작",
+        "tier": 1,
+        "score": 1,
+        "effect": "적에게 부착된 방어불능 또는 아츠부착 1단계마다 해당 적이 받는 부착 스택과 대응되는 데미지 -10%(해당 버프는 부착 지속시간 종료 0.1초후에 소멸)",
+        "icon": "assets/icons/모름1.png"
+      },
+      {
+        "id": "2-2",
+        "name": "조작: 공격 II",
+        "category": "조작",
+        "tier": 2,
+        "score": 2,
+        "effect": "적이 주는 피해 +80%",
+        "icon": "assets/icons/공격2.png"
+      },
+      {
+        "id": "2-16",
+        "name": "팀: 저체온증 II",
+        "category": "팀",
+        "tier": 2,
+        "score": 2,
+        "effect": "오퍼레이터가 배틀 스킬을 1회 사용할 때마다 메인 컨트롤 오퍼레이터에게 냉기부착 1스택 부여. 각 오퍼레이터당 발동 가능 쿨타임 3초",
+        "icon": "assets/icons/한기2.png"
+      },
+      {
+        "id": "2-17",
+        "name": "팀: 열 손실 II",
+        "category": "팀",
+        "tier": 2,
+        "score": 2,
+        "effect": "오퍼레이터가 연계 스킬을 1회 사용할 때마다 메인 컨트롤 오퍼레이터에게 냉기부착 1스택 부여. 각 오퍼레이터당 발동 가능 쿨타임 3초",
+        "icon": "assets/icons/손실2.png"
+      },
+      {
+        "id": "2-4",
+        "name": "조작: 활성 II",
+        "category": "조작",
+        "tier": 2,
+        "score": 2,
+        "effect": "적 생명력 +100%",
+        "icon": "assets/icons/활성2.png"
+      },
+      {
+        "id": "3-13",
+        "name": "환경: 충격",
+        "category": "환경",
+        "tier": 3,
+        "score": 3,
+        "effect": "오퍼레이터 일반공격, 배틀스킬,연계스킬, 궁극기 이외의 피해 +100%, 배틀스킬 피해 -60%",
+        "icon": "assets/icons/충격.png"
+      },
+      {
+        "id": "1-22",
+        "name": "조작: 치유 I",
+        "category": "조작",
+        "tier": 1,
+        "score": 1,
+        "effect": "적이 제어 효과의 영향을 받을 때, 매초마다 최대 HP의 5%를 회복",
+        "icon": "assets/icons/치유1.png"
+      },
+      {
+        "id": "1-3",
+        "name": "환경: 시간 제한 I",
+        "category": "환경",
+        "tier": 1,
+        "score": 1,
+        "effect": "카운트다운 -100초 (제한시간 8분20초)",
+        "icon": "assets/icons/시간1.png"
+      },
+      {
+        "id": "3-1",
+        "name": "팀: 위축 III",
+        "category": "팀",
+        "tier": 3,
+        "score": 3,
+        "effect": "오퍼레이터의 주요 능력치 -40%",
+        "icon": "assets/icons/위축3.png"
+      },
+      {
+        "id": "3-23",
+        "name": "환경: 재구성 II",
+        "category": "환경",
+        "tier": 3,
+        "score": 3,
+        "effect": "3,4 웨이브의 쌍뿔아겔로스,삼미아겔로스가 알파개체로 변경(알파개체 : 체력 50% 증가)",
+        "icon": "assets/icons/재구성.png"
+      }
+    ],
+    "createdAt": "2026-08-11T14:55:59.400Z",
+    "source": "site"
   }
 ];
